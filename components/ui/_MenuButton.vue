@@ -1,75 +1,120 @@
 <template>
     <div class="l-menubutton">
-        <div class="openbtn1"><span></span><span></span><span></span></div>
+        <button id="OpenMenu" class="menubutton" :class="{open:isOpenMenu}" v-on:click="isOpenMenu = !isOpenMenu"><div class="l-lines"><span></span><span></span><span></span></div></button>
+            <div class="sidemenu-wrap" :class="{open:isOpenMenu}">
+                <LayoutsSidemenu  isOpenMenu/>
+            </div>
+        <div id="MenuBg" :class="{open:isOpenMenu}" v-on:click="isOpenMenu = false"></div>
     </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .l-menubutton {
-        width:48px;
-        height:48px;
         position: absolute;
         top:50%;
-        right:12px;
+        right:6px;
         transform: translateY(-50%);
-    }
-    .openbtn1{
-    position: relative;/*ボタン内側の基点となるためrelativeを指定*/
-    background:#EDEBE1;
-    box-shadow:-6px -6px 12px rgba(255, 255, 255, 0.33),
-                3px 3px 6px rgba(0, 0, 0, 0.16);
-    cursor: pointer;
-        width: 50px;
-        height:50px;
-    margin:auto 0 auto auto;
-    border-radius: 5px;
-    }
 
-    /*ボタン内側*/
-    .openbtn1 span{
-        display: inline-block;
-        transition: all .4s;/*アニメーションの設定*/
+        .menubutton{
+            z-index: 100;
+        }
+    }
+    .sidemenu-wrap{
         position: absolute;
-        left: 14px;
-        height: 3px;
-        border-radius: 2px;
-        background: #A3C612;
-        width: 45%;
+        right:-6px;
+        top:-6px;
+        z-index: 3;
+        transform: translate(100%);
+        @include cubic_ease;
+        display: none;
+
+        &.open {
+            transform: translate(0%);
+            display: block;
+        }
+    }
+    .menubutton{    
+        @include NM_convex;
+        position: relative;/*ボタン内側の基点となるためrelativeを指定*/
+        background:#f7f6eb;
+        cursor: pointer;
+        width: 48px;
+        height:48px;
+        margin:auto 0 auto auto;
+        border-radius: 9999px;
+
+        .l-lines{
+            position: absolute;
+            top:50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            flex-direction:column;
+        }
+        span{
+            @include cubic_ease;
+            display: block;
+            height: 2px;
+            border-radius: 2px;
+            background: #A3C612;
+            width: 26px;
+            margin-top:6px;
+
+            }
+            & span:nth-of-type(1) {
+                margin-top:0;
+                
+            }
+            & span:nth-of-type(2) {
+                transform-origin:50% 50%;
+
+            }
+        &.open span{
+            margin:-1px;
+            
+            &:nth-of-type(1) {
+                transform:rotate(-45deg);
+
+            }
+            &:nth-of-type(2) {
+                transform:scale(0);
+
+            }
+            &:nth-of-type(3){
+                transform:rotate(45deg);
+
+            }
+        }
     }
 
-    .openbtn1 span:nth-of-type(1) {
-    top:15px; 
-    }
-
-    .openbtn1 span:nth-of-type(2) {
-    top:23px;
-    }
-
-    .openbtn1 span:nth-of-type(3) {
-    top:31px;
-    }
-
-    /*activeクラスが付与されると線が回転して×に*/
-
-    .openbtn1.active span:nth-of-type(1) {
-        top: 18px;
-        left: 18px;
-        transform: translateY(6px) rotate(-45deg);
-        width: 30%;
-    }
-
-    .openbtn1.active span:nth-of-type(2) {
-    opacity: 0;/*真ん中の線は透過*/
-    }
-
-    .openbtn1.active span:nth-of-type(3){
-        top: 30px;
-        left: 18px;
-        transform: translateY(-6px) rotate(45deg);
-        width: 30%;
+    #MenuBg {
+        position: fixed;
+        top:-6px;
+        right: -6px;
+        z-index: 2;
+        width: 100vw;
+        height: 100vh;
+        background: black;
+        opacity: 0;
+        @include cubic_ease;
+        pointer-events: none;
+    
+        &.open {
+            opacity:.2;
+            pointer-events: auto;
+        }
     }
 
 </style>
 
 <script>
+export default{
+    data(){
+        return{
+            isOpenMenu: false,
+        }
+    }
+}
 </script>

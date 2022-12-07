@@ -12,8 +12,8 @@ export default {
       { name: 'format-detection', content: 'telephone=no' },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-            { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Noto+Serif+JP'},
-            { rel:'stylesheet', href:'https://unpkg.com/ress/dist/ress.min.css'}
+            { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Noto+Serif+JP'},//これはscssにそのうち移動
+            { rel:'stylesheet', href:'https://unpkg.com/ress/dist/ress.min.css'}//リセットcss
     ],
   },
 
@@ -27,13 +27,33 @@ export default {
   components: true,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: [],
+  buildModules: [
+    '@nuxtjs/style-resources',
+  ],
+  styleResources: {
+    scss: [
+      './assets/scss/variable/*.scss',
+      './assets/scss/global/*.scss',
+    ],
+  },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    //For distinction about devise. Smartphone or Tablet or Computer.
+    //https://github.com/nuxt-community/device-module
+    '@nuxtjs/device',
+    //Auto build sitemap.
+    //https://github.com/nuxt-community/sitemap-module#sitemap-options
+    '@nuxtjs/sitemap',
   ],
+  sitemap: {
+    //トップページのURL(末尾スラッシュなし)
+    //hostname: 'https://XXXXXXXXX.com',
+    //各ページのURL末尾にスラッシュをつけるかどうか
+    trailingSlash: true,
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
@@ -41,6 +61,33 @@ export default {
     baseURL: '/',
   },
 
+  //delete data-n-head
+  hooks: {
+    generate: {
+      page (page) {
+        const cheerio = require('cheerio')
+        const $ = cheerio.load(page.html, { decodeEntities: false })
+        
+        const attrs = [
+          'data-n-head-ssr',
+          'data-n-head',
+          'data-hid',
+          'data-vue-ssr-id',
+          'data-server-rendered',
+        ]
+        
+        attrs.forEach(value => {
+          $('*[' + value + ']').removeAttr(value)
+        })
+        
+        $('link[rel="preload"][href^="/_nuxt/"][as="script"]').remove()
+        $('script[src^="/_nuxt/"]').remove()
+        $('script:contains("window.__NUXT__")').remove()
+        
+        page.html = $.html()
+      },
+    },
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 }

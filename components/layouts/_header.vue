@@ -1,21 +1,27 @@
 <template>
     <header class="l-header">
         <UiLogo />
-        <UiMenuButton />
+        <UiMenubutton />
+        <div class="header-bg"></div>
     </header>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .l-header{
         position: relative;
-        background-color: #EDEBE1;
         width:100%;
         height:60px;
-        box-shadow:-6px -6px 12px rgba(255, 255, 255, 0.33),
-                3px 3px 6px rgba(0, 0, 0, 0.16);
+    }
+    .header-bg{
+        @include NM_convex;
+        border-radius:9999px 0 0 9999px;
+        width:100%;
+        height: 100%;
     }
 </style>
 
 <script>
-
+export default {
+        name:'Header'
+    }
 </script>
