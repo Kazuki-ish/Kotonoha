@@ -43,7 +43,6 @@
     }
     .l-sidemenu{
         @include NM_convex;
-        position: relative;
         background-color: #f7f6eb;
         height: 100vh;
         width:70vw;

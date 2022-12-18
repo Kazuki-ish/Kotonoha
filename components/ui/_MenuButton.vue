@@ -1,5 +1,5 @@
 <template>
-    <div class="l-menubutton">
+    <div class="l-menubutton" >
         <button id="OpenMenu" class="menubutton" :class="{open:isOpenMenu}" v-on:click="isOpenMenu = !isOpenMenu"><div class="l-lines"><span></span><span></span><span></span></div></button>
             <div class="sidemenu-wrap" :class="{open:isOpenMenu}">
                 <LayoutsSidemenu  isOpenMenu/>
@@ -14,7 +14,6 @@
         top:50%;
         right:6px;
         transform: translateY(-50%);
-
         .menubutton{
             z-index: 100;
         }
@@ -26,11 +25,9 @@
         z-index: 3;
         transform: translate(100%);
         @include cubic_ease;
-        display: none;
 
         &.open {
             transform: translate(0%);
-            display: block;
         }
     }
     .menubutton{    
@@ -113,7 +110,7 @@
 export default{
     data(){
         return{
-            isOpenMenu: false,
+            isOpenMenu: '',
         }
     }
 }
