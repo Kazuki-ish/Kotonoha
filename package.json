@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "exdev": "nuxt --hostname 192.168.68.101 --port 3010",
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
@@ -14,10 +15,12 @@
   "dependencies": {
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/device": "^3.0.0",
+    "@nuxtjs/pwa": "^3.3.5",
     "@nuxtjs/sitemap": "^2.4.0",
     "@nuxtjs/style-resources": "^1.2.1",
     "cheerio": "^1.0.0-rc.12",
     "core-js": "^3.25.3",
+    "firebase": "^9.16.0",
     "nuxt": "^2.15.8",
     "vue": "^2.7.10",
     "vue-server-renderer": "^2.7.10",

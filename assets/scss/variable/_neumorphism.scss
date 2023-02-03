@@ -1,7 +1,0 @@
-@mixin NM_convex ($highlight:-6px,$shadow:3px){
-    background: #f7f6eb;
-    box-shadow:
-        $highlight $highlight $highlight * -2 rgba(255, 255, 255, 0.4),
-        $highlight * -1 $highlight * -1 $highlight * -2 rgba(255, 255, 255, 0.4) inset,
-        $shadow $shadow $shadow * 2 rgba(0, 0, 0, 0.2);
-  }

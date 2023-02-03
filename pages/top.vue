@@ -1,10 +1,10 @@
 <template>
-  <section class="l-page">
+  <main class="l-main">
     <LayoutsHeader />
     <div class="c-inner">
 
     </div>
-  </section>
+  </main>
 </template>
 
 <script>

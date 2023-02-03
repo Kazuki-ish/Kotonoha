@@ -2,6 +2,7 @@
 
 <style lang="scss">
     #js-c-scroll{
+        @include cubic_ease;
         // visibility: hidden;
         opacity:0;//アニメーション初期化
         

@@ -1,7 +1,7 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'Kotonoha',
+    title: 'コトノハ',
     htmlAttrs: {
       lang: 'jp',
     },
@@ -10,11 +10,20 @@ export default {
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
+      { name: 'apple-mobile-web-app-capable', content:'yes' },
+      { name: 'apple-mobile-web-app-status-bar-style', content:'black-translucent'},
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
             { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Noto+Serif+JP'},//これはscssにそのうち移動
             { rel:'stylesheet', href:'https://unpkg.com/ress/dist/ress.min.css'}//リセットcss
     ],
+  },
+  pwa: {
+    icon: {
+      //source: 'SRC_DIR/static/*****/icon_pwa.png',
+      //fileName: 'icon_pwa.png'
+      //https://designsupply-web.com/media/development/6823/
+    }
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -32,8 +41,7 @@ export default {
   ],
   styleResources: {
     scss: [
-      './assets/scss/variable/*.scss',
-      './assets/scss/global/*.scss',
+      './assets/scss/**/*.scss'
     ],
   },
 

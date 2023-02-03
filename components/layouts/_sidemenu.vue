@@ -4,7 +4,7 @@
             <nav id="MenuList" :class="{open:isOpenMenu}">
                 <ul class="sidemenu__list">
                     <li class="sidemenu__item" v-for="menu in menus" v-if="menu.public">
-                        <div class="sidemenu__item__link"><nuxt-link :to="menu.href">{{menu.title}}</nuxt-link></div>
+                        <nuxt-link :to="menu.href"><p class="sidemenu__item__link">{{menu.title}}</p></nuxt-link>
                     </li>
                 </ul>
             </nav>
@@ -12,7 +12,7 @@
     </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .sidemenu{
 
         &__list{
@@ -22,7 +22,6 @@
 
         &__item{
             @include NM_convex;
-            padding:14px 0 14px 24px;
             margin-left:12px;
             border-radius: 9999px 0 0 9999px;
 
@@ -31,6 +30,7 @@
                 
             }
             &__link{
+                padding:14px 0 14px 24px;
                 font-size:20px;
                 letter-spacing: -0.05em;
                 line-height: calc(68 / 40);

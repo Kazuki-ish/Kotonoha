@@ -1,0 +1,31 @@
+.c-vertical-inner{
+    min-height:609px;
+    max-height:calc((1458 / 1686) * 100vh);
+    margin: 8px 8px 0 0;
+    overflow-y: hidden;
+    white-space: pre-wrap;
+    overflow-x: scroll;
+
+    p{
+  	  text-indent:1em;
+    }
+  }
+
+.c-vertical{
+    vertical-align: text-top;
+    writing-mode: vertical-rl;
+    line-height:calc(52 / 32);
+    letter-spacing: 0.075em;
+    height:100%;
+    width: 100%;
+    overflow-x: auto;
+}
+
+.c-vertical-input {
+    max-height:calc((845 / 1686) * 100vh);
+}
+
+.c-vertical-button {
+    writing-mode: initial;
+    transform: rotate(90deg);
+}

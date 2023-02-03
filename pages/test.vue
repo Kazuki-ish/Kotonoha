@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <main class="l-main">
     <LayoutsHeader />
     <p>testpage</p>
-  </div>
+  </main>
 </template>
 
 <script>

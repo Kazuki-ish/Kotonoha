@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <main class="l-main">
     <LayoutsHeader />
     <p>searchpage</p>
-  </div>
+  </main>
 </template>
 
 <script>
