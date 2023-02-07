@@ -17,7 +17,7 @@
         width: 100%;
 
         &.-write {
-            @include NM_convex;
+            //@include NM_convex;
             pointer-events: visible;
         }
     }

@@ -3,23 +3,23 @@
     box-shadow:
         $highlight $highlight $highlight * -2 rgba(255, 255, 255, 0.4),
         $highlight * -1 $highlight * -1 $highlight * -2 rgba(255, 255, 255, 0.4) inset,
-        $shadow $shadow $shadow * 2 rgba(0, 0, 0, 0.2);
+        $shadow $shadow $shadow * 4 rgba(0, 0, 0, 0.2);
 }
 @mixin NM_convex_anim ($highlight:-6px,$shadow:3px, $color:#f7f6eb){
     background: $color;
     box-shadow:
         $highlight $highlight $highlight * -2 rgba(255, 255, 255, 0.4),
         $highlight * -1 $highlight * -1 $highlight * -2 rgba(255, 255, 255, 0.4) inset,
-        $shadow $shadow $shadow * 2 rgba(0, 0, 0, 0.2),
+        $shadow $shadow $shadow * 4 rgba(0, 0, 0, 0.2),
         6px 6px 12px transparent inset;
 }
 
-@mixin NM_dent ($shadow:6px,$blur:12px, $color:rgba(0, 0, 0, 0.33)){
-    box-shadow: inset $shadow $shadow $blur rgba(0, 0, 0, 0.33);
+@mixin NM_dent ($shadow:6px,$blur:12px, $color:rgba(0, 0, 0, 0.2)){
+    box-shadow: inset $shadow $shadow $blur rgba(0, 0, 0, 0.2);
 }
-@mixin NM_dent_anim ($shadow:6px, $blur:12px, $color:rgba(0, 0, 0, 0.33)){
+@mixin NM_dent_anim ($shadow:6px, $blur:12px, $color:rgba(0, 0, 0, 0.2)){
     box-shadow:
         -6px -6px -6px * -2 transparent,
-        $shadow $shadow $blur rgba(0, 0, 0, 0.33) inset,
+        $shadow $shadow $blur rgba(0, 0, 0, 0.2) inset,
         3px 3px 3px * 2 transparent;
 }

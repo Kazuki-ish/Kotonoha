@@ -33,11 +33,17 @@ export default {
       name: '',
     }
   },
-  mounted() {
+  mounted(){
   },
   methods:{
     logText() {
-        console.log(this.$refs.novelText.innerText);
+      this.text = this.$refs.novelText.innerText
+      if (this.text){
+        console.log(this.text);
+      }
+      else{
+        console.log('text is nothing');
+      }
     }
   }
 }
