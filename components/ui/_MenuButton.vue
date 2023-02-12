@@ -29,10 +29,12 @@
     top: -6px;
     z-index: 3;
     transform: translate(100%);
+    opacity: 0;
     @include cubic_ease;
 
     &.-open {
         transform: translate(0%);
+        opacity: 1;
     }
 }
 
@@ -45,7 +47,7 @@
     width: 48px;
     height: 48px;
     margin: auto 0 auto auto;
-    border-radius: 9999px;
+    border-radius: calc(21 / 768 * 100vw);
 
     .l-lines {
         position: absolute;
@@ -104,6 +106,7 @@
 }
 
 #MenuBg {
+    @include cubic_ease;
     position: fixed;
     top: -6px;
     right: -6px;
@@ -112,7 +115,6 @@
     height: 100vh;
     background: black;
     opacity: 0;
-    @include cubic_ease;
     pointer-events: none;
 
     &.-open {

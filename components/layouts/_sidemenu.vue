@@ -21,7 +21,7 @@
         }
 
         &__item{
-            @include NM_convex;
+            @include NM_convex($color:rgba(255, 255, 255, 0.4));
             margin-left:12px;
             border-radius: 9999px 0 0 9999px;
 
@@ -42,7 +42,7 @@
         }
     }
     .l-sidemenu{
-        @include NM_convex;
+            @include NM_convex($color:rgba(255, 255, 255, 0.4));
         background-color: #f7f6eb;
         height: 100vh;
         width:70vw;

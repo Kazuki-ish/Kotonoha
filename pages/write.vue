@@ -14,7 +14,7 @@
 <style lang="scss" scoped>
 
 .writing {
-  @include NM_dent(1px, 12px);
+  @include NM_dent_anim;
   border-radius: 24px;
   min-height: 50%;
   padding:8px 8px 8px 80vw;

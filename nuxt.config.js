@@ -1,4 +1,9 @@
 export default {
+
+  //静的ホスティングに最適化
+  target: 'static',
+  //ssr: false,
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'コトノハ',
@@ -30,7 +35,8 @@ export default {
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -58,9 +64,9 @@ export default {
   ],
   sitemap: {
     //トップページのURL(末尾スラッシュなし)
-    //hostname: 'https://XXXXXXXXX.com',
+    hostname: 'https://kotonoha.com',
     //各ページのURL末尾にスラッシュをつけるかどうか
-    trailingSlash: true,
+    trailingSlash: false,
   },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -69,33 +75,38 @@ export default {
     baseURL: '/',
   },
 
-  //delete data-n-head
-  hooks: {
-    generate: {
-      page (page) {
-        const cheerio = require('cheerio')
-        const $ = cheerio.load(page.html, { decodeEntities: false })
+  //delete data-n-head 静的書き出し時にjsが読み込まれなくなるため無効化
+  // hooks: {
+  //   generate: {
+  //     page (page) {
+  //       const cheerio = require('cheerio')
+  //       const $ = cheerio.load(page.html, { decodeEntities: false })
         
-        const attrs = [
-          'data-n-head-ssr',
-          'data-n-head',
-          'data-hid',
-          'data-vue-ssr-id',
-          'data-server-rendered',
-        ]
+  //       const attrs = [
+  //         'data-n-head-ssr',
+  //         'data-n-head',
+  //         'data-hid',
+  //         'data-vue-ssr-id',
+  //         'data-server-rendered',
+  //       ]
         
-        attrs.forEach(value => {
-          $('*[' + value + ']').removeAttr(value)
-        })
+  //       attrs.forEach(value => {
+  //         $('*[' + value + ']').removeAttr(value)
+  //       })
         
-        $('link[rel="preload"][href^="/_nuxt/"][as="script"]').remove()
-        $('script[src^="/_nuxt/"]').remove()
-        $('script:contains("window.__NUXT__")').remove()
+  //       $('link[rel="preload"][href^="/_nuxt/"][as="script"]').remove()
+  //       $('script[src^="/_nuxt/"]').remove()
+  //       $('script:contains("window.__NUXT__")').remove()
         
-        page.html = $.html()
-      },
-    },
-  },
+  //       page.html = $.html()
+  //     },
+  //   },
+  // },
+
+  //js読み込み
+  // generate: {subFolders: true},
+  // router: {base: '/'},
+  
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
 }
