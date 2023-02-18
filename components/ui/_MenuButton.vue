@@ -1,13 +1,13 @@
 <template>
     <div class="l-menubutton">
-        <button id="OpenMenu" class="menubutton" :class="{ '-open': isOpenMenu, '-dent': isOpenMenu }"
-            v-on:click="isOpenMenu = !isOpenMenu">
+        <button id="OpenMenu" class="menubutton" :class="{ '-open': this.$store.state.common.isOpenMenu, '-dent': this.$store.state.common.isOpenMenu }"
+            v-on:click="toggleOpen">
             <div class="l-lines"><span></span><span></span><span></span></div>
         </button>
-        <div class="sidemenu-wrap" :class="{ '-open': isOpenMenu }">
-            <LayoutsSidemenu :isOpenMenu="isOpenMenu" />
+        <div class="sidemenu-wrap" :class="{ '-open': this.$store.state.common.isOpenMenu }">
+            <LayoutsSidemenu />
         </div>
-        <div id="MenuBg" :class="{ '-open': isOpenMenu }" v-on:click="isOpenMenu = false"></div>
+        <div id="MenuBg" :class="{ '-open': this.$store.state.common.isOpenMenu }" v-on:click="toggleOpen"></div>
     </div>
 </template>
 
@@ -24,13 +24,13 @@
 }
 
 .sidemenu-wrap {
+    @include cubic_ease;
     position: absolute;
     right: -6px;
     top: -6px;
     z-index: 3;
     transform: translate(100%);
     opacity: 0;
-    @include cubic_ease;
 
     &.-open {
         transform: translate(0%);
@@ -125,10 +125,14 @@
 </style>
 
 <script>
+
 export default {
     data() {
-        return {
-            isOpenMenu: '',
+        return {};
+    },
+    methods: {
+        toggleOpen() {
+            this.$store.commit("common/toggle");
         }
     }
 }

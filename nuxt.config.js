@@ -2,7 +2,7 @@ export default {
 
   //静的ホスティングに最適化
   target: 'static',
-  //ssr: false,
+  ssr: false,
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -49,6 +49,7 @@ export default {
     scss: [
       './assets/scss/**/*.scss'
     ],
+    hoistUseStatements: true
   },
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -62,6 +63,11 @@ export default {
     //https://github.com/nuxt-community/sitemap-module#sitemap-options
     '@nuxtjs/sitemap',
   ],
+
+  plugins: [
+    '~plugins/sideMenu.js'
+  ],
+
   sitemap: {
     //トップページのURL(末尾スラッシュなし)
     hostname: 'https://kotonoha.com',
@@ -108,5 +114,15 @@ export default {
   // router: {base: '/'},
   
   // Build Configuration: https://go.nuxtjs.dev/config-build
-  build: {},
+  build: {
+    loaders: {
+      scss: {
+        implementation: require('sass'),
+        // fibersをインストールした場合
+        sassOptions: {
+          fiber: require('fibers'),
+        },
+      },
+    },
+  },
 }

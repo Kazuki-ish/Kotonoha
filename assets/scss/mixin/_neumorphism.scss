@@ -1,12 +1,10 @@
 @mixin NM_convex ($highlight:-4px,$shadow:6px, $color:rgba(255, 255, 255, 0.7)){
-    background: $color;
     box-shadow:
         $highlight $highlight $highlight * -2 $color,
         $highlight * -1 $highlight * -1 $highlight * -2 $color inset,
         $shadow $shadow $shadow * 2 rgba(0, 0, 0, 0.15);
 }
 @mixin NM_convex_anim ($highlight:-4px,$shadow:6px, $color:rgba(255, 255, 255, 0.7)){
-    background: $color;
     box-shadow:
         $highlight $highlight $highlight * -2 $color,
         $highlight * -1 $highlight * -1 $highlight * -2 $color inset,

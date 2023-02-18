@@ -1,0 +1,24 @@
+@mixin absolute($left:null, $top:null, $right:null, $bottom:null){
+    position: absolute;
+    left:$left;
+    top:$top;
+    right:$right;
+    bottom:$bottom;
+}
+
+@mixin absCenter($left:50%, $top:50%, $right:null, $bottom:null){
+    position: absolute;
+    left:$left;
+    top:$top;
+    right:$right;
+    bottom:$bottom;
+    transform: translate(-50%, -50%);
+}
+
+@mixin relative($left:null, $top:null, $right:null, $bottom:null){
+    position: relative;
+    left:$left;
+    top:$top;
+    right:$right;
+    bottom:$bottom;
+}

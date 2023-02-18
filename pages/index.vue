@@ -1,26 +1,46 @@
 <template>
-  <main class="l-main">
-  <LayoutsHeader />
   <section class="c-vertical-inner" id ="js-c-scroll">
-    <div class="c-vertical"><p><span class="big">このページはトップページらしい。</span><br></p>
-      <p>小説と名のついたWebサイトのほとんどは横書きでレイアウトされています。日本で最も人気なあのサイトも、大手出版社が鳴り物入りでリリースしたあのサイトも、ギリギリ小説サイトとして使えるブログ形式のあのサイトも。新しいサイトができるたびに、作者はがっかりしました。また横書きかよ、と。それから、またラノベかよ、とも。<br></p>
-      <p>でも、それは当然なのです。なぜなら縦書きにするのは難しいから。Webは英語圏で作られたため、横書きを前提に設計されています。単純に縦横で切り替えられる問題ではないのです。ただでさえ字間の設定すらシビアな中で、縦書きに配慮することは難しいです。<br></p>
-      <p>コトノハは、それらを解決すべく生みだされました。縦書きのための機能を順次開発しながら、エリアを限定することで「縦書き小説投稿サイト」を実現しています。<br></p>
-      <p>また、今のところ、コトノハではライトノベルをジャンルとして置いていません。今後増えるかもしれませんが、ライトな読み物を扱うサイトはあふれています。そうではなく、純文学を主体とした、もっと硬派なサイトを目指していきます。</p>
-      <ModulesScroll ref="scroll"/>
+    <div class="booklist c-vertical">
+      <li class="booklist__item" v-for="book in books">
+        <h2 class="booklist__item__title">{{ book.title }}</h2>
+        <p class="booklist__item__text">{{ book.text }}</p>
+        <h2 class="booklist__item__author">{{ book.author }}</h2>
+      </li>
     </div>
+    <ModulesScroll ref="scroll"/>
   </section>
-  </main>
 </template>
 
 <script>
 export default {
   name: 'TopPage',
-  
+
   data() {
     return {
-      isScroll: true
-    };
+      pageName: 'ホーム',
+      isScroll: true,
+
+      books:[
+        {
+          title:'こころ',
+          text: '上 \n 先生と私 \n 私はその人を常に先生と呼んでいた。だからここでもただ先生と書くだけで本名は打ち明けない。これは世間を憚る遠慮というより',
+          author: '夏目漱石'
+        },
+        {
+          title:'人間失格',
+          text: '私は、その男の写真を三葉、見たことがある。 \n 一葉は、その男の、幼年時代、とでも言うべきであろうか、十歳前後かと推定される頃の写真であって、その子供が大勢の女の人にとりかこまれて',
+          author: '太宰治'
+        },
+        {
+          title:'舞姫',
+          text: '石炭をば早や積み果てつ。中等室の卓のほとりはいと静にて、熾熱燈の光の晴れがましきも徒なり。今宵は夜毎にこゝに集ひ来る骨牌仲間も「ホテル」に宿りて、舟に残れるは余一人のみなれば。',
+          author: '森鴎外'
+        },
+      ]
+    }
+  },
+  created () {
+    this.$store.commit("common/inputPageName", 'ホーム' )
   },
   mounted () {
     this.$refs.scroll.scrollSet()
@@ -30,5 +50,49 @@ export default {
 
 <style lang="scss" scoped>
 
+.booklist {
 
+  h2 {
+    @include absolute;
+    font-size: 1rem;
+    font-weight: 300;
+    margin: 0;
+  }
+  p {
+    @include NM_convex;
+    border-radius: 18px;
+    //padding:16px 16px 12px;
+    margin: 0;
+  }
+}
+
+.booklist__item {
+  @include relative;
+  text-decoration: none;
+  height: get_Vh(857);
+  width: get_Vw(373);
+  white-space: pre-wrap;
+  list-style:none;
+  padding:0 1rem;
+  z-index: -100;
+}
+.booklist__item:nth-child(even) {
+  margin-top: get_Vh(301);
+}
+.booklist__item__title {
+  top:0;
+  right: 0;
+  line-height: 1;
+}
+.booklist__item__author {
+  left: 0;
+  line-height: 1;
+  bottom:0;
+}
+
+.booklist__item__text {
+  position: relative;
+  right: -1.5rem;
+  padding:1rem;
+}
 </style>

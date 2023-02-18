@@ -1,10 +1,12 @@
 <template>
     <div class="sidemenu">
         <div class="l-sidemenu">
-            <nav id="MenuList" :class="{open:isOpenMenu}">
+            <nav id="MenuList" :class="{ open:this.$store.state.common.isOpenMenu }">
                 <ul class="sidemenu__list">
-                    <li class="sidemenu__item" v-for="menu in menus" v-if="menu.public">
-                        <nuxt-link :to="menu.href"><p class="sidemenu__item__link">{{menu.title}}</p></nuxt-link>
+                    <li class="sidemenu__item" v-for="menu in menus" v-if="menu.public" >
+                        <nuxt-link :to="menu.href">
+                            <p class="sidemenu__item__link" >{{menu.title}}</p>
+                        </nuxt-link>
                     </li>
                 </ul>
             </nav>
@@ -62,20 +64,25 @@
 export default {
     data() {
         return {
-        flag: false,
-        menus: [
-            { public: true, href: '/about/', title: 'コトノハについて' },
-            { public: true, href: '/search', title: '小説を探す' },
-            { public: true, href: '/search', title: '作家を探す' },
-            { public: true, href: '/write/', title: '作品を書く' },
-            { public: true, href: '/my/', title: '作品を管理する' },
-            { public: false, href: '/test/', title: 'テストページ' },
-        ],
+            menus: [
+                { public: true, href: '/about/', title: 'コトノハについて' },
+                { public: true, href: '/search', title: '小説を探す' },
+                { public: true, href: '/search', title: '作家を探す' },
+                { public: true, href: '/write/', title: '作品を書く' },
+                { public: true, href: '/my/', title: '作品を管理する' },
+                { public: false, href: '/test/', title: 'テストページ' },
+            ],
         }
+        
     },
-    props:{
-        isOpenMenu: [Boolean],
-    },
+    methods: {
+        closeMenu(){
+            this.$store.commit('common/close')
+        },
+        toggleOpen() {
+            this.$store.commit("common/toggle");
+        }
+    }
 }
 
 </script>

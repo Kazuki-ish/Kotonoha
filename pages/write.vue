@@ -1,14 +1,12 @@
 <template>
-  <main class="l-main">
-    <LayoutsHeader />
+  <section class="write">
     <div class="c-vertical-inner">
       <div class="c-vertical">
             <p class="writing c-vertical-input" ref="novelText" placeholder="入力ください" type="text" contenteditable="true">
             </p>
       </div>
     </div>
-    <LayoutsFooter v-on:saveText="logText" />
-  </main>
+  </section>
 </template>
 
 <style lang="scss" scoped>
@@ -30,8 +28,12 @@ export default {
 
   data() {
     return {
+      pageName: '作品を書く',
       name: '',
     }
+  },
+  created () {
+    this.$store.commit("common/inputPageName", '作品を書く' )
   },
   mounted(){
   },

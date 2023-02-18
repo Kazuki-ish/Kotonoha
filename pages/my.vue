@@ -1,12 +1,20 @@
 <template>
-  <main class="l-main">
-    <LayoutsHeader />
+  <section class="my">
     <p>mypage</p>
-  </main>
+  </section>
 </template>
 
 <script>
 export default {
-  name: 'MyPage'
+  name: 'MyPage',
+
+  data() {
+    return {
+      pageName: 'プロフィール'
+    };
+  },
+  created () {
+    this.$store.commit("common/inputPageName", 'プロフィール' )
+  },
 }
 </script>

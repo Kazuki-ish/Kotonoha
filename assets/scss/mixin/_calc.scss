@@ -1,4 +1,9 @@
 @function get_Vh($px, $height:1686){
-    $px: $height / $px;
-    @return $px & 1vh;
+    $px: calc($px / $height);
+    @return $px * 100vh;
+}
+
+@function get_Vw($px, $width:780){
+    $px: calc($px / $width);
+    @return $px * 100vw;
 }

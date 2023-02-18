@@ -1,12 +1,20 @@
 <template>
-  <main class="l-main">
-    <LayoutsHeader />
+  <section class="search">
     <p>searchpage</p>
-  </main>
+  </section>
 </template>
 
 <script>
 export default {
-  name: 'SerchPage'
+  name: 'SerchPage',
+
+  data() {
+    return {
+      pageName: '探す',
+    };
+  },
+  created () {
+    this.$store.commit("common/inputPageName", '探す' )
+  },
 }
 </script>
