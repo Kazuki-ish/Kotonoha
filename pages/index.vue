@@ -4,7 +4,9 @@
       <li class="booklist__item" v-for="book in books">
         <h2 class="booklist__item__title">{{ book.title }}</h2>
         <p class="booklist__item__text">{{ book.text }}</p>
-        <h2 class="booklist__item__author">{{ book.author }}</h2>
+        <div class="booklist__item__wrapper">
+          <h2 class="booklist__item__author">{{ book.author }}</h2>
+        </div>
       </li>
     </div>
     <ModulesScroll ref="scroll"/>
@@ -24,17 +26,20 @@ export default {
         {
           title:'こころ',
           text: '上 \n 先生と私 \n 私はその人を常に先生と呼んでいた。だからここでもただ先生と書くだけで本名は打ち明けない。これは世間を憚る遠慮というより',
-          author: '夏目漱石'
+          author: '夏目漱石',
+          link:''
         },
         {
           title:'人間失格',
           text: '私は、その男の写真を三葉、見たことがある。 \n 一葉は、その男の、幼年時代、とでも言うべきであろうか、十歳前後かと推定される頃の写真であって、その子供が大勢の女の人にとりかこまれて',
-          author: '太宰治'
+          author: '太宰治',
+          link:''
         },
         {
           title:'舞姫',
           text: '石炭をば早や積み果てつ。中等室の卓のほとりはいと静にて、熾熱燈の光の晴れがましきも徒なり。今宵は夜毎にこゝに集ひ来る骨牌仲間も「ホテル」に宿りて、舟に残れるは余一人のみなれば。',
-          author: '森鴎外'
+          author: '森鴎外',
+          link:''
         },
       ]
     }
@@ -53,7 +58,6 @@ export default {
 .booklist {
 
   h2 {
-    @include absolute;
     font-size: 1rem;
     font-weight: 300;
     margin: 0;
@@ -66,33 +70,38 @@ export default {
   }
 }
 
-.booklist__item {
+.booklist .booklist__item {
   @include relative;
-  text-decoration: none;
   height: get_Vh(857);
-  width: get_Vw(373);
+  //width: get_Vw(373);
   white-space: pre-wrap;
   list-style:none;
-  padding:0 1rem;
+  //padding:0 1.4rem;
   z-index: -100;
+
+  &:nth-child(n + 2) {
+    margin-right: 0.4rem;
+  }
 }
-.booklist__item:nth-child(even) {
+.booklist .booklist__item:nth-child(even) {
   margin-top: get_Vh(301);
 }
-.booklist__item__title {
-  top:0;
-  right: 0;
+
+.booklist .booklist__item__wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+.booklist .booklist__item__title {
   line-height: 1;
 }
-.booklist__item__author {
+.booklist .booklist__item__author {
   left: 0;
   line-height: 1;
   bottom:0;
 }
 
-.booklist__item__text {
-  position: relative;
-  right: -1.5rem;
+.booklist .booklist__item__text {
   padding:1rem;
+  margin: 0 0.2rem;
 }
 </style>
