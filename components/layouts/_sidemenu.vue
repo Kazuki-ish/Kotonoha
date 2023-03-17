@@ -1,6 +1,7 @@
 <template>
     <div class="sidemenu">
         <div class="l-sidemenu">
+            <UiLoginbutton />
             <nav id="MenuList" :class="{ open:this.$store.state.common.isOpenMenu }">
                 <ul class="sidemenu__list">
                     <li class="sidemenu__item" v-for="menu in menus" v-if="menu.public" >
@@ -9,6 +10,7 @@
                         </nuxt-link>
                     </li>
                 </ul>
+                <UiAd />
             </nav>
         </div>
     </div>
@@ -44,7 +46,7 @@
         }
     }
     .l-sidemenu{
-            @include NM_convex($color:rgba(255, 255, 255, 0.4));
+        @include NM_convex($color:rgba(255, 255, 255, 0.4));
         background-color: #f7f6eb;
         height: 100vh;
         width:70vw;
@@ -66,8 +68,8 @@ export default {
         return {
             menus: [
                 { public: true, href: '/about/', title: 'コトノハについて' },
-                { public: true, href: '/search', title: '小説を探す' },
-                { public: true, href: '/search', title: '作家を探す' },
+                { public: true, href: '/search/', title: '小説を探す' },
+                { public: true, href: '/search/', title: '作家を探す' },
                 { public: true, href: '/write/', title: '作品を書く' },
                 { public: true, href: '/my/', title: '作品を管理する' },
                 { public: false, href: '/test/', title: 'テストページ' },

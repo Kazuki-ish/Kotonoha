@@ -17,7 +17,7 @@ export default {
  }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     
     
     .l-main {
@@ -30,5 +30,9 @@ export default {
         &.-mounted {
             opacity: 1;
         }
+    }
+
+    a {
+        text-decoration: none;
     }
 </style>
