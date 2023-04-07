@@ -1,8 +1,15 @@
 <template>
     <section class="login-button">
-        <nuxt-link :to="this.link">
-            ログインする
-        </nuxt-link>
+        <div class="login-button__name" v-if="this.$store.state.user.isLogin">
+            <p class="login-button__name__user">
+                {{ this.$store.state.user.profile.name }}
+            </p>
+        </div>
+        <div class="login-button__topage" v-else>
+            <nuxt-link :to="this.link">
+                ログイン/新規登録
+            </nuxt-link>
+        </div>
     </section>
 </template>
 
@@ -17,14 +24,24 @@
         line-height: 1;
         z-index: 10;
     }
+
+    .login-button__name__user {
+        font-size: 1rem;
+    }
 </style>
 <script>
 export default {
     data() {
         return {
-            link: '/login/'
-        }
-    }
+            link: '/signup/'
+        };
+    },
+    created() {
+        // this.$store.dispatch('user/listenAuthStateChanged')
+    },
+    mounted() {
+        // console.log( this.$store.state.user );
+    },
 }
 
 </script>

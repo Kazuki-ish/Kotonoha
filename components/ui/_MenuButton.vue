@@ -7,7 +7,7 @@
         <div class="sidemenu-wrap" :class="{ '-open': this.$store.state.common.isOpenMenu }">
             <LayoutsSidemenu />
         </div>
-        <div id="MenuBg" :class="{ '-open': this.$store.state.common.isOpenMenu }" v-on:click="toggleOpen"></div>
+        <div id="MenuBg" class="menubutton__bg" :class=" {'-open': this.$store.state.common.isOpenMenu }" v-on:click="toggleOpen"></div>
     </div>
 </template>
 
@@ -104,8 +104,7 @@
         }
     }
 }
-
-#MenuBg {
+.menubutton__bg {
     @include cubic_ease;
     position: fixed;
     top: -6px;
@@ -118,7 +117,7 @@
     pointer-events: none;
 
     &.-open {
-        opacity: .2;
+        // opacity: .15;
         pointer-events: auto;
     }
 }

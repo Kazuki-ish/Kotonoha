@@ -1,5 +1,7 @@
 @charset "UTF-8";
 
+$base-color: #F4F3EA;
+
 /*全体のスタイル*/
 html {
   font-size: 16px;
@@ -13,7 +15,7 @@ body{
     border: 0;
     vertical-align: baseline;
     color:#121212;
-    background-color:#f7f6eb;
+    background-color:$base-color;
 }
 ul {
   list-style: none;

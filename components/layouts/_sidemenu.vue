@@ -25,7 +25,7 @@
         }
 
         &__item{
-            @include NM_convex($color:rgba(255, 255, 255, 0.4));
+            @include NM_convex;
             margin-left:12px;
             border-radius: 9999px 0 0 9999px;
 
@@ -46,8 +46,8 @@
         }
     }
     .l-sidemenu{
-        @include NM_convex($color:rgba(255, 255, 255, 0.4));
-        background-color: #f7f6eb;
+        @include NM_convex( $highlight:-2px);
+        background-color: $base-color;
         height: 100vh;
         width:70vw;
     }
@@ -68,10 +68,10 @@ export default {
         return {
             menus: [
                 { public: true, href: '/about/', title: 'コトノハについて' },
-                { public: true, href: '/search/', title: '小説を探す' },
-                { public: true, href: '/search/', title: '作家を探す' },
+                { public: false, href: '/search/', title: '小説を探す' },
+                { public: false, href: '/search/', title: '作家を探す' },
                 { public: true, href: '/write/', title: '作品を書く' },
-                { public: true, href: '/my/', title: '作品を管理する' },
+                { public: true, href: '/profile/', title: 'プロフィール' },
                 { public: false, href: '/test/', title: 'テストページ' },
             ],
         }

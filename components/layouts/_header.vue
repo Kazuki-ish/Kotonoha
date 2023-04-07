@@ -23,7 +23,7 @@
         letter-spacing: -0.05em;
     }
     .header-bg{
-        //@include NM_convex;
+        // @include NM_convex;
         border-radius:9999px 0 0 9999px;
         width:100%;
         height: 100%;
