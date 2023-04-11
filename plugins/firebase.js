@@ -1,7 +1,8 @@
 //環境変数の設定　初期化用のファイル
 
 import { initializeApp } from "firebase/app";
-import { getAuth, updateEmail } from "firebase/auth";
+import { getAuth } from "firebase/auth";
+import { getStorage } from 'firebase/storage';
 
 // const provider = new GoogleAuthProvider();
 
@@ -19,4 +20,4 @@ const config = {
 
 const app = initializeApp(config);
 export const auth = getAuth();
-export { updateEmail };
+export const storage = getStorage(app);

@@ -12,7 +12,7 @@ export default function ({ route, store, redirect }) {
     //   console.log(store.state.user.profile);
       
     } else {
-      if (route.name !== 'login') redirect('/login')
+    //   if (route.name !== 'login') redirect('/login')
     }
   })
 }

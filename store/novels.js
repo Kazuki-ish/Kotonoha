@@ -1,11 +1,16 @@
 export const state = () => ({
-    main: []
+    auther:'',
+    title:'',
+    body:'',
+    currentRead: '',
+    like: false,
   })
   
   export const mutations = {
     add (state, text) {
       state.list.push({
         text: text,
+        reading: '',
         done: false
       })
     },
