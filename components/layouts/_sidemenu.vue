@@ -46,7 +46,7 @@
         }
     }
     .l-sidemenu{
-        @include NM_convex( $highlight:-2px);
+        @include NM_convex_side;
         background-color: $base-color;
         height: 100vh;
         width:70vw;

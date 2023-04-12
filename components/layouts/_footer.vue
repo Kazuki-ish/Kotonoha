@@ -3,11 +3,11 @@
         '-write':$route.name == 'write', 
         '-profile':$route.name == 'profile'
     }">
-        <div class="button-list" v-if="$route.name == 'write'">
+        <!-- <div class="button-list" v-if="$route.name == 'write'">
             <button></button>
             <button @click="emitText"></button>
             <button></button>
-        </div>
+        </div> -->
         <div class="mode" v-if="$route.name == 'profile'">
             <p class="mode__txt -view" :class="{'-active': !this.$store.state.user.editProfile }">表示</p>
             <button class="mode__btn" :class="{'-off': !this.$store.state.user.editProfile }" @click="changeMode">
@@ -20,6 +20,7 @@
 
 <style lang="scss" scoped>
     footer {
+        display: none;
         bottom: 0;
         height: calc( 120 / 1686 * 100vh);
         position: absolute;
@@ -76,6 +77,7 @@
     }
     .mode__btn {
         @include cubic_ease;
+        @include NM_dent_op;
         background-color: #A3C612;
         border-radius: 9999px;
         position: absolute;
@@ -90,7 +92,7 @@
     }
     .mode__btn__cir {
         @include cubic_ease;
-        @include NM_convex;
+        @include NM_convex_op;
         background-color:$base-color;
         border-radius: 9999px;
         transform: translateX(100%);

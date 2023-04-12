@@ -2,10 +2,11 @@
   <section class="write">
     <div class="c-vertical-inner">
       <div class="c-vertical">
-            <p class="writing c-vertical-input" ref="novelText" placeholder="入力ください" type="text" contenteditable="true">
-            </p>
+        <p class="writing c-vertical-input" ref="novelTitle" placeholder="タイトルを入力" contenteditable="true"></p>
+        <p class="writing c-vertical-input" ref="novelText" placeholder="入力ください" contenteditable="true"></p>
       </div>
     </div>
+    <button @click="saveNovel">Save Novel</button>
   </section>
 </template>
 
@@ -46,7 +47,24 @@ export default {
       else{
         console.log('text is nothing');
       }
-    }
+    },
+    async saveNovel() {
+      const title = this.$refs.novelTitle.innerText;
+      const body = this.$refs.novelText.innerText;
+
+      if (!title || !body) {
+        console.log("Title or body is missing");
+        return;
+      }
+
+      await this.$store.dispatch("novels/addNovel", {
+        uid: this.$store.state.user.uid,
+        title,
+        body
+      });
+
+      console.log("Novel saved successfully");
+    },
   }
 }
 </script>
