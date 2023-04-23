@@ -21,7 +21,7 @@ export default {
         scrollSet () {
             const content = document.getElementById('js-c-scroll');
             const scrollWidth = content.scrollWidth;
-            console.log(scrollWidth);
+            // console.log(scrollWidth);
 
             content.scrollLeft = scrollWidth;
             content.classList.add('-mounted');

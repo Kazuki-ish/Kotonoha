@@ -1,8 +1,10 @@
 import { auth } from '~/plugins/firebase'
 import { db } from '~/plugins/firebase'
-import { collection, addDoc, query, where, getDocs , setDoc, doc} from 'firebase/firestore'
+import { collection, addDoc, query, where, getDocs, getDoc, setDoc, doc} from 'firebase/firestore'
 
 export const state = () => ({
+  userNovels: [],
+  currentNovel: null,
   novel:{},
   title: '',
   body: '',
@@ -13,8 +15,17 @@ export const state = () => ({
 })
 
 export const mutations = {
+  setUserNovels(state, novels) {
+    state.userNovels = novels;
+  },
+  setCurrentNovel(state, novel) {
+    state.currentNovel = novel;
+  },
+  setTitle(state, title) {
+    state.title = title;
+  },
   setBody(state, body) {
-    state.body = body
+    state.body = body;
   },
   setNovelID(state, novelID) {
     state.novelID = novelID
@@ -37,17 +48,52 @@ export const mutations = {
 }
 
 export const actions = {
+  async fetchUserNovels({ commit }, userId) {
+    const userDocRef = doc(db, 'novels', userId);
+    const userDoc = await getDoc(userDocRef);
+  
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      const userNovels = [];
+  
+      for (const title in userData.novel) {
+        userNovels.push({
+          title: title,
+          ...userData.novel[title],
+        });
+      }
+  
+      commit('setUserNovels', userNovels);
+    } else {
+      commit('setUserNovels', []);
+    }
+  },  
+  
+  async fetchNovel({ commit }, novelId) {
+    const novelDocRef = doc(db, 'novels', novelId);
+    const novelSnapshot = await getDoc(novelDocRef);
+
+    if (novelSnapshot.exists()) {
+      const novelData = {
+        id: novelSnapshot.id,
+        ...novelSnapshot.data(),
+      };
+      commit('setCurrentNovel', novelData);
+    } else {
+      console.error('No such novel found!');
+    }
+  },
   async addNovel({ commit }, { uid, title, body }) {
     const novelData = {
       title,
       body
     };
   
-    const userDocRef = doc(db, 'novel', uid);
+    const userDocRef = doc(db, 'novels', uid);
     await setDoc(userDocRef, { novel: { [title]: novelData } }, { merge: true });
   
     commit('setNovel', { uid, title, body });
-  },
+  },  
   async fetchLikedNovels({ commit }, uid) {
     const q = query(collection(db, 'likes'), where('uid', '==', uid))
     const querySnapshot = await getDocs(q)

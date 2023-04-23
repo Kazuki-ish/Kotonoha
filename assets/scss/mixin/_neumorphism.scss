@@ -18,14 +18,14 @@ $blur: 4px;
 }
 @mixin NM_convex_op ( $highlight:-2px,$shadow:4px, $blur:$blur ){
     box-shadow:
-        $highlight $highlight $blur -2 $NM_op-hl,
+        $highlight $highlight $blur $NM_op-hl,
         $highlight * -1 $highlight * -1 $highlight * -2 $NM_op-hl inset,
         $shadow $shadow $shadow * 2 $NM_op-sh;
 }
-@mixin NM_convex_anim ( $highlight:-2px,$shadow:4px ){
+@mixin NM_convex_anim ( $highlight:-4px,$shadow:4px ){
     box-shadow:
         $highlight $highlight $blur $NM_highlight,
-        $highlight * -1 $highlight * -1 $blur $NM_highlight inset,
+        // $highlight * -1 $highlight * -1 $blur $NM_highlight inset,
         $shadow $shadow $blur $NM_shadow,
         6px 6px 12px transparent inset;
 }

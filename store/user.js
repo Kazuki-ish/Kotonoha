@@ -8,6 +8,7 @@ import { ref as fbRef, uploadBytes, getDownloadURL, deleteObject } from "firebas
 export const state = () => ({
   isLogin: false,
   editProfile: true,
+  editNovel: true,
   //   token: localStorage.getItem('token') || '',
   username: '',
   uid: '',
@@ -26,7 +27,9 @@ export const mutations = {
   setUser(state, user) {
     state.isLogin = true
     state.icon = user.photoURL
-    state.uid = user.uid
+    if(user.uid) {
+        state.uid = user.uid
+    }
     state.profile.name = user.displayName
     state.profile.mail = user.email
   },
@@ -53,10 +56,14 @@ export const mutations = {
     state.editProfile = !state.editProfile
     // console.log(state.editProfile);
   },
+  toggleNovelMode(state) {
+    state.editNovel = !state.editNovel
+    // console.log(state.editProfile);
+  },
 }
 
 export const actions = {
-  gotUser({ commit }, user) {
+  gotUser({ commit, state }, user) {
     commit('setUser', user)
   },
   //   logout({ commit }) {

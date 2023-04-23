@@ -9,6 +9,7 @@ export default function ({ route, store, redirect }) {
       store.dispatch('user/gotUser', user)
     //   console.log(user);
     //   console.log(store.state.user);
+    // console.log(store.state.user.uid);
     //   console.log(store.state.user.profile);
       
     } else {

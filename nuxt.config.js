@@ -36,7 +36,9 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '~/plugins/firebase.js'
+    '~/plugins/firebase.js',
+    '~plugins/sideMenu.js',
+    '~/plugins/dompurify.js',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -63,10 +65,6 @@ export default {
     //Auto build sitemap.
     //https://github.com/nuxt-community/sitemap-module#sitemap-options
     '@nuxtjs/sitemap',
-  ],
-
-  plugins: [
-    '~plugins/sideMenu.js'
   ],
 
   router: {

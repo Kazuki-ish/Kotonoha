@@ -2,21 +2,25 @@
   <section class="write">
     <div class="c-vertical-inner">
       <div class="c-vertical">
-        <p class="writing c-vertical-input" ref="novelTitle" placeholder="タイトルを入力" contenteditable="true"></p>
-        <p class="writing c-vertical-input" ref="novelText" placeholder="入力ください" contenteditable="true"></p>
+        <p class="write__input -title c-vertical-input" ref="novelTitle" @input="updateTitle" contenteditable="true">タイトル
+        </p>
+        <p class="write__input -body c-vertical-input" ref="novelText" @input="updateBody" contenteditable="true">本文</p>
       </div>
     </div>
-    <button @click="saveNovel">Save Novel</button>
   </section>
 </template>
 
 <style lang="scss" scoped>
-
-.writing {
+.write__input {
   @include NM_dent_anim;
   border-radius: 24px;
+  margin-top: 8px;
   min-height: 50%;
-  padding:8px 8px 8px 80vw;
+  padding: 8px 8px 8px 80vw;
+
+  &.-title {
+    padding-left: 8px;
+  }
 
 }
 </style>
@@ -33,37 +37,47 @@ export default {
       name: '',
     }
   },
-  created () {
-    this.$store.commit("common/inputPageName", '作品を書く' )
+  created() {
+    this.$store.commit("common/inputPageName", '作品を書く')
   },
-  mounted(){
+  mounted() {
   },
-  methods:{
+  methods: {
     logText() {
       this.text = this.$refs.novelText.innerText
-      if (this.text){
+      if (this.text) {
         console.log(this.text);
       }
-      else{
+      else {
         console.log('text is nothing');
       }
     },
-    async saveNovel() {
-      const title = this.$refs.novelTitle.innerText;
-      const body = this.$refs.novelText.innerText;
+    addBr(txt) {
+      const rawTxt = txt;
+      const escapedTxt = rawTxt
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+      let formattedTxt = escapedTxt.replace(/(?:\r\n|\r|\n)/g, "<br>");
 
-      if (!title || !body) {
-        console.log("Title or body is missing");
-        return;
+      // 最後の <br> タグを削除
+      if (formattedTxt.endsWith("<br>")) {
+        formattedTxt = formattedTxt.slice(0, -4);
       }
 
-      await this.$store.dispatch("novels/addNovel", {
-        uid: this.$store.state.user.uid,
-        title,
-        body
-      });
-
-      console.log("Novel saved successfully");
+      return formattedTxt;
+    },
+    updateTitle() {
+      const fmTxt = this.addBr(this.$refs.novelTitle.innerText);
+      console.log(fmTxt);
+      this.$store.commit("novels/setTitle", fmTxt);
+    },
+    updateBody() {
+      const fmTxt = this.addBr(this.$refs.novelText.innerText);
+      console.log(fmTxt);
+      this.$store.commit("novels/setBody", fmTxt);
     },
   }
 }
