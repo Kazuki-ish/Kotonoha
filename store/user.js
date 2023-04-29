@@ -8,7 +8,7 @@ import { ref as fbRef, uploadBytes, getDownloadURL, deleteObject } from "firebas
 export const state = () => ({
   isLogin: false,
   editProfile: true,
-  editNovel: true,
+  editNovel: false,
   //   token: localStorage.getItem('token') || '',
   username: '',
   uid: '',
@@ -58,6 +58,15 @@ export const mutations = {
   },
   toggleNovelMode(state) {
     state.editNovel = !state.editNovel
+    // console.log(state.editProfile);
+  },
+  setMode(state, pageName) {
+    if (pageName == 'write') {
+        state.editNovel = true;
+    }
+    else {
+        state.editNovel = false;
+    }
     // console.log(state.editProfile);
   },
 }

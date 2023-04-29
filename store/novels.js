@@ -39,12 +39,22 @@ export const mutations = {
   setBookmarkNum(state, bookmarkNum) {
     state.bookmarkNum = bookmarkNum
   },
-  setNovel(state, { uid, title, body }) {
+  setNovel(state, { uid, title, body, novelSlug }) {
     if (!state.novel[uid]) {
       state.novel[uid] = {};
     }
-    state.novel[uid][title] = { body };
+    state.novel[uid][novelSlug] = { title, body }; 
   },
+}
+
+// addNovel内で使用
+function generateUniqueSlug(title) {
+  const slug = title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  const uniqueId = Date.now().toString(36);
+  return `${slug}-${uniqueId}`;
 }
 
 export const actions = {
@@ -53,13 +63,14 @@ export const actions = {
     const userDoc = await getDoc(userDocRef);
   
     if (userDoc.exists()) {
+      console.log(userDoc)
       const userData = userDoc.data();
       const userNovels = [];
   
-      for (const title in userData.novel) {
+      for (const novelSlug in userData.novel) {
         userNovels.push({
-          title: title,
-          ...userData.novel[title],
+          id: novelSlug,
+          ...userData.novel[novelSlug],
         });
       }
   
@@ -67,33 +78,33 @@ export const actions = {
     } else {
       commit('setUserNovels', []);
     }
-  },  
-  
-  async fetchNovel({ commit }, novelId) {
-    const novelDocRef = doc(db, 'novels', novelId);
-    const novelSnapshot = await getDoc(novelDocRef);
-
-    if (novelSnapshot.exists()) {
-      const novelData = {
-        id: novelSnapshot.id,
-        ...novelSnapshot.data(),
-      };
-      commit('setCurrentNovel', novelData);
-    } else {
-      console.error('No such novel found!');
-    }
   },
+  // async fetchNovel({ commit }, novelId) {
+  //   const novelDocRef = doc(db, 'novels', novelId);
+  //   const novelSnapshot = await getDoc(novelDocRef);
+
+  //   if (novelSnapshot.exists()) {
+  //     const novelData = {
+  //       id: novelSnapshot.id,
+  //       ...novelSnapshot.data(),
+  //     };
+  //     commit('setCurrentNovel', novelData);
+  //   } else {
+  //     console.error('No such novel found!');
+  //   }
+  // },
   async addNovel({ commit }, { uid, title, body }) {
     const novelData = {
       title,
-      body
+      body,
     };
-  
+
+    const novelSlug = generateUniqueSlug(title);
     const userDocRef = doc(db, 'novels', uid);
-    await setDoc(userDocRef, { novel: { [title]: novelData } }, { merge: true });
-  
-    commit('setNovel', { uid, title, body });
-  },  
+    await setDoc(userDocRef, { novel: { [novelSlug]: novelData } }, { merge: true });
+
+    commit('setNovel', { uid, title, body, slug: novelSlug.slug }); 
+  },
   async fetchLikedNovels({ commit }, uid) {
     const q = query(collection(db, 'likes'), where('uid', '==', uid))
     const querySnapshot = await getDocs(q)

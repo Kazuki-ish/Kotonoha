@@ -81,7 +81,6 @@ export default {
   white-space: pre-wrap;
   list-style:none;
   //padding:0 1.4rem;
-  z-index: -100;
 
   &:nth-child(n + 2) {
     margin-right: 0.4rem;

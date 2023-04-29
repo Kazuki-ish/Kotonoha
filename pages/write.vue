@@ -39,6 +39,7 @@ export default {
   },
   created() {
     this.$store.commit("common/inputPageName", '作品を書く')
+    this.$store.commit('user/setMode', this.$route.name)
   },
   mounted() {
   },
@@ -71,12 +72,12 @@ export default {
     },
     updateTitle() {
       const fmTxt = this.addBr(this.$refs.novelTitle.innerText);
-      console.log(fmTxt);
+      // console.log(fmTxt);
       this.$store.commit("novels/setTitle", fmTxt);
     },
     updateBody() {
       const fmTxt = this.addBr(this.$refs.novelText.innerText);
-      console.log(fmTxt);
+      // console.log(fmTxt);
       this.$store.commit("novels/setBody", fmTxt);
     },
   }

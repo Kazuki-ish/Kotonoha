@@ -17,6 +17,7 @@
     top: 50%;
     right: 6px;
     transform: translateY(-50%);
+    z-index: 10;
 
     .menubutton {
         z-index: 100;

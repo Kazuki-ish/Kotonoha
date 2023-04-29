@@ -14,7 +14,7 @@
             </button>
             <p class="mode__txt -edit" :class="{ '-active': this.$store.state.user.editProfile }">編集</p>
         </div>
-        
+
         <div class="mode" v-if="$route.name == 'write' || $route.name == 'novelList'">
             <p class="mode__txt -view" :class="{ '-active': !this.$store.state.user.editNovel }">表示</p>
             <button class="mode__btn" :class="{ '-off': !this.$store.state.user.editNovel }" @click="changeNovelMode">
@@ -31,7 +31,7 @@ $btn: 32px;
 
 footer {
     bottom: 0;
-    height: calc(120 / 1686 * 100vh);
+    min-height: calc(120 / 1686 * 100vh);
     position: absolute;
     pointer-events: auto;
     width: 100%;
@@ -46,9 +46,11 @@ footer {
 }
 
 .button-list {
+    @include absolute(50%, -62px);
     display: flex;
     justify-content: center;
     margin-top: calc(12 / 1686 * 100vh);
+    transform: translateX(-50%);
 
     button {
         @include NM_convex;
@@ -74,11 +76,11 @@ footer {
     width: 50%;
 
     &.-view {
-        padding-right: $btn;
+        margin-right: $btn;
     }
 
     &.-edit {
-        padding-left: $btn;
+        margin-left: $btn;
     }
 
     &.-active {
@@ -143,7 +145,7 @@ export default {
         },
         changeNovelMode() {
             this.$store.commit('user/toggleNovelMode')
-            // console.log(this.$store.state.user.editProfile)
+            // console.log(this.$store.state.user.editNovel)
         },
         async saveNovel() {
             const title = this.$store.state.novels.title;
@@ -168,11 +170,13 @@ export default {
         novelMode(beforeToggle, afterToggle) {
             if (afterToggle == true) {
                 this.$router.push('/novellist');
+                this.$store.commit("common/inputPageName", '書いた小説')
             }
             else {
                 this.$router.push('/write');
+                this.$store.commit("common/inputPageName", '小説を書く')
             }
-        }
+        },
     },
 }
 </script>

@@ -38,7 +38,7 @@ export default {
   created() {
     this.$store.commit("common/inputPageName", 'コトノハについて')
   },
-  mounted() {//DOMマウント時に実行
+  mounted() {//DOMマウント後に実行
 
     //右端までスクロールする
     this.$refs.scroll.scrollSet()
