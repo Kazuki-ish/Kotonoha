@@ -1,5 +1,5 @@
 <template>
-    <section class="c-vertical-inner" id="js-c-scroll">
+    <section class="c-vertical-inner" id="js-c-scroll" ref="scrollContent">
         <div class="c-vertical" v-if="novel">
             <h1 v-html="novel.title"></h1>
             <p v-html="novel.body"></p>
@@ -39,8 +39,10 @@ export default {
     },
     mounted() {//DOMマウント後に実行
 
+        const refs = this.$refs.scrollContent;
+
         //右端までスクロールする
-        this.$refs.scroll.scrollSet()
+        this.$refs.scroll.scrollSet(refs)
     },
 };
 </script>

@@ -170,11 +170,11 @@ export default {
         novelMode(beforeToggle, afterToggle) {
             if (afterToggle == true) {
                 this.$router.push('/novellist');
-                this.$store.commit("common/inputPageName", '書いた小説')
+                this.$store.commit("common/inputPageName", '書いた作品')
             }
             else {
                 this.$router.push('/write');
-                this.$store.commit("common/inputPageName", '小説を書く')
+                this.$store.commit("common/inputPageName", '作品を書く')
             }
         },
     },

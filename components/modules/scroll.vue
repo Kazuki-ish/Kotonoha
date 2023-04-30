@@ -18,8 +18,9 @@ export default {
     mounted(){
     },
     methods: {
-        scrollSet () {
-            const content = document.getElementById('js-c-scroll');
+        scrollSet (refs) {
+            
+            const content = refs ? refs : document.getElementById("js-c-scroll");
             const scrollWidth = content.scrollWidth;
             // console.log(scrollWidth);
 

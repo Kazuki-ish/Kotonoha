@@ -3,7 +3,7 @@
         <ul class="booklist c-vertical">
             <li class="booklist__item" v-for="novel in novels" :key="novel.id">
                 <h1 class="booklist__item__title" v-html="novel.title"></h1>
-                <nuxt-link :to="`${uid}/${novel.id}`">
+                <nuxt-link :to="`/${uid}/${novel.id}`">
                     <p class="booklist__item__text" v-html="novel.body"></p>
                 </nuxt-link>
             </li>
@@ -108,6 +108,13 @@ export default {
 
         //右端までスクロールする
         this.$refs.scroll.scrollSet()
+    },
+    watch: {
+        novelMode(beforeToggle, afterToggle) {
+            if (afterToggle == true) {
+                this.$refs.scroll.scrollSet()
+            }
+        }
     },
 };
 </script>
