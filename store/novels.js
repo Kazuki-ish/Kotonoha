@@ -1,31 +1,40 @@
 import { auth } from '~/plugins/firebase'
 import { db } from '~/plugins/firebase'
-import { collection, addDoc, query, where, getDocs, getDoc, setDoc, doc} from 'firebase/firestore'
+import {
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+  getDoc,
+  setDoc,
+  doc,
+} from 'firebase/firestore'
 
 export const state = () => ({
   userNovels: [],
   currentNovel: null,
-  novel:{},
+  novel: {},
   title: '',
   body: '',
   novelID: [],
   likedID: [],
   bookmarkID: [],
-  bookmarkNum: []
+  bookmarkNum: [],
 })
 
 export const mutations = {
   setUserNovels(state, novels) {
-    state.userNovels = novels;
+    state.userNovels = novels
   },
   setCurrentNovel(state, novel) {
-    state.currentNovel = novel;
+    state.currentNovel = novel
   },
   setTitle(state, title) {
-    state.title = title;
+    state.title = title
   },
   setBody(state, body) {
-    state.body = body;
+    state.body = body
   },
   setNovelID(state, novelID) {
     state.novelID = novelID
@@ -41,9 +50,9 @@ export const mutations = {
   },
   setNovel(state, { uid, title, body, novelSlug }) {
     if (!state.novel[uid]) {
-      state.novel[uid] = {};
+      state.novel[uid] = {}
     }
-    state.novel[uid][novelSlug] = { title, body }; 
+    state.novel[uid][novelSlug] = { title, body }
   },
 }
 
@@ -52,25 +61,49 @@ function generateUniqueSlug(title) {
   const slug = title
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '');
-  const uniqueId = Date.now().toString(36);
-  return `${slug}-${uniqueId}`;
+    .replace(/^-|-$/g, '')
+  const uniqueId = Date.now().toString(36)
+  return `${slug}-${uniqueId}`
 }
 
 export const actions = {
-  async fetchUserNovels({ commit }, userId) {
-    const userDocRef = doc(db, 'novels', userId);
-    const userDoc = await getDoc(userDocRef);
-  
+  async fetchSingleNovel({ commit }, { uid, slug }) {
+    const userDocRef = doc(db, 'novels', uid)
+    const userDoc = await getDoc(userDocRef)
+
     if (userDoc.exists()) {
-      console.log(userDoc)
+      const userData = userDoc.data()
+
+      if (userData.novel && userData.novel[slug]) {
+        return {
+          id: slug,
+          ...userData.novel[slug],
+        }
+      }
+    }
+    return null
+  },
+  async fetchUserNovels({ commit }, userId) {
+    const userDocRef = doc(db, 'novels', userId)
+    const userDoc = await getDoc(userDocRef)
+
+    if (userDoc.exists()) {
       const userData = userDoc.data();
       const userNovels = [];
   
       for (const novelSlug in userData.novel) {
+        let novelBody = userData.novel[novelSlug].body;
+        
+        // 144字以上かチェック
+        if (novelBody.length > 144) {
+          // ...を追加
+          novelBody = novelBody.substring(0, 144) + '......';
+        }
+  
         userNovels.push({
           id: novelSlug,
           ...userData.novel[novelSlug],
+          body: novelBody, // Use the modified novelBody here
         });
       }
   
@@ -97,13 +130,17 @@ export const actions = {
     const novelData = {
       title,
       body,
-    };
+    }
 
-    const novelSlug = generateUniqueSlug(title);
-    const userDocRef = doc(db, 'novels', uid);
-    await setDoc(userDocRef, { novel: { [novelSlug]: novelData } }, { merge: true });
+    const novelSlug = generateUniqueSlug(title)
+    const userDocRef = doc(db, 'novels', uid)
+    await setDoc(
+      userDocRef,
+      { novel: { [novelSlug]: novelData } },
+      { merge: true }
+    )
 
-    commit('setNovel', { uid, title, body, slug: novelSlug.slug }); 
+    commit('setNovel', { uid, title, body, slug: novelSlug.slug })
   },
   async fetchLikedNovels({ commit }, uid) {
     const q = query(collection(db, 'likes'), where('uid', '==', uid))
@@ -126,5 +163,5 @@ export const actions = {
     })
     commit('setBookmarkID', bookmarkID)
     commit('setBookmarkNum', bookmarkNum)
-  }
+  },
 }

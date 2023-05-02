@@ -13,7 +13,6 @@
         </div>
       </li>
     </div>
-    <ModulesScroll ref="scroll"/>
   </section>
 </template>
 
@@ -52,7 +51,7 @@ export default {
     this.$store.commit("common/inputPageName", 'ホーム' )
   },
   mounted () {
-    this.$refs.scroll.scrollSet()
+    this.$scrollSet()
   },
 }
 </script>

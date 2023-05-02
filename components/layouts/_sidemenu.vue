@@ -68,10 +68,10 @@ export default {
         return {
             menus: [
                 { public: true, href: '/about/', title: 'コトノハについて' },
-                { public: false, href: '/search/', title: '小説を探す' },
+                { public: false, href: '/search/', title: '作品を探す' },
                 { public: false, href: '/search/', title: '作家を探す' },
-                { public: true, href: '/write/', title: '小説を書く' },
-                { public: true, href: '/novellist/', title: '書いた小説' },
+                { public: true, href: '/write/', title: '作品を書く' },
+                { public: false, href: '/${uid}/', title: '書いた作品' },
                 { public: true, href: '/profile/', title: 'プロフィール' },
                 { public: false, href: '/test/', title: 'テストページ' },
             ],

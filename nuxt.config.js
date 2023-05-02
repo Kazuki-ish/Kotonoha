@@ -39,6 +39,7 @@ export default {
     '~/plugins/firebase.js',
     '~plugins/sideMenu.js',
     '~/plugins/dompurify.js',
+    '~/plugins/scrollSet.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

@@ -1,6 +1,8 @@
 <template>
     <section class="c-vertical-inner" id="js-c-scroll">
         <ul class="booklist c-vertical">
+        <UiIcon />
+        <h2 class="booklist__display-name">{{ this.$store.state.user.profile.name }}</h2>
             <li class="booklist__item" v-for="novel in novels" :key="novel.id">
                 <h1 class="booklist__item__title" v-html="novel.title"></h1>
                 <nuxt-link :to="`/${uid}/${novel.id}`">
@@ -19,6 +21,7 @@
         font-size: 1rem;
         font-weight: 300;
         margin: 0;
+        display: block;
     }
 
     p {
@@ -27,6 +30,13 @@
         //padding:16px 16px 12px;
         margin: 0;
     }
+}
+
+.booklist__display-name {
+    position: relative;
+    top: 24px;
+    font-size: 24px;
+    font-weight: 300;
 }
 
 .booklist .booklist__item {
@@ -39,6 +49,9 @@
 
     &:nth-child(n + 2) {
         margin-right: 0.4rem;
+    }
+    &:first-child {
+        margin-right: 1rem;
     }
 }
 
@@ -69,6 +82,12 @@
   
 <script>
 export default {
+    data() {
+        return {
+            displayName: this.$store.state.user.profile.name,
+            displayIcon: this.$store.state.user.icon,
+        }
+    },
     computed: {
         // Vuex ストアから小説データを取得
         novels() {
@@ -77,13 +96,19 @@ export default {
         uid() {
             return this.$store.state.user.uid;
         },
+        watchMode() {
+            return this.$store.state.user.editNovel;
+        },
     },
     async fetch() {
         this.fetchNovels()
+        this.fetchUserNovels()
+        // this.setUser()
     },
     created() {
         this.$store.commit('user/setMode', this.$route.name)
         // console.log(this.$store.state.user.editNovel)
+        console.log(this.displayName)
     },
     watch: {
         uid(newUid, oldUid) {
@@ -94,27 +119,28 @@ export default {
                 }
             }
         },
+        watchMode(beforeToggle, afterToggle) {
+            if (afterToggle == true) {
+                this.$refs.scroll.scrollSet()
+            }
+        }
     },
     methods: {
         async fetchUserNovels() {
             await this.$store.dispatch('novels/fetchUserNovels', this.uid);
+            this.$refs.scroll.scrollSet()
         },
         fetchNovels() {
             this.$store.commit("common/inputPageName", '書いた小説')
-            // this.$store.commit("user/setMode", 'novelList')
-        }
+        },
+        // async setUser() {
+        //     this.$store.dispatch('user/setUserFromAuth')
+        // },
     },
     mounted() {//DOMマウント後に実行
 
         //右端までスクロールする
         this.$refs.scroll.scrollSet()
-    },
-    watch: {
-        novelMode(beforeToggle, afterToggle) {
-            if (afterToggle == true) {
-                this.$refs.scroll.scrollSet()
-            }
-        }
     },
 };
 </script>

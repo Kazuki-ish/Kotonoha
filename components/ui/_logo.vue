@@ -1,5 +1,7 @@
 <template>
-    <h1 class="maintitle"><nuxt-link to="/">コトノハ</nuxt-link></h1>
+    <div class="logo">
+        <h1 class="maintitle"><nuxt-link to="/">コトノハ</nuxt-link></h1><span class="prefix">アルファ</span>
+    </div>
 </template>
 
 <style lang="scss" scoped>
@@ -20,6 +22,9 @@
             color:black;
         }
     }
+    .prefix {
+            font-size: 10px;
+        }
 </style>
 
 <script>

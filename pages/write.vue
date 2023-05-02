@@ -2,9 +2,10 @@
   <section class="write">
     <div class="c-vertical-inner">
       <div class="c-vertical">
-        <p class="write__input -title c-vertical-input" ref="novelTitle" @input="updateTitle" contenteditable="true">タイトル
-        </p>
-        <p class="write__input -body c-vertical-input" ref="novelText" @input="updateBody" contenteditable="true">本文</p>
+        <p class="write__txt -title">タイトル</p>
+        <p class="write__input -title c-vertical-input" ref="novelTitle" @input="updateTitle" contenteditable="true"></p>
+        <p class="write__txt -body">本文</p>
+        <p class="write__input -body c-vertical-input" ref="novelText" @input="updateBody" contenteditable="true"></p>
       </div>
     </div>
   </section>
@@ -22,6 +23,14 @@
     padding-left: 8px;
   }
 
+}
+.write__txt {
+  display: block;
+  margin-left: 0.5rem;
+
+  &.-body {
+    margin-right: 2rem;
+  }
 }
 </style>
 

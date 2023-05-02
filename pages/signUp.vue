@@ -6,8 +6,8 @@
                 <input class="sign-up__mail__input" v-model="email" type="email" placeholder="メールアドレス" />
                 <p class="sign-up__mail__txt">パスワード</p>
                 <input class="sign-up__mail__input" v-model="password" type="password" placeholder="パスワード" />
-                <button class="sign-up__mail__btn -login" @click="signUpWithEmail(email, password)">ログインする(仮)</button>
-                <button class="sign-up__mail__btn -sign-up" @click="signUpWithEmail(email, password)">新しく登録する</button>
+                <button class="sign-up__mail__btn -login" @click="signIn(email, password)">ログインする</button>
+                <button class="sign-up__mail__btn -sign-up" @click="signUp(email, password)">新しく登録する</button>
             </div>
             <div class="sign-up__google">
                 <button @click="signInWithGoogle" class="sign-up__google__btn">
@@ -52,7 +52,7 @@
 
 .sign-up__mail__txt {
     &:nth-child(n + 2) {
-        margin-top:24px;
+        margin-top: 24px;
     }
 }
 
@@ -66,9 +66,6 @@
 </style>
  
 <script>
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '~/plugins/firebase'
 
 export default {
     data() {
@@ -85,32 +82,16 @@ export default {
         }
     },
     methods: {
-        async signInWithGoogle() {
-            try {
-                const provider = new GoogleAuthProvider();
-                const result = await signInWithPopup(auth, provider);
-                // 成功したら、result.user にユーザー情報が格納されています
-                console.log('User:', result.user);
-            } catch (error) {
-                console.error('Error:', error);
-            }
+        async signIn(email, password) {
+            this.$store.dispatch('user/signIn', { email, password })
+            this.$router.push('/');
         },
-
-        async signUpWithEmail(email, password) {
-            try {
-                await createUserWithEmailAndPassword(auth, email, password);
-            }
-            catch (error) {
-                console.error(error.message);
-            }
-            //登録後のログイン処理
-            try {
-                await signInWithEmailAndPassword(auth, email, password);
-                this.$router.push('/');
-            }
-            catch (error) {
-                console.error(error.message);
-            }
+        async signInWithGoogle() {
+            this.$store.dispatch('user/signUpWithGoogle', )
+        },
+        async signUp(email, password) {
+            this.$store.dispatch('user/signUpWithEmail', { email, password })
+            this.$router.push('/');
         },
     }
 }

@@ -1,9 +1,15 @@
 //状態管理のみを行うstore
 import { auth } from '~/plugins/firebase'
-import { updateEmail, updateProfile, GoogleAuthProvider } from 'firebase/auth'
+import { signInWithPopup, updateEmail, updateProfile, GoogleAuthProvider } from 'firebase/auth'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
 
 import { storage } from '~/plugins/firebase'
-import { ref as fbRef, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+import {
+  ref as fbRef,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from 'firebase/storage'
 
 export const state = () => ({
   isLogin: false,
@@ -27,8 +33,8 @@ export const mutations = {
   setUser(state, user) {
     state.isLogin = true
     state.icon = user.photoURL
-    if(user.uid) {
-        state.uid = user.uid
+    if (user.uid) {
+      state.uid = user.uid
     }
     state.profile.name = user.displayName
     state.profile.mail = user.email
@@ -61,25 +67,73 @@ export const mutations = {
     // console.log(state.editProfile);
   },
   setMode(state, pageName) {
-    if (pageName == 'write') {
-        state.editNovel = true;
+    if (pageName == 'profile') {
+      state.editProfile = true
+    } else {
+      state.editProfile = false
     }
-    else {
-        state.editNovel = false;
-    }
+    
     // console.log(state.editProfile);
   },
 }
 
 export const actions = {
+
+  async setUserFromAuth (commit,) {
+    const user = auth.currentUser;
+    commit('setUser', user);
+  },
+  async signInWithGoogle() {
+    try {
+        const provider = new GoogleAuthProvider();
+        const result = await signInWithPopup(auth, provider);
+        // 成功したら、result.user にユーザー情報が格納されています
+        console.log('User:', result.user);
+    } catch (error) {
+        console.error('Error:', error);
+    }
+},
+
+  async signUpWithEmail({ commit, dispatch }, { email, password }) {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+      // メールアドレス確認メールを送信
+      if (userCredential.user) {
+        await sendEmailVerification(auth.currentUser);
+        console.log('Verification email sent.');
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+
+    // 登録後のログイン処理
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      commit('setUser', auth.currentUser);
+    } catch (error) {
+      console.error(error.message);
+    }
+  },
+  async signIn(commit, {email, password}){
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      commit('setUser', auth.currentUser);
+    } catch (error) {
+      console.error(error.message);
+    }
+  },
   gotUser({ commit, state }, user) {
     commit('setUser', user)
   },
-  //   logout({ commit }) {
-  //     auth.signOut().then(() => {
-  //       commit(false)
-  //     })
-  //   },
+  async logOut({ commit }) {
+    try {
+      await auth.signOut();
+      commit('setUser', false);
+    } catch (error) {
+      console.error('Error during sign out:', error);
+    }
+  },
 
   async update({ commit }, updatedValues) {
     const user = auth.currentUser //ユーザーインスタンスをfirebaseから取得
@@ -108,7 +162,7 @@ export const actions = {
       }
 
       commit('setUser', user)
-      commit('log')
+      // commit('log')
     }
   },
   async resizeImage({ commit }, { file, maxWidth, maxHeight }) {
@@ -150,11 +204,11 @@ export const actions = {
       const fileExtension = imageFile.name.split('.').pop()
 
       // 現在のアイコン画像がある場合、削除
-    //   const currentIconURL = this.state.user.icon
-    //   if (currentIconURL) {
-    //     const currentStorageRef = fbRef(storage, currentIconURL)
-    //     await deleteObject(currentStorageRef)
-    //   }
+      //   const currentIconURL = this.state.user.icon
+      //   if (currentIconURL) {
+      //     const currentStorageRef = fbRef(storage, currentIconURL)
+      //     await deleteObject(currentStorageRef)
+      //   }
 
       // ユーザーのUIDをパスに含めます
       const filePath = `user-icons/${uid}/${Date.now()}.${fileExtension}`
@@ -163,7 +217,7 @@ export const actions = {
       await uploadBytes(storageRef, resizedImage)
 
       const downloadURL = await getDownloadURL(storageRef)
-    //   console.log('Image URL:', downloadURL)
+      //   console.log('Image URL:', downloadURL)
 
       // プロフィールのiconを更新
       const user = auth.currentUser

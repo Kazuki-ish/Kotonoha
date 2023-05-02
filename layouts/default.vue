@@ -18,8 +18,6 @@ export default {
 </script>
 
 <style lang="scss">
-    
-    
     .l-main {
         @include cubic_ease;
         height: 100svh;
@@ -33,6 +31,17 @@ export default {
     }
 
     a {
+        color:black;
         text-decoration: none;
     }
+
+    #js-c-scroll{
+    @include cubic_ease;
+    // visibility: hidden;
+    opacity:0;//アニメーション初期化
+    
+    &.-mounted{
+        opacity: 1;
+    }
+}
 </style>

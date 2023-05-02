@@ -1,19 +1,27 @@
 <template>
-    <section class="c-vertical-inner" id="js-c-scroll" ref="scrollContent">
+    <section class="novel c-vertical-inner" id="js-c-scroll" ref="scrollContent">
         <div class="c-vertical" v-if="novel">
-            <h1 v-html="novel.title"></h1>
-            <p v-html="novel.body"></p>
-            <!-- <div v-else>
-      <p>小説が見つかりませんでした。</p>
-    </div> -->
+            <h1 class="novel__title" v-html="novel.title"></h1>
+            <p class="novel__body" v-html="novel.body"></p>
         </div>
-        <ModulesScroll ref="scroll" />
+        <!-- <div class="c-vertical" v-else>
+            <p>小説が見つかりませんでした。</p>
+        </div> -->
+        <!-- <ModulesScroll ref="scroll" /> -->
     </section>
 </template>
 
+<style lang="scss" scoped>
+.novel__title {
+    display: block;
+    margin: 0 4rem;
+}
+
+.novel__body {
+    margin-right: 24px;
+}
+</style>
 <script>
-import { db } from '~/plugins/firebase';
-import { getDoc, doc, collection, query, where } from 'firebase/firestore';
 
 export default {
     data() {
@@ -23,26 +31,13 @@ export default {
     },
     async fetch() {
         const { uid, slug } = this.$route.params;
-        const userDocRef = doc(db, 'novels', uid);
-        const userDoc = await getDoc(userDocRef);
-
-        if (userDoc.exists()) {
-            const userData = userDoc.data();
-
-            if (userData.novel && userData.novel[slug]) {
-                this.novel = {
-                    id: slug,
-                    ...userData.novel[slug],
-                };
-            }
-        }
+        this.novel = await this.$store.dispatch('novels/fetchSingleNovel', { uid, slug });
     },
     mounted() {//DOMマウント後に実行
 
-        const refs = this.$refs.scrollContent;
-
-        //右端までスクロールする
-        this.$refs.scroll.scrollSet(refs)
+    },
+    updated() {
+        this.$scrollSet(this.$refs.scrollContent)
     },
 };
 </script>
