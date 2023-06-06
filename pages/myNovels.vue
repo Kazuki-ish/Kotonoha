@@ -52,8 +52,8 @@
     list-style: none;
     //padding:0 1.4rem;
 
-    &:nth-child(n + 2) {
-        margin-right: 0.4rem;
+    &:nth-of-type(n + 2) {
+        margin-right: 2rem;
     }
     &:first-child {
         margin-right: 1rem;

@@ -4,15 +4,13 @@
         '-novel-list': $route.name == 'myNovels',
         '-profile': $route.name == 'profile'
     }">
-        <div class="button-list" v-if="$route.name == 'write'">
+        <!-- <div class="button-list" v-if="$route.name == 'write'">
             <button class="c-black-txt" @click="saveNovel">保存する</button>
-        </div>
-        <div class="button-list" 
-        v-if="$route.path.includes('writeNovel') && $route.params.slug">
-            <button class="c-black-txt" @click="overWriteNovel"
-            :class="{'-pushed':pushed, '-succeed':succeed}">
+        </div> -->
+        <div class="button-list" v-if="$route.path.includes('writeNovel') && $route.params.slug || $route.name == 'write' ">
+            <button class="c-black-txt" @click="overWriteNovel" :class="{ '-pushed': pushed, '-succeed': succeed }">
                 <span class="button-list__txt" @transitionend="pushRouter">
-                    {{buttonText}}
+                    {{ buttonText }}
                 </span>
             </button>
         </div>
@@ -21,7 +19,6 @@
 </template>
 
 <style lang="scss" scoped>
-
 footer {
     bottom: 0;
     min-height: calc(120 / 1686 * 100vh);
@@ -40,7 +37,7 @@ footer {
 
 .button-list {
     @include absolute(50%, -62px);
-    color:black;
+    color: black;
     display: flex;
     justify-content: center;
     margin-top: calc(12 / 1686 * 100vh);
@@ -69,11 +66,11 @@ footer {
     .-pushed & {
         transform: rotate(360deg);
     }
+
     .-succeed & {
         opacity: 0;
     }
 }
-
 </style>
 
 <script>
@@ -82,7 +79,7 @@ import { getRedirectResult } from '@firebase/auth';
 export default {
     name: 'Footer',
 
-    data(){
+    data() {
         return {
             buttonText: '保存する',
             pushed: false,
@@ -120,6 +117,7 @@ export default {
 
             if (!title || !body) {
                 console.log("Title or body is missing");
+                this.buttonText = '失敗';
                 return;
             }
 
@@ -137,13 +135,20 @@ export default {
                 this.buttonText = '完了';
             } else if (event.propertyName === 'opacity' && this.succeed) {
                 this.$router.push('/writeNovel');
-                this.init();
             }
         },
-        init(){
-            this.pushed = false;
-            this.succeed = false;
-            this.buttonText = '保存する';
+        init() {
+            if (this.$route.path === '/writeNovel') {
+                this.pushed = false;
+                this.succeed = false;
+                this.buttonText = '保存する';
+            }
+        },
+    },
+    watch: {
+        '$route.path': {
+            handler: 'init',
+            immediate: false
         },
     },
 }

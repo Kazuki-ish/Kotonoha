@@ -5,6 +5,12 @@
                 <UiIcon />
                 <h2 class="booklist__display-name">{{ this.$store.state.user.profile.name }}</h2>
             </div>
+            <li class="booklist__item">
+                <h1 class="booklist__item__title">新しく書く</h1>
+                <nuxt-link :to="'/write'">
+                    <p class="booklist__item__text -add-novel"><span></span><span></span></p>
+                </nuxt-link>
+            </li>
             <li class="booklist__item" v-for="novel in novels" :key="novel.id">
                 <h1 class="booklist__item__title" v-html="novel.title"></h1>
                 <nuxt-link :to="`/writeNovel/${novel.id}`">
@@ -17,6 +23,7 @@
 
 <style lang="scss" scoped>
 .booklist {
+    padding-left: 10rem;
 
     h1 {
         font-size: 1rem;
@@ -52,8 +59,8 @@
     list-style: none;
     //padding:0 1.4rem;
 
-    &:nth-child(n + 2) {
-        margin-right: 0.4rem;
+    &:nth-of-type(n + 2) {
+        margin-right: 2rem;
     }
     &:first-child {
         margin-right: 1rem;
@@ -82,6 +89,24 @@
 .booklist .booklist__item__text {
     padding: 1rem;
     margin: 0 0.2rem;
+}
+
+.booklist .booklist__item__text.-add-novel {
+        @include NM_dent;
+        position: relative;
+        min-height: get_Vh(857);
+        min-width: get_Vw(252);
+
+        span:first-of-type {
+            transform: rotate(90deg) translate(0, calc(get_Vw(30) / 2));
+        }
+        span{
+            @include absCenter;
+            border-top: solid black 1px;
+            display: block;
+            width: get_Vw(30);
+        }
+
 }
 </style>
   
