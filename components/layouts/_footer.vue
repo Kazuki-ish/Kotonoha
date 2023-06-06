@@ -5,10 +5,16 @@
         '-profile': $route.name == 'profile'
     }">
         <div class="button-list" v-if="$route.name == 'write'">
-            <button @click="saveNovel">保存する</button>
+            <button class="c-black-txt" @click="saveNovel">保存する</button>
         </div>
-        <div class="button-list" v-if="$route.path.includes('writeNovel') && $route.params.slug">
-            <button @click="overWriteNovel">保存する</button>
+        <div class="button-list" 
+        v-if="$route.path.includes('writeNovel') && $route.params.slug">
+            <button class="c-black-txt" @click="overWriteNovel"
+            :class="{'-pushed':pushed, '-succeed':succeed}">
+                <span class="button-list__txt" @transitionend="pushRouter">
+                    {{buttonText}}
+                </span>
+            </button>
         </div>
         <UiToggleMode />
     </footer>
@@ -41,13 +47,30 @@ footer {
     transform: translateX(-50%);
 
     button {
-        @include NM_convex;
+        @include cubic_ease();
+        @include NM_convex_anim;
         border-radius: calc(21 / 780 * 100vw);
         padding: 8px;
 
         &:nth-child(n + 2) {
             margin-left: calc(94 / 780 * 100vw);
         }
+
+        &.-pushed {
+            @include NM_dent_anim;
+        }
+    }
+}
+
+.button-list__txt {
+    @include cubic_ease();
+    display: inline-block;
+
+    .-pushed & {
+        transform: rotate(360deg);
+    }
+    .-succeed & {
+        opacity: 0;
     }
 }
 
@@ -58,6 +81,14 @@ import { getRedirectResult } from '@firebase/auth';
 
 export default {
     name: 'Footer',
+
+    data(){
+        return {
+            buttonText: '保存する',
+            pushed: false,
+            succeed: false,
+        }
+    },
     computed: {
     },
     methods: {
@@ -79,7 +110,10 @@ export default {
 
             console.log("Novel saved successfully");
         },
-        async overWriteNovel() {
+        async overWriteNovel(event) {
+            this.pushed = true;
+            this.buttonText = '保存中';
+
             const title = this.$store.state.novels.title;
             const body = this.$store.state.novels.body;
             const slug = this.$store.state.novels.slug;
@@ -95,9 +129,22 @@ export default {
                 body,
                 slug,
             });
-
-            console.log("Novel saved successfully");
-        }
+            // console.log("Novel saved successfully");
+        },
+        pushRouter(event) {
+            if (event.propertyName === 'transform' && this.pushed) {
+                this.succeed = true;
+                this.buttonText = '完了';
+            } else if (event.propertyName === 'opacity' && this.succeed) {
+                this.$router.push('/writeNovel');
+                this.init();
+            }
+        },
+        init(){
+            this.pushed = false;
+            this.succeed = false;
+            this.buttonText = '保存する';
+        },
     },
 }
 </script>

@@ -1,8 +1,10 @@
 <template>
     <section class="c-vertical-inner" id="js-c-scroll">
         <ul class="booklist c-vertical">
-        <UiIcon />
-        <h2 class="booklist__display-name">{{ this.$store.state.user.profile.name }}</h2>
+            <div class="booklist__profile">
+                <UiIcon />
+                <h2 class="booklist__display-name">{{ this.$store.state.user.profile.name }}</h2>
+            </div>
             <li class="booklist__item" v-for="novel in novels" :key="novel.id">
                 <h1 class="booklist__item__title" v-html="novel.title"></h1>
                 <nuxt-link :to="`/${uid}/${novel.id}`">
@@ -29,6 +31,10 @@
         //padding:16px 16px 12px;
         margin: 0;
     }
+}
+
+.booklist__profile {
+    display: block;
 }
 
 .booklist__display-name {
@@ -89,7 +95,7 @@ export default {
     },
     computed: {
         // Vuex ストアから小説データを取得
-        novels() {
+    novels() {
             return this.$store.state.novels.userNovels;
         },
         uid() {

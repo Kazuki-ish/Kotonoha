@@ -159,11 +159,11 @@ export const actions = {
     const userDocSnapshot = await getDoc(userDocRef)
     if (userDocSnapshot.exists()) {
       const userData = userDocSnapshot.data()
-      console.log(userData)
+      // console.log(userData)
       const existingNovelData = userData.novel && userData.novel[slug]
 
-      console.log(slug)
-      console.log(existingNovelData)
+      // console.log(slug)
+      // console.log(existingNovelData)
       // 同じidのデータが存在し、テキストが変わっていた場合、データを更新
       if (
         existingNovelData &&

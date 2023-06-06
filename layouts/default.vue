@@ -40,8 +40,13 @@ export default {
     // visibility: hidden;
     opacity:0;//アニメーション初期化
     
-    &.-mounted{
-        opacity: 1;
+        &.-mounted{
+            opacity: 1;
+        }
     }
-}
+
+    //style conponents 
+    .c-black-txt {
+        color:black;
+    }
 </style>

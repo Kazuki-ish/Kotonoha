@@ -1,8 +1,10 @@
 <template>
     <section class="c-vertical-inner" id="js-c-scroll">
         <ul class="booklist c-vertical">
-        <UiIcon />
-        <h2 class="booklist__display-name">{{ this.$store.state.user.profile.name }}</h2>
+            <div class="booklist__profile">
+                <UiIcon />
+                <h2 class="booklist__display-name">{{ this.$store.state.user.profile.name }}</h2>
+            </div>
             <li class="booklist__item" v-for="novel in novels" :key="novel.id">
                 <h1 class="booklist__item__title" v-html="novel.title"></h1>
                 <nuxt-link :to="`/writeNovel/${novel.id}`">
@@ -29,6 +31,10 @@
         //padding:16px 16px 12px;
         margin: 0;
     }
+}
+
+.booklist__profile {
+    display: block;
 }
 
 .booklist__display-name {
@@ -129,7 +135,7 @@ export default {
             await this.$scrollSet()
         },
         setPageName() {
-            this.$store.commit("common/inputPageName", '書いた小説')
+            this.$store.commit("common/inputPageName", '作品を書く')
         },
         // async setUser() {
         //     this.$store.dispatch('user/setUserFromAuth')
