@@ -5,12 +5,11 @@
         <h2 class="booklist__display-name">{{ this.$store.state.user.profile.name }}</h2>
             <li class="booklist__item" v-for="novel in novels" :key="novel.id">
                 <h1 class="booklist__item__title" v-html="novel.title"></h1>
-                <nuxt-link :to="`/${uid}/${novel.id}`">
+                <nuxt-link :to="`/writeNovel/${novel.id}`">
                     <p class="booklist__item__text" v-html="novel.body"></p>
                 </nuxt-link>
             </li>
         </ul>
-        <ModulesScroll ref="scroll" />
     </section>
 </template>
 
@@ -82,15 +81,6 @@
   
 <script>
 export default {
-    async asyncData({ params, error }) {
-  try {
-    const data = await fetchData(params.uid, params.novelid);
-    return { data };
-  } catch (err) {
-    error({ statusCode: 404, message: 'Page not found' });
-  }
-},
-
     data() {
         return {
             displayName: this.$store.state.user.profile.name,
@@ -99,7 +89,7 @@ export default {
     },
     computed: {
         // Vuex ストアから小説データを取得
-        novels() {
+    novels() {
             return this.$store.state.novels.userNovels;
         },
         uid() {
@@ -110,14 +100,13 @@ export default {
         },
     },
     async fetch() {
-        this.fetchNovels()
-        this.fetchUserNovels()
+        this.setPageName()
         // this.setUser()
     },
     created() {
         this.$store.commit('user/setMode', this.$route.name)
         // console.log(this.$store.state.user.editNovel)
-        console.log(this.displayName)
+        // console.log(this.displayName)
     },
     watch: {
         uid(newUid, oldUid) {
@@ -130,26 +119,24 @@ export default {
         },
         watchMode(beforeToggle, afterToggle) {
             if (afterToggle == true) {
-                this.$refs.scroll.scrollSet()
+                this.$scrollSet();
             }
         }
     },
     methods: {
         async fetchUserNovels() {
             await this.$store.dispatch('novels/fetchUserNovels', this.uid);
-            this.$refs.scroll.scrollSet()
+            await this.$scrollSet()
         },
-        fetchNovels() {
+        setPageName() {
             this.$store.commit("common/inputPageName", '書いた小説')
         },
         // async setUser() {
         //     this.$store.dispatch('user/setUserFromAuth')
         // },
     },
-    mounted() {//DOMマウント後に実行
-
-        //右端までスクロールする
-        this.$refs.scroll.scrollSet()
+    async mounted() {//DOMマウント後に実行
+        this.fetchUserNovels()
     },
 };
 </script>

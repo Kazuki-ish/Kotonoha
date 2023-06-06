@@ -129,4 +129,7 @@ export default {
       },
     },
   },
+  generate: {
+    fallback: true, // 404.html を生成する代わりに fallback ページを使用
+  },
 }

@@ -10,6 +10,8 @@
 <style lang="scss">
 .icon {
     &.myNovels {
+        @include NM_convex_op;
+        border-radius: 9999px;
       display: block;  
     }
 }

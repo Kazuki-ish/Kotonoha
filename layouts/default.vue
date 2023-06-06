@@ -20,9 +20,9 @@ export default {
 <style lang="scss">
     .l-main {
         @include cubic_ease;
-        height: 100svh;
+        max-height: 100svh;
         overflow: hidden;
-        width: 100svw;
+        max-width: 100svw;
         opacity: 0;
         
         &.-mounted {

@@ -48,8 +48,9 @@
 }
 
 .profile__list__label {
-  margin-top: 24px;
+  margin-top: 18px;
   color: #121212;
+
 }
 
 .profile__list__input {

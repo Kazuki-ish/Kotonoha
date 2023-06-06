@@ -17,6 +17,7 @@ export const state = () => ({
   novel: {},
   title: '',
   body: '',
+  slug: '',
   novelID: [],
   likedID: [],
   bookmarkID: [],
@@ -35,6 +36,9 @@ export const mutations = {
   },
   setBody(state, body) {
     state.body = body
+  },
+  setSlug(state, slug) {
+    state.slug = slug
   },
   setNovelID(state, novelID) {
     state.novelID = novelID
@@ -71,6 +75,7 @@ export const actions = {
     const userDocRef = doc(db, 'novels', uid)
     const userDoc = await getDoc(userDocRef)
 
+    // console.log(uid)
     if (userDoc.exists()) {
       const userData = userDoc.data()
 
@@ -88,28 +93,28 @@ export const actions = {
     const userDoc = await getDoc(userDocRef)
 
     if (userDoc.exists()) {
-      const userData = userDoc.data();
-      const userNovels = [];
-  
+      const userData = userDoc.data()
+      const userNovels = []
+
       for (const novelSlug in userData.novel) {
-        let novelBody = userData.novel[novelSlug].body;
-        
+        let novelBody = userData.novel[novelSlug].body
+
         // 144字以上かチェック
         if (novelBody.length > 144) {
           // ...を追加
-          novelBody = novelBody.substring(0, 144) + '......';
+          novelBody = novelBody.substring(0, 144) + '......'
         }
-  
+
         userNovels.push({
           id: novelSlug,
           ...userData.novel[novelSlug],
           body: novelBody, // Use the modified novelBody here
-        });
+        })
       }
-  
-      commit('setUserNovels', userNovels);
+
+      commit('setUserNovels', userNovels)
     } else {
-      commit('setUserNovels', []);
+      commit('setUserNovels', [])
     }
   },
   // async fetchNovel({ commit }, novelId) {
@@ -142,6 +147,48 @@ export const actions = {
 
     commit('setNovel', { uid, title, body, slug: novelSlug.slug })
   },
+  async saveNovel({ commit }, { uid, title, body, slug }) {
+    const novelData = {
+      title,
+      body,
+    }
+
+    const userDocRef = doc(db, 'novels', uid)
+
+    // 既存のデータを取得
+    const userDocSnapshot = await getDoc(userDocRef)
+    if (userDocSnapshot.exists()) {
+      const userData = userDocSnapshot.data()
+      console.log(userData)
+      const existingNovelData = userData.novel && userData.novel[slug]
+
+      console.log(slug)
+      console.log(existingNovelData)
+      // 同じidのデータが存在し、テキストが変わっていた場合、データを更新
+      if (
+        existingNovelData &&
+        (existingNovelData.title !== title || existingNovelData.body !== body)
+      ) {
+        await setDoc(
+          userDocRef,
+          { novel: { [slug]: novelData } },
+          { merge: true }
+        )
+
+        commit('setNovel', { uid, title, body, slug: slug })
+      }
+    } else {
+      // 既存のデータがない場合、新たにデータを追加
+      await setDoc(
+        userDocRef,
+        { novel: { [slug]: novelData } },
+        { merge: true }
+      )
+
+      commit('setNovel', { uid, title, body, slug: slug })
+    }
+  },
+
   async fetchLikedNovels({ commit }, uid) {
     const q = query(collection(db, 'likes'), where('uid', '==', uid))
     const querySnapshot = await getDocs(q)

@@ -15,10 +15,12 @@
 .novel__title {
     display: block;
     margin: 0 4rem;
+    max-height: 100%;
 }
 
 .novel__body {
     margin-right: 24px;
+    max-height: 100%;
 }
 </style>
 <script>

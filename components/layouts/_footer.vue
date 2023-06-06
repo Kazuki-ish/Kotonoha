@@ -7,6 +7,9 @@
         <div class="button-list" v-if="$route.name == 'write'">
             <button @click="saveNovel">保存する</button>
         </div>
+        <div class="button-list" v-if="$route.path.includes('writeNovel') && $route.params.slug">
+            <button @click="overWriteNovel">保存する</button>
+        </div>
         <UiToggleMode />
     </footer>
 </template>
@@ -72,6 +75,25 @@ export default {
                 uid: this.$store.state.user.uid,
                 title,
                 body
+            });
+
+            console.log("Novel saved successfully");
+        },
+        async overWriteNovel() {
+            const title = this.$store.state.novels.title;
+            const body = this.$store.state.novels.body;
+            const slug = this.$store.state.novels.slug;
+
+            if (!title || !body) {
+                console.log("Title or body is missing");
+                return;
+            }
+
+            await this.$store.dispatch("novels/saveNovel", {
+                uid: this.$store.state.user.uid,
+                title,
+                body,
+                slug,
             });
 
             console.log("Novel saved successfully");
