@@ -38,8 +38,9 @@ export default {
     mounted() {//DOMマウント後に実行
 
     },
-    updated() {
+    updated() {        
         this.$scrollSet(this.$refs.scrollContent)
+        this.$store.commit("common/inputPageName", this.novel.title)
     },
 };
 </script>

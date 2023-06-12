@@ -44,7 +44,7 @@ footer {
     transform: translateX(-50%);
 
     button {
-        @include cubic_ease();
+        @include cubic_ease($time: 4s);
         @include NM_convex_anim;
         border-radius: calc(21 / 780 * 100vw);
         padding: 8px;
@@ -136,7 +136,7 @@ export default {
                 this.succeed = true;
                 this.buttonText = '完了';
             } else if (event.propertyName === 'opacity' && this.succeed) {
-                this.$router.push('/writeNovel');
+                // this.$router.push('/writeNovel');
             }
         },
         init() {

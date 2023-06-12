@@ -4,12 +4,12 @@
             <UiIcon />
             <h2 class="booklist__display-name">{{ this.$store.state.user.profile.name }}</h2>
         </div>
-        <li class="booklist__item" v-for="novel in novels" :key="novel.id">
+        <li class="booklist__item" v-for="(novel, index) in novels" :key="novel.id">
             <h1 class="booklist__item__title" v-html="novel.title"></h1>
-            <nuxt-link :to="`/${uid}/${novel.id}`">
+            <nuxt-link :to="`/${uid(index)}/${novel.id}`" clsss="booklist__item__link">
                 <p class="booklist__item__text" v-html="novel.body"></p>
             </nuxt-link>
-            <div v-if="novel.name && isName" class="booklist__bottom-wraper">
+            <div v-if="novel.name && $route.name !== 'myNovels'" class="booklist__bottom-wraper">
                 <h2 class="booklist__item__auther">{{ novel.name }}</h2>
             </div>
         </li>
@@ -39,8 +39,6 @@
 }
 
 .booklist__item__auther {
-    position: relative;
-    top: 24px;
     font-size: 24px;
     font-weight: 300;
 }
@@ -76,12 +74,16 @@
 }
 
 .booklist .booklist__item__title {
+    display: block;
     margin-left: -1rem;
     line-height: 1;
 }
 
 .booklist .booklist__bottom-wraper {
     text-align: right;
+}
+.booklist__item__link {
+    display: block;
 }
 
 .booklist .booklist__item__author {
@@ -103,9 +105,6 @@ export default {
         isProfile: {
             type: Boolean,
         },
-        isName: {
-            type: Boolean,
-        }
     },
     async fetch() {
         if (this.$route.name == "myNovels") { //ルートネームにmynovelsがあったら現在ログインしているユーザーのノベルスをデータに入れる
@@ -124,9 +123,6 @@ export default {
                 return this.$store.state.novels.newNovels;
             }
         },
-        uid() {
-            return this.$store.state.user.uid;
-        },
     },
     created() {
         this.$store.commit("common/inputPageName", 'ホーム')
@@ -134,6 +130,9 @@ export default {
     mounted() {
         // console.log(this.$store.state.user.profile.name)
         this.$scrollSet()
+    },
+    updated() {
+        // console.log(this.$store.state.novels.newNovels)
     },
     methods: {
         async fetchNewNovels() {
@@ -143,6 +142,14 @@ export default {
         async fetchUserNovels() {
             await this.$store.dispatch('novels/fetchUserNovels');
             await this.$scrollSet()
+        },
+        uid(index) {
+            if (this.$route.name == "myNovels") {
+                return this.$store.state.user.uid;
+            }
+            else {
+                return this.$store.state.novels.newNovels[index].uid;
+            }
         },
     },
 }

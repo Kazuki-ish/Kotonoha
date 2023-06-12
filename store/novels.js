@@ -159,7 +159,7 @@ export const actions = {
             const timestamp = doc.data().timestamp // Directly use the timestamp property from the doc data
             const slug = doc.data().slug; // Retrieve slug from the document data
   
-            console.log(slug)
+            // console.log(slug)
   
             return {
               id: slug, // Use slug as the id
@@ -222,24 +222,38 @@ export const actions = {
   async saveNovel({ rootState, commit }, { uid, title, body, slug }) {
     const name = rootState.user.profile.name // プロファイルからnameを取得
     const timestamp = Timestamp.now()
+
+    if (!slug) {
+      slug = generateUniqueSlug(title)
+    }
+    console.log(`saveNovel called with uid=${uid}, title=${title}, body=${body}, slug=${slug}`); // Add this line
+
     const novelData = {
       title,
       body,
       name,
       timestamp,
+      slug,
     }
 
     const userDocRef = doc(db, 'novels', uid)
     const newDocRef = doc(db, 'new', timestamp.toString()) // timestampを文字列に変換してIDとして使用
 
+    // uidに一致するドキュメントが存在しない場合は新規ドキュメントを作成
+    await setDoc(userDocRef, {}, { merge: true })
+
+    // console.log('saveNovel実行中')
+
     // 既存のデータを取得
     const userDocSnapshot = await getDoc(userDocRef)
+    // console.log(userDocSnapshot)
+    
     if (userDocSnapshot.exists()) {
       const userData = userDocSnapshot.data()
       const existingNovelData = userData.novel && userData.novel[slug]
 
       // 同じidのデータが存在し、テキストが変わっていた場合、データを更新
-      if (
+      if ( //ここのelse分岐がないためreturnしてしまっている。今のところ下のelse文をコピーしておくが、今後整頓が必要
         existingNovelData &&
         (existingNovelData.title !== title || existingNovelData.body !== body)
       ) {
@@ -248,6 +262,7 @@ export const actions = {
           { novel: { [slug]: novelData } },
           { merge: true }
         )
+
 
         // 新しいドキュメントへの保存
         await setDoc(
@@ -265,6 +280,30 @@ export const actions = {
           timestamp: timestamp,
         }) // Include name and timestamp in the commit
       }
+      else {//docが確認できなかったため新規データ追加
+        await setDoc(
+          userDocRef,
+          { novel: { [slug]: novelData } },
+          { merge: true }
+        )
+        // console.log('新規データ追加中')
+  
+        // newドキュメントへの保存
+        await setDoc(
+          newDocRef,
+          { uid, title, body, slug, name, timestamp },
+          { merge: true }
+        )
+  
+        commit('setNovel', {
+          uid,
+          title,
+          body,
+          name,
+          slug: slug,
+          timestamp: timestamp,
+        }) // Include name and timestamp in the commit
+      }
     } else {
       // 既存のデータがない場合、新たにデータを追加
       await setDoc(
@@ -272,8 +311,9 @@ export const actions = {
         { novel: { [slug]: novelData } },
         { merge: true }
       )
+      console.log('新規データ追加中')
 
-      // 新しいドキュメントへの保存
+      // newドキュメントへの保存
       await setDoc(
         newDocRef,
         { uid, title, body, slug, name, timestamp },
