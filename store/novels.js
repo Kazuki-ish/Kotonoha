@@ -9,10 +9,12 @@ import {
   getDoc,
   setDoc,
   doc,
+  Timestamp,
 } from 'firebase/firestore'
 
 export const state = () => ({
   userNovels: [],
+  newNovels:[],
   currentNovel: null,
   novel: {},
   title: '',
@@ -30,6 +32,9 @@ export const mutations = {
   },
   setCurrentNovel(state, novel) {
     state.currentNovel = novel
+  },
+  setNewNovels(state, novels) {
+    state.newNovels = novels
   },
   setTitle(state, title) {
     state.title = title
@@ -109,13 +114,52 @@ export const actions = {
           id: novelSlug,
           ...userData.novel[novelSlug],
           body: novelBody, // Use the modified novelBody here
+          timestamp: userData.novel[novelSlug].timestamp, // Add the timestamp here
         })
       }
+
+      // Sort the novels array by timestamp
+      userNovels.sort((a, b) => b.timestamp - a.timestamp)
 
       commit('setUserNovels', userNovels)
     } else {
       commit('setUserNovels', [])
     }
+  },
+  async fetchNewNovels({ commit }) {
+    const newNovelsRef = collection(db, 'new')
+    const newNovelsSnapshot = await getDocs(newNovelsRef)
+
+    const newNovels = newNovelsSnapshot.docs.map((doc) => {
+      let novelBody = doc.data().body
+
+      // 144字以上かチェック
+      if (novelBody.length > 144) {
+        // ...を追加
+        novelBody = novelBody.substring(0, 144) + '......'
+      }
+
+      console.log(doc)
+      const timestamp = doc.data().timestamp // Directly use the timestamp property from the doc data
+
+      return {
+        id: doc.id,
+        ...doc.data(),
+        body: novelBody, // Use the modified novelBody here
+        timestamp: timestamp, // Use the timestamp from the doc data
+      }
+    })
+
+    // Sort the novels array by timestamp
+    newNovels.sort((a, b) => {
+      // Compare using seconds first, and then nanoseconds if seconds are equal
+      return (
+        b.timestamp.seconds - a.timestamp.seconds ||
+        b.timestamp.nanoseconds - a.timestamp.nanoseconds
+      )
+    })
+
+    commit('setNewNovels', newNovels)
   },
   // async fetchNovel({ commit }, novelId) {
   //   const novelDocRef = doc(db, 'novels', novelId);
@@ -147,23 +191,25 @@ export const actions = {
 
     commit('setNovel', { uid, title, body, slug: novelSlug.slug })
   },
-  async saveNovel({ commit }, { uid, title, body, slug }) {
+  async saveNovel({ rootState, commit }, { uid, title, body, slug }) {
+    const name = rootState.user.profile.name // プロファイルからnameを取得
+    const timestamp = Timestamp.now()
     const novelData = {
       title,
       body,
+      name,
+      timestamp,
     }
 
     const userDocRef = doc(db, 'novels', uid)
+    const newDocRef = doc(db, 'new', timestamp.toString()) // timestampを文字列に変換してIDとして使用
 
     // 既存のデータを取得
     const userDocSnapshot = await getDoc(userDocRef)
     if (userDocSnapshot.exists()) {
       const userData = userDocSnapshot.data()
-      // console.log(userData)
       const existingNovelData = userData.novel && userData.novel[slug]
 
-      // console.log(slug)
-      // console.log(existingNovelData)
       // 同じidのデータが存在し、テキストが変わっていた場合、データを更新
       if (
         existingNovelData &&
@@ -175,7 +221,21 @@ export const actions = {
           { merge: true }
         )
 
-        commit('setNovel', { uid, title, body, slug: slug })
+        // 新しいドキュメントへの保存
+        await setDoc(
+          newDocRef,
+          { uid, title, body, slug, name, timestamp },
+          { merge: true }
+        )
+
+        commit('setNovel', {
+          uid,
+          title,
+          body,
+          name,
+          slug: slug,
+          timestamp: timestamp,
+        }) // Include name and timestamp in the commit
       }
     } else {
       // 既存のデータがない場合、新たにデータを追加
@@ -185,7 +245,21 @@ export const actions = {
         { merge: true }
       )
 
-      commit('setNovel', { uid, title, body, slug: slug })
+      // 新しいドキュメントへの保存
+      await setDoc(
+        newDocRef,
+        { uid, title, body, slug, name, timestamp },
+        { merge: true }
+      )
+
+      commit('setNovel', {
+        uid,
+        title,
+        body,
+        name,
+        slug: slug,
+        timestamp: timestamp,
+      }) // Include name and timestamp in the commit
     }
   },
 

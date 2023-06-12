@@ -56,6 +56,9 @@ footer {
         &.-pushed {
             @include NM_dent_anim;
         }
+        &.-succeed {
+            opacity: 0;
+        }
     }
 }
 
@@ -66,9 +69,8 @@ footer {
     .-pushed & {
         transform: rotate(360deg);
     }
-
-    .-succeed & {
-        opacity: 0;
+    .-succeed &{
+            opacity: 0;
     }
 }
 </style>

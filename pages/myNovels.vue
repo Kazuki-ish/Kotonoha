@@ -58,6 +58,9 @@
     &:first-child {
         margin-right: 1rem;
     }
+    &:last-child {
+        margin-left: 4rem;
+    }
 }
 
 .booklist .booklist__item:nth-child(even) {
@@ -70,6 +73,7 @@
 }
 
 .booklist .booklist__item__title {
+    margin-left: -1rem;
     line-height: 1;
 }
 
