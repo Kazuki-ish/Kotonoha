@@ -68,7 +68,7 @@
   border-radius: 10px;
   color: #121212;
   padding: 8px 32px;
-  margin: 48px auto 0;
+  margin: 32px auto 0;
 }
 </style>
 

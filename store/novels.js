@@ -93,74 +93,102 @@ export const actions = {
     }
     return null
   },
-  async fetchUserNovels({ commit }, userId) {
-    const userDocRef = doc(db, 'novels', userId)
-    const userDoc = await getDoc(userDocRef)
-
-    if (userDoc.exists()) {
-      const userData = userDoc.data()
-      const userNovels = []
-
-      for (const novelSlug in userData.novel) {
-        let novelBody = userData.novel[novelSlug].body
-
-        // 144字以上かチェック
-        if (novelBody.length > 144) {
-          // ...を追加
-          novelBody = novelBody.substring(0, 144) + '......'
+  async fetchUserNovels({ commit }) {
+    return new Promise((resolve) => {
+      auth.onAuthStateChanged(async (user) => {
+        if (user) {
+          // User is signed in.
+          const userDocRef = doc(db, 'novels', user.uid)
+          const userDoc = await getDoc(userDocRef)
+  
+          if (userDoc.exists()) {
+            const userData = userDoc.data()
+            const userNovels = []
+  
+            for (const novelSlug in userData.novel) {
+              let novelBody = userData.novel[novelSlug].body
+  
+              // 144字以上かチェック
+              if (novelBody.length > 144) {
+                // ...を追加
+                novelBody = novelBody.substring(0, 144) + '......'
+              }
+  
+              userNovels.push({
+                id: novelSlug,
+                ...userData.novel[novelSlug],
+                body: novelBody, // Use the modified novelBody here
+                timestamp: userData.novel[novelSlug].timestamp, // Add the timestamp here
+              })
+            }
+  
+            // Sort the novels array by timestamp
+            userNovels.sort((a, b) => b.timestamp - a.timestamp)
+  
+            commit('setUserNovels', userNovels)
+          } else {
+            commit('setUserNovels', [])
+          }
+          resolve()
+        } else {
+          // No user is signed in.
+          commit('setUserNovels', [])
+          resolve()
         }
-
-        userNovels.push({
-          id: novelSlug,
-          ...userData.novel[novelSlug],
-          body: novelBody, // Use the modified novelBody here
-          timestamp: userData.novel[novelSlug].timestamp, // Add the timestamp here
-        })
-      }
-
-      // Sort the novels array by timestamp
-      userNovels.sort((a, b) => b.timestamp - a.timestamp)
-
-      commit('setUserNovels', userNovels)
-    } else {
-      commit('setUserNovels', [])
-    }
+      })
+    })
   },
+  
   async fetchNewNovels({ commit }) {
-    const newNovelsRef = collection(db, 'new')
-    const newNovelsSnapshot = await getDocs(newNovelsRef)
-
-    const newNovels = newNovelsSnapshot.docs.map((doc) => {
-      let novelBody = doc.data().body
-
-      // 144字以上かチェック
-      if (novelBody.length > 144) {
-        // ...を追加
-        novelBody = novelBody.substring(0, 144) + '......'
-      }
-
-      console.log(doc)
-      const timestamp = doc.data().timestamp // Directly use the timestamp property from the doc data
-
-      return {
-        id: doc.id,
-        ...doc.data(),
-        body: novelBody, // Use the modified novelBody here
-        timestamp: timestamp, // Use the timestamp from the doc data
-      }
+    return new Promise((resolve) => {
+      auth.onAuthStateChanged(async (user) => {
+        if (user) {
+          // User is signed in.
+          const newNovelsRef = collection(db, 'new')
+          const newNovelsSnapshot = await getDocs(newNovelsRef)
+  
+          const newNovels = newNovelsSnapshot.docs.map((doc) => {
+            let novelBody = doc.data().body
+  
+            // 144字以上かチェック
+            if (novelBody.length > 144) {
+              // ...を追加
+              novelBody = novelBody.substring(0, 144) + '......'
+            }
+  
+            const timestamp = doc.data().timestamp // Directly use the timestamp property from the doc data
+            const slug = doc.data().slug; // Retrieve slug from the document data
+  
+            console.log(slug)
+  
+            return {
+              id: slug, // Use slug as the id
+              ...doc.data(),
+              body: novelBody, // Use the modified novelBody here
+              timestamp: timestamp, // Use the timestamp from the doc data
+            }
+          })
+  
+          // Sort the novels array by timestamp
+          newNovels.sort((a, b) => {
+            // Compare using seconds first, and then nanoseconds if seconds are equal
+            return (
+              b.timestamp.seconds - a.timestamp.seconds ||
+              b.timestamp.nanoseconds - a.timestamp.nanoseconds
+            )
+          })
+  
+          commit('setNewNovels', newNovels)
+          resolve()
+        } else {
+          // No user is signed in.
+          commit('setNewNovels', [])
+          resolve()
+        }
+      })
     })
-
-    // Sort the novels array by timestamp
-    newNovels.sort((a, b) => {
-      // Compare using seconds first, and then nanoseconds if seconds are equal
-      return (
-        b.timestamp.seconds - a.timestamp.seconds ||
-        b.timestamp.nanoseconds - a.timestamp.nanoseconds
-      )
-    })
-
-    commit('setNewNovels', newNovels)
   },
+  
   // async fetchNovel({ commit }, novelId) {
   //   const novelDocRef = doc(db, 'novels', novelId);
   //   const novelSnapshot = await getDoc(novelDocRef);

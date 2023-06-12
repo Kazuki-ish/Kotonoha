@@ -118,7 +118,7 @@ export default {
             const slug = this.$store.state.novels.slug;
 
             if (!title || !body) {
-                console.log("Title or body is missing");
+                //console.log("Title or body is missing");
                 this.buttonText = '失敗';
                 return;
             }
