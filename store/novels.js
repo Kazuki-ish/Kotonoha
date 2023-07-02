@@ -8,8 +8,10 @@ import {
   getDocs,
   getDoc,
   setDoc,
+  updateDoc,
   doc,
   Timestamp,
+  deleteField,
 } from 'firebase/firestore'
 
 export const state = () => ({
@@ -63,6 +65,17 @@ export const mutations = {
     }
     state.novel[uid][novelSlug] = { title, body }
   },
+  removeNovel(state, { uid, novelSlug }) {
+    if (state.novel[uid]) {
+      delete state.novel[uid][novelSlug];
+  
+      // もし特定の uid の下に何も小説がない場合は、その uid のオブジェクト自体も削除します。
+      if (Object.keys(state.novel[uid]).length === 0) {
+        delete state.novel[uid];
+      }
+    }
+  },
+  
 }
 
 // addNovel内で使用
@@ -203,22 +216,6 @@ export const actions = {
   //     console.error('No such novel found!');
   //   }
   // },
-  async addNovel({ commit }, { uid, title, body }) {
-    const novelData = {
-      title,
-      body,
-    }
-
-    const novelSlug = generateUniqueSlug(title)
-    const userDocRef = doc(db, 'novels', uid)
-    await setDoc(
-      userDocRef,
-      { novel: { [novelSlug]: novelData } },
-      { merge: true }
-    )
-
-    commit('setNovel', { uid, title, body, slug: novelSlug.slug })
-  },
   async saveNovel({ rootState, commit }, { uid, title, body, slug }) {
     const name = rootState.user.profile.name // プロファイルからnameを取得
     const timestamp = Timestamp.now()
@@ -330,6 +327,26 @@ export const actions = {
       }) // Include name and timestamp in the commit
     }
   },
+
+  async deleteNovel({ state, commit }, { uid, slug }) {
+    console.log(state.novel)
+    // Get a reference to the document
+    const docRef = doc(db, 'novels', uid);
+  
+    // Use FieldValue.delete() to remove the novel field
+    const updateData = {};
+    updateData[`novel.${slug}`] = deleteField(); // deleteField() is imported from "firebase/firestore"
+  
+    // Update the document
+    await updateDoc(docRef, updateData);
+
+    // const newDocRef = doc(db, ' novels ', timestamp)
+  
+    console.log(state.novel)
+    commit('removeNovel', {uid, slug} );
+  },
+  
+  
 
   async fetchLikedNovels({ commit }, uid) {
     const q = query(collection(db, 'likes'), where('uid', '==', uid))

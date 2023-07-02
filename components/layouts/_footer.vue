@@ -10,7 +10,12 @@
         <div class="button-list" v-if="$route.path.includes('writeNovel') && $route.params.slug || $route.name == 'write' ">
             <button class="c-black-txt" @click="overWriteNovel" :class="{ '-pushed': pushed, '-succeed': succeed }">
                 <span class="button-list__txt" @transitionend="pushRouter">
-                    {{ buttonText }}
+                    {{ saveButtonText }}
+                </span>
+            </button>
+            <button class="c-black-txt" @click="deleteNovel" :class="{ '-pushed': pushed, '-succeed': succeed }">
+                <span class="button-list__txt" @transitionend="pushRouter">
+                    {{ deleteButtonText }}
                 </span>
             </button>
         </div>
@@ -76,14 +81,17 @@ footer {
 </style>
 
 <script>
+import { deleteApp } from '@firebase/app';
 import { getRedirectResult } from '@firebase/auth';
+import { deflate } from 'zlib';
 
 export default {
     name: 'Footer',
 
     data() {
         return {
-            buttonText: '保存する',
+            saveButtonText: '保存する',
+            deleteButtonText: '削除する',
             pushed: false,
             succeed: false,
         }
@@ -91,27 +99,9 @@ export default {
     computed: {
     },
     methods: {
-        async saveNovel() {
-            const title = this.$store.state.novels.title;
-            const body = this.$store.state.novels.body;
-            // console.log(this.$store.state.novels.title)
-
-            if (!title || !body) {
-                console.log("Title or body is missing");
-                return;
-            }
-
-            await this.$store.dispatch("novels/addNovel", {
-                uid: this.$store.state.user.uid,
-                title,
-                body
-            });
-
-            console.log("Novel saved successfully");
-        },
         async overWriteNovel(event) {
             this.pushed = true;
-            this.buttonText = '保存中';
+            this.saveButtonText = '保存中';
 
             const title = this.$store.state.novels.title;
             const body = this.$store.state.novels.body;
@@ -119,7 +109,7 @@ export default {
 
             if (!title || !body) {
                 //console.log("Title or body is missing");
-                this.buttonText = '失敗';
+                this.saveButtonText = '失敗';
                 return;
             }
 
@@ -131,19 +121,30 @@ export default {
             });
             // console.log("Novel saved successfully");
         },
+        async deleteNovel(event) {
+
+            this.pushed = true;
+            const slug = this.$store.state.novels.slug;
+            // console.log(slug)
+
+            await this.$store.dispatch("novels/deleteNovel", {
+                uid: this.$store.state.user.uid,
+                slug,
+            });
+        },
         pushRouter(event) {
             if (event.propertyName === 'transform' && this.pushed) {
                 this.succeed = true;
-                this.buttonText = '完了';
+                this.saveButtonText = '完了';
             } else if (event.propertyName === 'opacity' && this.succeed) {
-                // this.$router.push('/writeNovel');
+                this.$router.push('/writeNovel');
             }
         },
         init() {
             if (this.$route.path === '/writeNovel') {
                 this.pushed = false;
                 this.succeed = false;
-                this.buttonText = '保存する';
+                this.saveButtonText = '保存する';
             }
         },
     },

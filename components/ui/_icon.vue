@@ -16,6 +16,7 @@
 }
 .icon__none {
     max-width: 108px;
+    max-height: 108px;
     margin: 0 auto;
     border-radius: 9999px;
 }
