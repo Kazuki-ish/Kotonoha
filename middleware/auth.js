@@ -14,7 +14,9 @@ export default function ({ route, store, redirect }) {
       //   console.log(store.state.user.profile);
     } else {
       store.commit('user/logout')
-      //   if (route.name !== 'login') redirect('/login')
+      if (route.path == '/profile' || route.path == '/write' || route.path == '/myNovels') {
+        redirect('/signup')
+      }
     }
   })
 }

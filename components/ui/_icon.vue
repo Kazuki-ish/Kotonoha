@@ -9,14 +9,17 @@
 
 <style lang="scss">
 .icon {
+    max-width: 108px;
+    max-height: 108px;
+
     &.myNovels {
         @include NM_convex_op;
         border-radius: 9999px;
     }
 }
 .icon__none {
-    max-width: 108px;
-    max-height: 108px;
+    max-width: 100%;
+    max-height: 100%;
     margin: 0 auto;
     border-radius: 9999px;
 }

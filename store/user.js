@@ -14,7 +14,7 @@ import {
 export const state = () => ({
   isLogin: false,
   editProfile: true,
-  editNovel: false,
+  editNovel: true,
   //   token: localStorage.getItem('token') || '',
   username: '',
   uid: '',
@@ -23,6 +23,8 @@ export const state = () => ({
     name: '',
     mail: '',
   },
+  hasMessage: false,
+  messageText: '',
 })
 
 export const getters = {
@@ -72,7 +74,11 @@ export const mutations = {
     } else {
       state.editProfile = false
     }
-    
+    if (pageName == 'myNovels') {
+      state.editNovel = true
+    } else {
+      state.editNovel = false;
+    }
     // console.log(state.editProfile);
   },
 }
@@ -113,15 +119,23 @@ export const actions = {
       commit('setUser', auth.currentUser);
     } catch (error) {
       console.error(error.message);
+      
     }
   },
-  async signIn(commit, {email, password}){
+  async signIn( {commit,dispatch}, {email, password}){
     try {
       await signInWithEmailAndPassword(auth, email, password);
       commit('setUser', auth.currentUser);
     } catch (error) {
       console.error(error.message);
+      dispatch('setErrorMessage', error.message);
     }
+  },
+  async setErrorMessage({commit}, message){
+    commit('setMessage', {hasMessage: true, messageText: message});
+    setTimeout(() => {
+      commit('setMessage', {hasMessage: false, messageText: ''});
+    }, 2000);
   },
   gotUser({ commit, state }, user) {
     commit('setUser', user)

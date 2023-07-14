@@ -1,13 +1,13 @@
 <template>
     <footer :class="{
-        '-write': $route.name == 'write',
+        '-write-novel': $route.name == 'writeNovel',
         '-novel-list': $route.name == 'myNovels',
         '-profile': $route.name == 'profile'
     }">
         <!-- <div class="button-list" v-if="$route.name == 'write'">
             <button class="c-black-txt" @click="saveNovel">保存する</button>
         </div> -->
-        <div class="button-list" v-if="$route.path.includes('writeNovel') && $route.params.slug || $route.name == 'write' ">
+        <div class="button-list" v-if="$route.path.includes('writeNovel') && $route.params.slug">
             <button class="c-black-txt" @click="overWriteNovel" :class="{ '-pushed': pushed, '-succeed': succeed }">
                 <span class="button-list__txt" @transitionend="pushRouter">
                     {{ saveButtonText }}
@@ -19,6 +19,7 @@
                 </span>
             </button>
         </div>
+        <UiMassage />
         <UiToggleMode />
     </footer>
 </template>
@@ -70,6 +71,7 @@ footer {
 .button-list__txt {
     @include cubic_ease();
     display: inline-block;
+    white-space: nowrap;
 
     .-pushed & {
         transform: rotate(360deg);

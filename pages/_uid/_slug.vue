@@ -38,6 +38,10 @@ export default {
     mounted() {//DOMマウント後に実行
 
     },
+    created() {
+        this.$store.commit('user/setMode', this.$route.name)
+        console.log (this.$route)
+    },
     updated() {        
         this.$scrollSet(this.$refs.scrollContent)
         this.$store.commit("common/inputPageName", this.novel.title)

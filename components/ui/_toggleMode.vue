@@ -8,7 +8,7 @@
             <p class="mode__txt -edit" :class="{ '-active': this.$store.state.user.editProfile }">編集</p>
         </div>
 
-        <div class="mode" v-if="$route.name == 'write' || $route.name == 'preview'">
+        <div class="mode" v-if="$route.params.slug && $route.params.slug.startsWith('-') || $route.name == 'preview'">
             <p class="mode__txt -view" :class="{ '-active': !this.$store.state.user.editNovel }">プレビュー</p>
             <button class="mode__btn" :class="{ '-off': !this.$store.state.user.editNovel }" @click="changeNovelMode">
                 <div class="mode__btn__cir"></div>
@@ -82,7 +82,8 @@ export default {
     computed: {
 
         watchMode() {
-            return this.$store.state.user.editProfile;
+            return this.$store.state.user.editProfile
+
         },
         returnRoute(name) {
             $route.name == name;

@@ -86,7 +86,7 @@ export default {
       },
     };
   },
-  async fetch () {
+  fetch () {
     this.update()
     this.$store.commit('user/setMode', this.$route.name)
   },

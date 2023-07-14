@@ -23,7 +23,6 @@ export default {
         // this.setUser()
     },
     created() {
-        this.$store.commit('user/setMode', this.$route.name)
         // console.log(this.$store.state.user.editNovel)
         // console.log(this.displayName)
     },

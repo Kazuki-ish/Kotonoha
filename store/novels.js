@@ -12,6 +12,7 @@ import {
   doc,
   Timestamp,
   deleteField,
+  deleteDoc,
 } from 'firebase/firestore'
 
 export const state = () => ({
@@ -234,7 +235,7 @@ export const actions = {
     }
 
     const userDocRef = doc(db, 'novels', uid)
-    const newDocRef = doc(db, 'new', timestamp.toString()) // timestampを文字列に変換してIDとして使用
+    const newDocRef = doc(db, 'new', `${timestamp.toString()}`) // timestampとslugを文字列に変換してIDとして使用
 
     // uidに一致するドキュメントが存在しない場合は新規ドキュメントを作成
     await setDoc(userDocRef, {}, { merge: true })
@@ -329,20 +330,31 @@ export const actions = {
   },
 
   async deleteNovel({ state, commit }, { uid, slug }) {
-    console.log(state.novel)
-    // Get a reference to the document
+    // console.log(state.novel)
+    // refを定義
     const docRef = doc(db, 'novels', uid);
   
-    // Use FieldValue.delete() to remove the novel field
+    // ノベルを消す
     const updateData = {};
     updateData[`novel.${slug}`] = deleteField(); // deleteField() is imported from "firebase/firestore"
   
-    // Update the document
+    // ドキュメントをアップデート
     await updateDoc(docRef, updateData);
 
-    // const newDocRef = doc(db, ' novels ', timestamp)
+    // newからも削除する
+    const newCollectionRef = collection(db, 'new');
+    const newCollectionSnapshot = await getDocs(newCollectionRef);
+    
+    // 該当のドキュメントを検索
+    newCollectionSnapshot.forEach((doc) => {
+      // slugとuidが一致する場合に
+      if (doc.data().slug === slug && doc.data().uid === uid) {
+        // ドキュメントを消す
+        deleteDoc(doc.ref);
+      }
+    });
   
-    console.log(state.novel)
+    // console.log(state.novel)
     commit('removeNovel', {uid, slug} );
   },
   
