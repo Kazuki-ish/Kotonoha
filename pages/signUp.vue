@@ -83,11 +83,20 @@ export default {
     },
     methods: {
         async signIn(email, password) {
-            this.$store.dispatch('user/signIn', { email, password })
-            this.$router.push('/');
+            const success = await this.$store.dispatch('user/signIn', { email, password });
+            if (success) {
+                this.$router.push('/');
+            } else {
+                // エラー処理などをここで行うことができます。
+            }
         },
         async signInWithGoogle() {
-            this.$store.dispatch('user/signUpWithGoogle', )
+            const success = await this.$store.dispatch('user/signUpWithGoogle', )
+            if (success) {
+                this.$router.push('/');
+            } else {
+                // エラー処理などをここで行うことができます。
+            }
         },
         async signUp(email, password) {
             this.$store.dispatch('user/signUpWithEmail', { email, password })

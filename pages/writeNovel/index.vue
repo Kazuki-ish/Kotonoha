@@ -44,8 +44,7 @@
 }
 
 .booklist__display-name {
-    position: relative;
-    top: 24px;
+    padding-top: 24px;
     font-size: 24px;
     font-weight: 300;
 }
@@ -141,6 +140,9 @@ export default {
         // this.$store.commit('user/setMode', this.$route.name)
         // console.log(this.$store.state.user.editNovel)
         // console.log(this.displayName)
+        if (!this.$store.state.user.isLogin) {
+            this.$router.push('/signUp')
+        }
     },
     watch: {
         uid(newUid, oldUid) {

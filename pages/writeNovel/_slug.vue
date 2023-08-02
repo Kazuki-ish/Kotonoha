@@ -30,7 +30,7 @@
 
 .write__input {
     @include NM_dent_anim;
-    border-radius: 24px;
+    border-radius: 12px;
     margin-top: 8px;
     min-height: 50%;
     padding: 8px 8px 8px 80vw;

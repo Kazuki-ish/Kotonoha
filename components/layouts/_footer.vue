@@ -1,13 +1,14 @@
 <template>
     <footer :class="{
         '-write-novel': $route.name == 'writeNovel',
+        '-wirte': $route.name == 'write',
         '-novel-list': $route.name == 'myNovels',
-        '-profile': $route.name == 'profile'
+        '-profile': $route.name == 'profile',
     }">
         <!-- <div class="button-list" v-if="$route.name == 'write'">
             <button class="c-black-txt" @click="saveNovel">保存する</button>
         </div> -->
-        <div class="button-list" v-if="$route.path.includes('writeNovel') && $route.params.slug">
+        <div class="button-list" v-if="$route.path.includes('writeNovel') && $route.params.slug || $route.name == 'write'">
             <button class="c-black-txt" @click="overWriteNovel" :class="{ '-pushed': pushed, '-succeed': succeed }">
                 <span class="button-list__txt" @transitionend="pushRouter">
                     {{ saveButtonText }}

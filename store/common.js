@@ -1,6 +1,8 @@
 export const state = () => ({
     isOpenMenu: false,
-    pageName: ''
+    pageName: '',
+    hasMessage: false,
+    messageText: '',
   })
   
   export const mutations = {
@@ -14,5 +16,21 @@ export const state = () => ({
     },
     inputPageName(state, input) {
       state.pageName = input;
-    }
+    },
+    setMessage(state, {hasMessage, messageText}) {
+      state.hasMessage = hasMessage;
+      state.messageText = messageText;
+    },
+  }
+
+  export const actions = {
+    setMessage({commit}, message){
+      commit('setMessage', {hasMessage: true, messageText: message});
+      setTimeout(() => {
+        commit('setMessage', {hasMessage: false, messageText: ''});
+      }, 2000);
+    },
+    clearMessage({commit}) {
+      commit('setMessage', {hasMessage: false, messageText: ''});
+    },
   }

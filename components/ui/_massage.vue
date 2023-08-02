@@ -1,7 +1,7 @@
 <template>
-    <div class="message" :class="{'-reveal': $store.state.user.hasMessage }">
+    <div class="message" :class="{'-reveal': $store.state.common.hasMessage,  }">
         <p class="massage__txt">
-            {{ $store.state.user.messageText }}
+            {{ $store.state.common.messageText }}
         </p>
     </div>
 
@@ -9,14 +9,16 @@
 
 <style lang="scss">
 .message {
-    @include cubic_ease;
-    background-color: #A3C612;
+    @include cubic_ease(transform);
+    border-radius: 4px;
+    background-color: #B1D615;
     bottom: 0;
     color: black;
+    box-shadow: 4px 4px 4px #D3D2CB;
     transform: translateX(-200%);
     position: fixed;
     padding: 8px;
-
+    margin: 0 0 4px 4px;
     &.-reveal {
         transform: translateX(0);
     }

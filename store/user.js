@@ -81,6 +81,10 @@ export const mutations = {
     }
     // console.log(state.editProfile);
   },
+  setMessage(state, {hasMessage, messageText}) {
+    state.hasMessage = hasMessage;
+    state.messageText = messageText;
+  },
 }
 
 export const actions = {
@@ -89,29 +93,34 @@ export const actions = {
     const user = auth.currentUser;
     commit('setUser', user);
   },
-  async signInWithGoogle() {
+  async signUpWithGoogle() {
     try {
         const provider = new GoogleAuthProvider();
         const result = await signInWithPopup(auth, provider);
         // 成功したら、result.user にユーザー情報が格納されています
         console.log('User:', result.user);
+        return true; // 成功した場合は true を返す
     } catch (error) {
         console.error('Error:', error);
+        return false; // エラーが発生した場合は false を返す
     }
 },
 
   async signUpWithEmail({ commit, dispatch }, { email, password }) {
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    //!!メールアドレスの確認セクション!!
+    // try {
+    //   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-      // メールアドレス確認メールを送信
-      if (userCredential.user) {
-        await sendEmailVerification(auth.currentUser);
-        console.log('Verification email sent.');
-      }
-    } catch (error) {
-      console.error(error.message);
-    }
+    //   // メールアドレス確認メールを送信
+    //   if (userCredential.user) {
+    //     await sendEmailVerification(auth.currentUser);
+    //     console.log('Verification email sent.');
+    //     return true; // 成功した場合は true を返す
+    //   }
+    // } catch (error) {
+    //   console.error(error.message);
+    //   return false; // エラーが発生した場合は false を返す
+    // }
 
     // 登録後のログイン処理
     try {
@@ -126,16 +135,12 @@ export const actions = {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       commit('setUser', auth.currentUser);
+      return true; // 成功した場合は true を返す
     } catch (error) {
       console.error(error.message);
       dispatch('setErrorMessage', error.message);
+      return false; // エラーが発生した場合は false を返す
     }
-  },
-  async setErrorMessage({commit}, message){
-    commit('setMessage', {hasMessage: true, messageText: message});
-    setTimeout(() => {
-      commit('setMessage', {hasMessage: false, messageText: ''});
-    }, 2000);
   },
   gotUser({ commit, state }, user) {
     commit('setUser', user)
@@ -242,5 +247,14 @@ export const actions = {
         commit('setIcon', downloadURL)
       }
     }
+  },
+  async setErrorMessage({commit}, message){
+    commit('setMessage', {hasMessage: true, messageText: message});
+    setTimeout(() => {
+      commit('setMessage', {hasMessage: false, messageText: ''});
+    }, 2000);
+  },
+  clearMessage({commit}) {
+    commit('setMessage', {hasMessage: false, messageText: ''});
   },
 }

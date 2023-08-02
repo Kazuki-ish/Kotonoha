@@ -10,7 +10,7 @@
                         </nuxt-link>
                     </li>
                 </ul>
-                <UiAd />
+                <!-- <UiAd /> -->
             </nav>
         </div>
     </div>

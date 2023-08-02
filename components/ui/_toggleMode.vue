@@ -8,13 +8,13 @@
             <p class="mode__txt -edit" :class="{ '-active': this.$store.state.user.editProfile }">編集</p>
         </div>
 
-        <div class="mode" v-if="$route.params.slug && $route.params.slug.startsWith('-') || $route.name == 'preview'">
+        <!-- <div class="mode" v-if="$route.params.slug && $route.params.slug.startsWith('-') || $route.name == 'preview'">
             <p class="mode__txt -view" :class="{ '-active': !this.$store.state.user.editNovel }">プレビュー</p>
             <button class="mode__btn" :class="{ '-off': !this.$store.state.user.editNovel }" @click="changeNovelMode">
                 <div class="mode__btn__cir"></div>
             </button>
             <p class="mode__txt -edit" :class="{ '-active': this.$store.state.user.editNovel }">書く</p>
-        </div>
+        </div> -->
     </div>
 </template>
 <style lang="scss">
@@ -99,15 +99,19 @@ export default {
             this.$store.commit('user/toggleNovelMode')
             // console.log(this.$store.state.user.editNovel)
         },
-    },
+},
     watch: {
         watchMode(beforeToggle, afterToggle) {
             if (afterToggle == true) {
-                this.$router.push('/myNovels');
+                if (this.$route.name !== 'writeNovel' && this.$route.name !== 'write') {
+                    this.$router.push('/myNovels');
+                }
                 this.$store.commit("common/inputPageName", '書いた作品')
             }
             else {
-                this.$router.push('/profile');
+                if (this.$route.name !== 'writeNovel' && this.$route.name !== 'write') {
+                    this.$router.push('/profile');
+                }
                 this.$store.commit("common/inputPageName", '作品を書く')
             }
         },

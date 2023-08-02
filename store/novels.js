@@ -153,55 +153,48 @@ export const actions = {
     })
   },
   
-  async fetchNewNovels({ commit }) {
-    return new Promise((resolve) => {
-      auth.onAuthStateChanged(async (user) => {
-        if (user) {
-          // User is signed in.
-          const newNovelsRef = collection(db, 'new')
-          const newNovelsSnapshot = await getDocs(newNovelsRef)
+  async fetchNewNovels({ commit,dispatch }) {
+    return new Promise(async (resolve) => {
+      // User is signed in or not, the code should run
+      const newNovelsRef = collection(db, 'new')
+      const newNovelsSnapshot = await getDocs(newNovelsRef)
   
-          const newNovels = newNovelsSnapshot.docs.map((doc) => {
-            let novelBody = doc.data().body
+      const newNovels = newNovelsSnapshot.docs.map((doc) => {
+        let novelBody = doc.data().body
   
-            // 144字以上かチェック
-            if (novelBody.length > 144) {
-              // ...を追加
-              novelBody = novelBody.substring(0, 144) + '......'
-            }
+        // 144字以上かチェック
+        if (novelBody.length > 144) {
+          // ...を追加
+          novelBody = novelBody.substring(0, 144) + '......'
+        }
   
-            const timestamp = doc.data().timestamp // Directly use the timestamp property from the doc data
-            const slug = doc.data().slug; // Retrieve slug from the document data
+        const timestamp = doc.data().timestamp // Directly use the timestamp property from the doc data
+        const slug = doc.data().slug; // Retrieve slug from the document data
   
-            // console.log(slug)
+        // console.log(slug)
   
-            return {
-              id: slug, // Use slug as the id
-              ...doc.data(),
-              body: novelBody, // Use the modified novelBody here
-              timestamp: timestamp, // Use the timestamp from the doc data
-            }
-          })
-  
-          // Sort the novels array by timestamp
-          newNovels.sort((a, b) => {
-            // Compare using seconds first, and then nanoseconds if seconds are equal
-            return (
-              b.timestamp.seconds - a.timestamp.seconds ||
-              b.timestamp.nanoseconds - a.timestamp.nanoseconds
-            )
-          })
-  
-          commit('setNewNovels', newNovels)
-          resolve()
-        } else {
-          // No user is signed in.
-          commit('setNewNovels', [])
-          resolve()
+        return {
+          id: slug, // Use slug as the id
+          ...doc.data(),
+          body: novelBody, // Use the modified novelBody here
+          timestamp: timestamp, // Use the timestamp from the doc data
         }
       })
+  
+      // Sort the novels array by timestamp
+      newNovels.sort((a, b) => {
+        // Compare using seconds first, and then nanoseconds if seconds are equal
+        return (
+          b.timestamp.seconds - a.timestamp.seconds ||
+          b.timestamp.nanoseconds - a.timestamp.nanoseconds
+        )
+      })
+
+      commit('setNewNovels', newNovels)
+      resolve()
     })
   },
+  
   
   // async fetchNovel({ commit }, novelId) {
   //   const novelDocRef = doc(db, 'novels', novelId);
@@ -217,14 +210,14 @@ export const actions = {
   //     console.error('No such novel found!');
   //   }
   // },
-  async saveNovel({ rootState, commit }, { uid, title, body, slug }) {
+  async saveNovel({ rootState, commit, dispatch }, { uid, title, body, slug }) {
     const name = rootState.user.profile.name // プロファイルからnameを取得
     const timestamp = Timestamp.now()
 
     if (!slug) {
       slug = generateUniqueSlug(title)
     }
-    console.log(`saveNovel called with uid=${uid}, title=${title}, body=${body}, slug=${slug}`); // Add this line
+    // console.log(`saveNovel called with uid=${uid}, title=${title}, body=${body}, slug=${slug}`); // Add this line
 
     const novelData = {
       title,
@@ -260,7 +253,8 @@ export const actions = {
           { novel: { [slug]: novelData } },
           { merge: true }
         )
-
+        //まず既存のノベルをnewから削除
+        await dispatch('deleteNewNovel', { uid, slug })
 
         // 新しいドキュメントへの保存
         await setDoc(
@@ -268,6 +262,8 @@ export const actions = {
           { uid, title, body, slug, name, timestamp },
           { merge: true }
         )
+
+        dispatch('common/setMessage', '小説を更新しました', { root: true })
 
         commit('setNovel', {
           uid,
@@ -318,6 +314,8 @@ export const actions = {
         { merge: true }
       )
 
+      dispatch('common/setMessage', '新しい小説を保存しました', { root: true })
+
       commit('setNovel', {
         uid,
         title,
@@ -329,7 +327,16 @@ export const actions = {
     }
   },
 
-  async deleteNovel({ state, commit }, { uid, slug }) {
+  //これからここを書きます
+  async setNovel({}){},
+  async createNovel({state, commit, dispatch}, {uid, title, body, name, slug, timestamp}){
+
+  },
+  async updateNovel({}){
+
+  },
+
+  async deleteNovel({ state, commit, dispatch }, { uid, slug }) {
     // console.log(state.novel)
     // refを定義
     const docRef = doc(db, 'novels', uid);
@@ -341,24 +348,55 @@ export const actions = {
     // ドキュメントをアップデート
     await updateDoc(docRef, updateData);
 
-    // newからも削除する
-    const newCollectionRef = collection(db, 'new');
-    const newCollectionSnapshot = await getDocs(newCollectionRef);
-    
-    // 該当のドキュメントを検索
-    newCollectionSnapshot.forEach((doc) => {
-      // slugとuidが一致する場合に
-      if (doc.data().slug === slug && doc.data().uid === uid) {
-        // ドキュメントを消す
-        deleteDoc(doc.ref);
-      }
-    });
-  
+    //アクションを呼び出してnewからも削除
+    await dispatch('deleteNewNovel', { uid, slug })
+
+    // console.log(newDocumentName)
+
     // console.log(state.novel)
     commit('removeNovel', {uid, slug} );
   },
+
+  async deleteNewNovel({dispatch}, {uid, slug}) {
+    // findNewNovelアクションを呼び出してドキュメント名を取得
+    const newDocumentName = await dispatch('findNewNovel', { uid, slug });
   
+    // もしドキュメント名が見つかった場合、そのドキュメントを削除
+    if (newDocumentName) {
+      const docRef = doc(db, 'new', newDocumentName); // 見つかったドキュメントへの参照を作成
+      await deleteDoc(docRef); // ドキュメントを削除
+      dispatch('common/setMessage', '小説を削除しました', { root: true })
+    }
+    else {
+      dispatch('common/setMessage', 'エラー:トップページから削除できませんでした', { root: true })
+    }
+  },
   
+  async findNewNovel({ commit }, { uid, slug }) {
+    const newCollectionRef = collection(db, 'new');
+    const querySnapshot = await getDocs(newCollectionRef);
+
+    const documents = querySnapshot.docs.map((doc) => {
+      return {
+        timestamp: doc.id, // ドキュメントのID (Timestamp)
+        slug: doc.data().slug, // slugフィールド
+        uid: doc.data().uid  // uidフィールド
+      };
+    });
+
+    // documents配列を検索し、指定されたuidとslugと一致するオブジェクトを見つける
+    const matchingDocument = documents.find(document => document.uid === uid && document.slug === slug);
+
+    // 一致するドキュメントが見つかった場合、そのtimestampプロパティを返す
+    if (matchingDocument) {
+      return matchingDocument.timestamp;
+    }
+
+    dispatch('common/setErrorMessage', 'findエラー', { root: true })
+
+    // 一致するドキュメントが見つからない場合、nullを返す
+    return null;
+  },
 
   async fetchLikedNovels({ commit }, uid) {
     const q = query(collection(db, 'likes'), where('uid', '==', uid))

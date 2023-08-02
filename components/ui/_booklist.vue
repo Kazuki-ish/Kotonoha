@@ -94,7 +94,7 @@
 
 .booklist .booklist__item__text {
     padding: 1rem;
-    margin: 0 0.2rem;
+    margin: 10px 0.2rem;
 }
 </style>
 
