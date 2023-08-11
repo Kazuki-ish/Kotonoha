@@ -308,7 +308,7 @@ export const actions = {
         { novel: { [slug]: novelData } },
         { merge: true }
       )
-      console.log('新規データ追加中')
+      // console.log('新規データ追加中')
 
       // newドキュメントへの保存
       await setDoc(
@@ -405,7 +405,7 @@ export const actions = {
     const uid = user.uid;
     const updatedName = user.displayName;
     
-    console.log(user.displayName)
+    // console.log(user.displayName)
 
     // findNewNovelアクションを呼び出してドキュメント名を取得
     const allNewNovels = await dispatch('fetchAllNewNovels', { uid });
@@ -445,7 +445,7 @@ export const actions = {
         // 更新
         await setDoc(timestampDocRef, {name: updatedName }, {merge: true});
 
-        console.log('バッチ処理完了');
+        // console.log('バッチ処理完了');
       }));
     }
 

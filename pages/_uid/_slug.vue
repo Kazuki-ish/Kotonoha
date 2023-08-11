@@ -47,5 +47,8 @@ export default {
         this.$store.commit("common/inputPageName", this.novel.title)
         this.$store.commit("common/inputAuther", this.novel.name)
     },
+    destroyed() {
+        this.$store.commit("common/inputAuther", "")
+    }
 };
 </script>

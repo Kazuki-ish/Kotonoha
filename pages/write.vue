@@ -56,10 +56,10 @@ export default {
     logText() {
       this.text = this.$refs.novelText.innerText
       if (this.text) {
-        console.log(this.text);
+        // console.log(this.text);
       }
       else {
-        console.log('text is nothing');
+        // console.log('text is nothing');
       }
     },
     addBr(txt) {
