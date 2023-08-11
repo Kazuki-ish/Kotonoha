@@ -24,6 +24,7 @@
 
     button {
         @include NM_convex;
+        color: #121212;
         display: block;
         border-radius: 21px;
         padding: 8px 32px;
@@ -62,6 +63,10 @@
 
 .sign-up__google {
     margin: 64px auto 0;
+
+    &__btn {
+      color: #121212;
+    }
 }
 </style>
  
