@@ -12,9 +12,9 @@ export default function ({ route, store, redirect }) {
       //   console.log(store.state.user);
       //   console.log(store.state.user.uid);
       //   console.log(store.state.user.profile);
-      
+
       // ページ遷移時にメッセージをクリアする処理
-      store.dispatch('user/clearMessage')
+      store.dispatch('common/clearMessage')
     } else {
       store.commit('user/logout')
       if (route.path == '/profile' || route.path == '/write' || route.path == '/myNovels') {

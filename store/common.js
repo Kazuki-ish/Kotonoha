@@ -1,6 +1,7 @@
 export const state = () => ({
     isOpenMenu: false,
     pageName: '',
+    auther: '',
     hasMessage: false,
     messageText: '',
   })
@@ -16,6 +17,9 @@ export const state = () => ({
     },
     inputPageName(state, input) {
       state.pageName = input;
+    },
+    inputAuther(state, input) {
+      state.auther = input;
     },
     setMessage(state, {hasMessage, messageText}) {
       state.hasMessage = hasMessage;

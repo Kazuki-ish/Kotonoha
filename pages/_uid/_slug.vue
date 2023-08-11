@@ -40,11 +40,12 @@ export default {
     },
     created() {
         this.$store.commit('user/setMode', this.$route.name)
-        console.log (this.$route)
+        // console.log (this.$route)
     },
     updated() {        
         this.$scrollSet(this.$refs.scrollContent)
         this.$store.commit("common/inputPageName", this.novel.title)
+        this.$store.commit("common/inputAuther", this.novel.name)
     },
 };
 </script>

@@ -1,7 +1,7 @@
 //状態管理のみを行うstore
 import { auth } from '~/plugins/firebase'
 import { signInWithPopup, updateEmail, updateProfile, GoogleAuthProvider } from 'firebase/auth'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, getUserByIdToken } from 'firebase/auth'
 
 import { storage } from '~/plugins/firebase'
 import {
@@ -81,10 +81,6 @@ export const mutations = {
     }
     // console.log(state.editProfile);
   },
-  setMessage(state, {hasMessage, messageText}) {
-    state.hasMessage = hasMessage;
-    state.messageText = messageText;
-  },
 }
 
 export const actions = {
@@ -93,15 +89,17 @@ export const actions = {
     const user = auth.currentUser;
     commit('setUser', user);
   },
-  async signUpWithGoogle() {
+  async signUpWithGoogle(dispatch,) {
     try {
         const provider = new GoogleAuthProvider();
         const result = await signInWithPopup(auth, provider);
         // 成功したら、result.user にユーザー情報が格納されています
-        console.log('User:', result.user);
+        // console.log('User:', result.user);
+        dispatch('common/setMessage', 'Googleでログインしました', { root: true })
         return true; // 成功した場合は true を返す
     } catch (error) {
-        console.error('Error:', error);
+        // console.error('Error:', error);
+        dispatch('common/setMessage', error, { root: true })
         return false; // エラーが発生した場合は false を返す
     }
 },
@@ -125,9 +123,12 @@ export const actions = {
     // 登録後のログイン処理
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      dispatch('common/setMessage', '登録して、ログインしました', { root: true })
       commit('setUser', auth.currentUser);
     } catch (error) {
-      console.error(error.message);
+      // console.error(error.message); 
+      dispatch('common/setMessage', error.message, { root: true })
+      
       
     }
   },
@@ -135,26 +136,31 @@ export const actions = {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       commit('setUser', auth.currentUser);
+
+      dispatch('common/setMessage', 'ログインしました', { root: true })
+      
       return true; // 成功した場合は true を返す
     } catch (error) {
-      console.error(error.message);
-      dispatch('setErrorMessage', error.message);
+      // console.error(error.message);
+      dispatch('common/setMessage', error.message, { root: true })
       return false; // エラーが発生した場合は false を返す
     }
   },
   gotUser({ commit, state }, user) {
     commit('setUser', user)
   },
-  async logOut({ commit }) {
+  async logOut({ commit, dispatch }) {
     try {
       await auth.signOut();
+      dispatch('common/setMessage', 'ログアウトしました', { root: true })
       commit('setUser', false);
     } catch (error) {
-      console.error('Error during sign out:', error);
+      // console.error('Error during sign out:', error);
+      dispatch('common/setMessage', error, { root: true })
     }
   },
 
-  async update({ commit }, updatedValues) {
+  async update({ commit, dispatch }, updatedValues) {
     const user = auth.currentUser //ユーザーインスタンスをfirebaseから取得
 
     if (user) {
@@ -170,6 +176,7 @@ export const actions = {
           photoURL: profileUpdates.photoURL,
         })
         // console.log('アイコンの更新できた')
+        dispatch('common/setMessage', 'アイコンを更新しました', { root: true })
       }
       if (updatedValues.hasOwnProperty('name') && updatedValues.name) {
         profileUpdates.displayName = updatedValues.name
@@ -177,7 +184,10 @@ export const actions = {
           displayName: profileUpdates.displayName,
         })
 
+        dispatch('novels/updateNovelProfile', user, { root: true })
+        
         // console.log('名前の更新できた')
+        dispatch('common/setMessage', '表示名を更新しました', { root: true })
       }
 
       commit('setUser', user)
@@ -247,14 +257,5 @@ export const actions = {
         commit('setIcon', downloadURL)
       }
     }
-  },
-  async setErrorMessage({commit}, message){
-    commit('setMessage', {hasMessage: true, messageText: message});
-    setTimeout(() => {
-      commit('setMessage', {hasMessage: false, messageText: ''});
-    }, 2000);
-  },
-  clearMessage({commit}) {
-    commit('setMessage', {hasMessage: false, messageText: ''});
   },
 }

@@ -1,7 +1,10 @@
 <template>
     <header class="l-header">
-        <p class="l-header__pagename">
+        <p class="l-header__txt -page-name">
             {{ this.$store.state.common.pageName }}
+        </p>
+        <p class="l-header__txt -auther">
+            {{ this.$store.state.common.auther }}
         </p>
         <UiLogo />
         <UiMenubutton />
@@ -15,12 +18,21 @@
         width:100%;
         height:60px;
     }
-    .l-header__pagename {
-        bottom: 0;
+
+    .l-header__txt {
+        bottom: 6px;
         font-size: 12px;
         position: absolute;
-        left: 12px;
         letter-spacing: -0.05em;
+        line-height: 1;
+
+        &.-page-name {
+            left: 12px;
+        }
+        &.-auther {
+            text-align: right;
+            right: 62px;
+        }
     }
     .header-bg{
         // @include NM_convex;

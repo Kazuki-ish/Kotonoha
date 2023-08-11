@@ -13,6 +13,7 @@ import {
   Timestamp,
   deleteField,
   deleteDoc,
+  writeBatch,
 } from 'firebase/firestore'
 
 export const state = () => ({
@@ -189,6 +190,8 @@ export const actions = {
           b.timestamp.nanoseconds - a.timestamp.nanoseconds
         )
       })
+
+      dispatch('fetchAllNewNovels')
 
       commit('setNewNovels', newNovels)
       resolve()
@@ -372,7 +375,7 @@ export const actions = {
     }
   },
   
-  async findNewNovel({ commit }, { uid, slug }) {
+  async findNewNovel({ commit, dispatch }, { uid, slug }) {
     const newCollectionRef = collection(db, 'new');
     const querySnapshot = await getDocs(newCollectionRef);
 
@@ -398,6 +401,78 @@ export const actions = {
     return null;
   },
 
+  async updateNovelProfile({commit, dispatch}, user) {
+    const uid = user.uid;
+    const updatedName = user.displayName;
+    
+    console.log(user.displayName)
+
+    // findNewNovelアクションを呼び出してドキュメント名を取得
+    const allNewNovels = await dispatch('fetchAllNewNovels', { uid });
+    
+    //配列を初期化
+    const matchingTimestamps = [];
+
+    for (const key in allNewNovels) {
+      //各オブジェクトからへ代入する準備
+      if (allNewNovels.hasOwnProperty(key)) {
+        const timestampKey = Object.keys(allNewNovels[key])[0];
+        const obj = allNewNovels[key][timestampKey];
+    
+        // console.log(obj.uid);
+    
+        if (obj.uid === uid) {
+          matchingTimestamps.push(timestampKey);
+          //uidが一致したら配列へ代入
+        }
+      }
+    }
+    
+    // 一致するTimestampが見つかった場合、そのTimestampの配列を返す
+    if (matchingTimestamps.length > 0) {
+
+      // Promise.allを使用して、全ての更新を並行して行う
+      await Promise.all(matchingTimestamps.map(async (timestamp) => {
+       
+        const newCollectionRef = collection(db, 'new');
+
+        // 各Timestampに対応するドキュメントへの参照を取得
+        const timestampDocRef = doc(newCollectionRef, timestamp);
+
+        // nameコレクションへの参照を取得
+        const nameCollectionRef = collection(timestampDocRef, 'name');
+
+        // 更新
+        await setDoc(timestampDocRef, {name: updatedName }, {merge: true});
+
+        console.log('バッチ処理完了');
+      }));
+    }
+
+    // 一致するTimestampが見つからない場合、nullを返す
+    return;
+  },
+
+  async fetchAllNewNovels({ commit }) {
+    const newCollectionRef = collection(db, 'new');
+    const querySnapshot = await getDocs(newCollectionRef);
+  
+    // 全てのドキュメントを取得してオブジェクトの配列に代入
+    const allNewDocuments = querySnapshot.docs.map((doc) => {
+      return {
+        [doc.id]: { // Timestampがキーとなります
+          slug: doc.data().slug, // slugフィールド
+          uid: doc.data().uid  // uidフィールド
+        }
+      };
+    });
+  
+    // commitなど、必要に応じて他の操作をここに追加できます
+    // console.log(allNewDocuments)
+
+    return allNewDocuments; // オブジェクトの配列を返す
+  },
+  
   async fetchLikedNovels({ commit }, uid) {
     const q = query(collection(db, 'likes'), where('uid', '==', uid))
     const querySnapshot = await getDocs(q)

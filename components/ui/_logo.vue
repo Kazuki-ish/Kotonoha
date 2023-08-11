@@ -24,6 +24,8 @@
     }
     .prefix {
             font-size: 10px;
+            margin-left: 4px;
+            opacity: .6;
         }
 </style>
 
