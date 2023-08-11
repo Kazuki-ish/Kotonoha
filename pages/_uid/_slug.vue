@@ -45,6 +45,7 @@ export default {
     updated() {        
         this.$scrollSet(this.$refs.scrollContent)
         this.$store.commit("common/inputPageName", this.novel.title)
+        console.log(this.novel.name)
         this.$store.commit("common/inputAuther", this.novel.name)
     },
     destroyed() {

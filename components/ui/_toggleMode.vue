@@ -99,20 +99,18 @@ export default {
             this.$store.commit('user/toggleNovelMode')
             // console.log(this.$store.state.user.editNovel)
         },
-},
+    },
     watch: {
         watchMode(beforeToggle, afterToggle) {
-            if (afterToggle == true) {
-                if (this.$route.name !== 'writeNovel' && this.$route.name !== 'write') {
+            if (this.$route.name =='profile') {
+                if (afterToggle == true) {
                     this.$router.push('/myNovels');
+                    this.$store.commit("common/inputPageName", '書いた作品')
                 }
-                this.$store.commit("common/inputPageName", '書いた作品')
-            }
-            else {
-                if (this.$route.name !== 'writeNovel' && this.$route.name !== 'write') {
+                else {
                     this.$router.push('/profile');
+                    this.$store.commit("common/inputPageName", '作品を書く')
                 }
-                this.$store.commit("common/inputPageName", '作品を書く')
             }
         },
     },
