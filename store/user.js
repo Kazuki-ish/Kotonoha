@@ -1,7 +1,17 @@
 //状態管理のみを行うstore
 import { auth } from '~/plugins/firebase'
-import { signInWithPopup, updateEmail, updateProfile, GoogleAuthProvider } from 'firebase/auth'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, getUserByIdToken } from 'firebase/auth'
+import {
+  signInWithPopup,
+  updateEmail,
+  updateProfile,
+  GoogleAuthProvider,
+} from 'firebase/auth'
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendEmailVerification,
+  getUserByIdToken,
+} from 'firebase/auth'
 
 import { storage } from '~/plugins/firebase'
 import {
@@ -77,32 +87,31 @@ export const mutations = {
     if (pageName == 'myNovels') {
       state.editNovel = true
     } else {
-      state.editNovel = false;
+      state.editNovel = false
     }
     // console.log(state.editProfile);
   },
 }
 
 export const actions = {
-
-  async setUserFromAuth (commit,) {
-    const user = auth.currentUser;
-    commit('setUser', user);
+  async setUserFromAuth({ commit }) {
+    const user = auth.currentUser
+    commit('setUser', user)
   },
-  async signUpWithGoogle(dispatch,) {
+  async signUpWithGoogle({ dispatch }) {
     try {
-        const provider = new GoogleAuthProvider();
-        const result = await signInWithPopup(auth, provider);
-        // 成功したら、result.user にユーザー情報が格納されています
-        // console.log('User:', result.user);
-        dispatch('common/setMessage', 'Googleでログインしました', { root: true })
-        return true; // 成功した場合は true を返す
+      const provider = new GoogleAuthProvider()
+      const result = await signInWithPopup(auth, provider)
+      // 成功したら、result.user にユーザー情報が格納されています
+      // console.log('User:', result.user);
+      dispatch('common/setMessage', 'Googleでログインしました', { root: true })
+      return true // 成功した場合は true を返す
     } catch (error) {
-        // console.error('Error:', error);
-        dispatch('common/setMessage', error, { root: true })
-        return false; // エラーが発生した場合は false を返す
+      // console.error('Error:', error);
+      dispatch('common/setMessage', error, { root: true })
+      return false // エラーが発生した場合は false を返す
     }
-},
+  },
 
   async signUpWithEmail({ commit, dispatch }, { email, password }) {
     //!!メールアドレスの確認セクション!!
@@ -122,28 +131,28 @@ export const actions = {
 
     // 登録後のログイン処理
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      dispatch('common/setMessage', '登録して、ログインしました', { root: true })
-      commit('setUser', auth.currentUser);
-    } catch (error) {
-      // console.error(error.message); 
-      dispatch('common/setMessage', error.message, { root: true })
-      
-      
-    }
-  },
-  async signIn( {commit,dispatch}, {email, password}){
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      commit('setUser', auth.currentUser);
-
-      dispatch('common/setMessage', 'ログインしました', { root: true })
-      
-      return true; // 成功した場合は true を返す
+      await signInWithEmailAndPassword(auth, email, password)
+      dispatch('common/setMessage', '登録して、ログインしました', {
+        root: true,
+      })
+      commit('setUser', auth.currentUser)
     } catch (error) {
       // console.error(error.message);
       dispatch('common/setMessage', error.message, { root: true })
-      return false; // エラーが発生した場合は false を返す
+    }
+  },
+  async signIn({ commit, dispatch }, { email, password }) {
+    try {
+      await signInWithEmailAndPassword(auth, email, password)
+      commit('setUser', auth.currentUser)
+
+      dispatch('common/setMessage', 'ログインしました', { root: true })
+
+      return true // 成功した場合は true を返す
+    } catch (error) {
+      // console.error(error.message);
+      dispatch('common/setMessage', error.message, { root: true })
+      return false // エラーが発生した場合は false を返す
     }
   },
   gotUser({ commit, state }, user) {
@@ -151,9 +160,9 @@ export const actions = {
   },
   async logOut({ commit, dispatch }) {
     try {
-      await auth.signOut();
+      await auth.signOut()
       dispatch('common/setMessage', 'ログアウトしました', { root: true })
-      commit('setUser', false);
+      commit('setUser', false)
     } catch (error) {
       // console.error('Error during sign out:', error);
       dispatch('common/setMessage', error, { root: true })
@@ -185,7 +194,7 @@ export const actions = {
         })
 
         dispatch('novels/updateNovelProfile', user, { root: true })
-        
+
         // console.log('名前の更新できた')
         dispatch('common/setMessage', '表示名を更新しました', { root: true })
       }
