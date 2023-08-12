@@ -46,7 +46,7 @@ export default {
     },
     methods: {
         setPageName() {
-            this.$store.commit("common/inputPageName", '書いた小説')
+            this.$store.commit("common/inputPageName", '書いた作品')
         },
         // async setUser() {
         //     this.$store.dispatch('user/setUserFromAuth')

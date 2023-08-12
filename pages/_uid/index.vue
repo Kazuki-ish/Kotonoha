@@ -140,7 +140,7 @@ export default {
             this.$refs.scroll.scrollSet()
         },
         fetchNovels() {
-            this.$store.commit("common/inputPageName", '書いた小説')
+            this.$store.commit("common/inputPageName", '仮')
         },
         // async setUser() {
         //     this.$store.dispatch('user/setUserFromAuth')

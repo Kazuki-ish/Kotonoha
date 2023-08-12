@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="toggleMode">
         <div class="mode" v-if="$route.name == 'profile' || $route.name == 'myNovels'">
             <p class="mode__txt -view" :class="{ '-active': !this.$store.state.user.editProfile }">表示</p>
             <button class="mode__btn" :class="{ '-off': !this.$store.state.user.editProfile }" @click="changeMode">
@@ -21,6 +21,10 @@
 // toggleボタンは共通化して引数で指定できるようにする
 $btn: 32px;
 
+.toggleMode {
+    position: relative;
+    top: 16px;
+}
 .mode {
     display: flex;
     position: relative;
@@ -102,7 +106,7 @@ export default {
     },
     watch: {
         watchMode(beforeToggle, afterToggle) {
-            if (this.$route.name =='profile') {
+            if (this.$route.name =='profile' || this.$route.name =='myNovels') {
                 if (afterToggle == true) {
                     this.$router.push('/myNovels');
                     this.$store.commit("common/inputPageName", '書いた作品')

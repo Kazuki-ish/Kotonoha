@@ -28,7 +28,7 @@
 <style lang="scss" scoped>
 footer {
     bottom: 0;
-    min-height: calc(120 / 1686 * 100vh);
+    min-height: 60px;
     position: absolute;
     pointer-events: auto;
     width: 100%;

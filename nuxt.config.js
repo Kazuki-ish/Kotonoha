@@ -18,7 +18,7 @@ export default {
       { name: 'apple-mobile-web-app-capable', content:'yes' },
       { name: 'apple-mobile-web-app-status-bar-style', content:'black-translucent'},
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.png' },
             { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Noto+Serif+JP'},//これはscssにそのうち移動
             { rel:'stylesheet', href:'https://unpkg.com/ress/dist/ress.min.css'}//リセットcss
     ],

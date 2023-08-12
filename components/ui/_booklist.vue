@@ -32,6 +32,10 @@
         //padding:16px 16px 12px;
         margin: 0;
     }
+
+    .-top & {
+
+    }
 }
 
 .booklist__profile {
@@ -39,13 +43,13 @@
 }
 
 .booklist__item__auther {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 300;
 }
 
 .booklist .booklist__item {
     @include relative;
-    height: get_Vh(857);
+    height: 80%;
     //width: get_Vw(373);
     white-space: pre-wrap;
     list-style: none;
@@ -65,7 +69,7 @@
 }
 
 .booklist .booklist__item:nth-child(even) {
-    margin-top: get_Vh(301);
+    margin-top: 20%;
 }
 
 .booklist .booklist__item__wrapper {
@@ -75,12 +79,14 @@
 
 .booklist .booklist__item__title {
     display: block;
+    font-size: 18px;
     margin-left: -1rem;
     line-height: 1;
 }
 
 .booklist .booklist__bottom-wraper {
     text-align: right;
+    margin-right: -1rem;
 }
 .booklist__item__link {
     display: block;
@@ -125,7 +131,7 @@ export default {
         },
     },
     created() {
-        this.$store.commit("common/inputPageName", 'ホーム')
+        // this.$store.commit("common/inputPageName", 'ホーム')
     },
     mounted() {
         // console.log(this.$store.state.user.profile.name)

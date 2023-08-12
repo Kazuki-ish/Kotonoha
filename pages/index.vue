@@ -1,5 +1,5 @@
 <template>
-  <section class="c-vertical-inner" id="js-c-scroll">
+  <section class="c-vertical-inner -top" id="js-c-scroll">
     <UiBooklist />
   </section>
 </template>

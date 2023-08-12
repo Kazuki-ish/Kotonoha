@@ -3,7 +3,7 @@
         <p class="l-header__txt -page-name">
             {{ this.$store.state.common.pageName }}
         </p>
-        <p class="l-header__txt -auther">
+        <p class="l-header__txt -auther" >
             {{ this.$store.state.common.auther }}
         </p>
         <UiLogo />

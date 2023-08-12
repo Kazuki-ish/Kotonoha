@@ -1,11 +1,11 @@
 .c-vertical-inner{
     background-color: #F4F3EA;
     min-height:calc((1300 / 1686) * 100svh);
-    max-height:calc((1450 / 1686) * 100svh);
-    margin: 8px 8px 0 0;
+    max-height:calc(100svh - 60px - 60px);
+    margin: 8px 8px 8px 0;
+    overflow-x: scroll;
     overflow-y: hidden;
     white-space: pre-wrap;
-    overflow-x: scroll;
 
     p{
   	  text-indent:1em;
@@ -15,6 +15,7 @@
 .c-vertical{
     vertical-align: text-top;
     writing-mode: vertical-rl;
+    padding-bottom: 12px;
     line-height:calc(52 / 32);
     letter-spacing: 0.075em;
     max-height:100%;

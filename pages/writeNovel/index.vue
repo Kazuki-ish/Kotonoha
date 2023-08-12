@@ -51,7 +51,7 @@
 
 .booklist .booklist__item {
     @include relative;
-    height: get_Vh(857);
+    height: 80%;
     //width: get_Vw(373);
     white-space: pre-wrap;
     list-style: none;
@@ -69,7 +69,7 @@
 }
 
 .booklist .booklist__item:nth-child(even) {
-    margin-top: get_Vh(301);
+    margin-top: 20%;
 }
 
 .booklist .booklist__item__wrapper {
