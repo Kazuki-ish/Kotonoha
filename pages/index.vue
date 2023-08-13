@@ -36,5 +36,8 @@ export default {
     }
   },
 
+  created() {
+        this.$store.commit("common/inputPageName", '')
+  },
 }
 </script>

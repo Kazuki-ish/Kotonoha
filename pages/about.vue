@@ -36,11 +36,15 @@ export default {
   },
   created() {
     this.$store.commit("common/inputPageName", 'コトノハについて')
+    this.$store.commit("common/inputAuther", "メイテイ")
   },
   mounted() {//DOMマウント後に実行
 
     //右端までスクロールする
     this.$scrollSet()
+  },
+  destroyed() {
+    this.$store.commit("common/inputAuther", "")
   },
 }
 </script>
