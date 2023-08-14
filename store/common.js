@@ -20,7 +20,7 @@ export const state = () => ({
     },
     inputAuther(state, input) {
       state.auther = input;
-      console.log(state.auther)
+      // console.log(state.auther)
     },
     setMessage(state, {hasMessage, messageText}) {
       state.hasMessage = hasMessage;
