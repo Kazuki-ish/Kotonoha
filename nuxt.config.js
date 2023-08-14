@@ -6,14 +6,15 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'コトノハ',
+    title: 'コトノハ | 縦書き小説投稿サイト',
     htmlAttrs: {
-      lang: 'jp',
+      lang: 'ja',
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
+      { hid: 'description', name: 'description', content: 'コトノハは縦書きで執筆、閲覧できる小説投稿サイトです。' },
+      { name: 'keywords', content: '小説投稿, 縦書き, 純文学, ハードSF, 執筆, 閲覧, コトノハ' },
       { name: 'format-detection', content: 'telephone=no' },
       { name: 'apple-mobile-web-app-capable', content:'yes' },
       { name: 'apple-mobile-web-app-status-bar-style', content:'black-translucent'},
