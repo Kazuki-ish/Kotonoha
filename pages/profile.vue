@@ -98,6 +98,10 @@ export default {
       this.$router.push('/signUp')
     }
   },
+  mounted() {
+    this.$store.commit('common/toggleMount');
+
+  },
   methods: {
     async logOut() {
       await this. $store.dispatch('user/logOut')
@@ -111,5 +115,8 @@ export default {
       };
     },
   },
+  destroyed() {
+    this.$store.commit('common/setIsMounted');
+  }
 }
 </script>

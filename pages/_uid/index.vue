@@ -10,7 +10,6 @@
                 </nuxt-link>
             </li>
         </ul>
-        <ModulesScroll ref="scroll" />
     </section>
 </template>
 

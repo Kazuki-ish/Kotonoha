@@ -1,19 +1,29 @@
 <template>
-    <main class="l-main" ref="main">
+    <main class="l-main">
         <LayoutsHeader />
-        <Nuxt />
+        <div class="l-main__content" ref="main">
+            <Nuxt  />
+        </div>
         <LayoutsFooter />
     </main>
 </template>
 
 <script>
+
 export default {
     mounted() {
-        this.$refs.main.classList.add('-mounted');
     },
     destroyed() {
-        this.$refs.main.classList.remove('-mounted');
-    }
+    },
+    watch: {
+        '$store.state.common.isMounted'(newValue, oldValue) {
+            if (newValue === true) {
+                this.$refs.main.classList.add('-mounted');
+            } else {
+                this.$refs.main.classList.remove('-mounted');
+            }
+        }
+    },
  }
 </script>
 
@@ -23,11 +33,6 @@ export default {
         max-height: 100svh;
         overflow: hidden;
         max-width: 100svw;
-        opacity: 0;
-        
-        &.-mounted {
-            opacity: 1;
-        }
     }
 
     a {
@@ -35,18 +40,17 @@ export default {
         text-decoration: none;
     }
 
-    #js-c-scroll{
-    @include cubic_ease;
-    // visibility: hidden;
-    opacity:0;//アニメーション初期化
-    
-        &.-mounted{
-            opacity: 1;
-        }
-    }
-
     //style conponents 
     .c-black-txt {
         color:black;
+    }
+
+    .l-main__content {
+        @include cubic_ease($time:.2s);
+        opacity: 0;
+
+        &.-mounted{
+            opacity: 1;
+        }
     }
 </style>

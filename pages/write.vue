@@ -51,6 +51,8 @@ export default {
     this.$store.commit('user/setMode', this.$route.name)
   },
   mounted() {
+    this.$store.commit('common/toggleMount');
+    console.log(this.$store.state.common.isMounted)
   },
   methods: {
     logText() {

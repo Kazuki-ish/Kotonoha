@@ -96,7 +96,10 @@ export default {
 
     methods: {
         changeMode() {
+        this.$store.commit('common/setIsMounted'); 
+        setTimeout(() => {
             this.$store.commit('user/toggleMode')
+        }, 200)
             // console.log(this.$store.state.user.editProfile)
         },
         changeNovelMode() {
@@ -113,7 +116,7 @@ export default {
                 }
                 else {
                     this.$router.push('/profile');
-                    this.$store.commit("common/inputPageName", '作品を書く')
+                    this.$store.commit("common/inputPageName", 'プロフィール')
                 }
             }
         },

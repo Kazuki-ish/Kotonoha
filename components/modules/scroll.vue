@@ -1,15 +1,6 @@
 <template></template>
 
 <style lang="scss">
-    #js-c-scroll{
-        @include cubic_ease;
-        // visibility: hidden;
-        opacity:0;//アニメーション初期化
-        
-        &.-mounted{
-            opacity: 1;
-        }
-    }
 </style>
 
 <script>
@@ -25,7 +16,7 @@ export default {
             // console.log(scrollWidth);
 
             content.scrollLeft = scrollWidth;
-            content.classList.add('-mounted');
+            // content.classList.add('-mounted');
         }
     }
 }

@@ -70,7 +70,7 @@ export default {
   ],
 
   router: {
-    middleware: ['auth']
+    middleware: ['auth', 'transition']
   },
 
   sitemap: {

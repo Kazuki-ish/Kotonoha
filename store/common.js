@@ -4,6 +4,7 @@ export const state = () => ({
     auther: '',
     hasMessage: false,
     messageText: '',
+    isMounted: false,
   })
   
   export const mutations = {
@@ -25,6 +26,12 @@ export const state = () => ({
     setMessage(state, {hasMessage, messageText}) {
       state.hasMessage = hasMessage;
       state.messageText = messageText;
+    },
+    setIsMounted(state) {
+      state.isMounted = false;
+    },
+    toggleMount(state) {
+      state.isMounted = !state.isMounted;
     },
   }
 

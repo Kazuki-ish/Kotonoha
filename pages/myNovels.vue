@@ -13,11 +13,6 @@ export default {
             isProfile: true,
         }
     },
-    computed: {
-        watchMode() {
-            return this.$store.state.user.editNovel;
-        },
-    },
     async fetch() {
         this.setPageName()
         // this.setUser()
@@ -38,11 +33,6 @@ export default {
                 }
             }
         },
-        watchMode(beforeToggle, afterToggle) {
-            if (afterToggle == true) {
-                this.$scrollSet();
-            }
-        }
     },
     methods: {
         setPageName() {

@@ -12,7 +12,6 @@
         <!-- <div class="c-vertical" v-else>
             <p>小説が見つかりませんでした。</p>
         </div> -->
-        <!-- <ModulesScroll ref="scroll" /> -->
     </section>
 </template>
 

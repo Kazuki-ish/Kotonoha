@@ -135,7 +135,6 @@ export default {
     },
     mounted() {
         // console.log(this.$store.state.user.profile.name)
-        this.$scrollSet()
     },
     updated() {
         // console.log(this.$store.state.novels.newNovels)
@@ -147,7 +146,7 @@ export default {
         },
         async fetchUserNovels() {
             await this.$store.dispatch('novels/fetchUserNovels');
-            await this.$scrollSet()
+            await this.$scrollSet();
         },
         uid(index) {
             if (this.$route.name == "myNovels") {
