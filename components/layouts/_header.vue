@@ -7,7 +7,7 @@
             {{ this.$store.state.common.auther }}
         </p>
         <UiLogo />
-        <UiMenubutton />
+        <UiMenuButton />
         <div class="header-bg"></div>
     </header>
 </template>

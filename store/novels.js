@@ -197,35 +197,20 @@ export const actions = {
     })
   },
 
-  // async fetchNovel({ commit }, novelId) {
-  //   const novelDocRef = doc(db, 'novels', novelId);
-  //   const novelSnapshot = await getDoc(novelDocRef);
-
-  //   if (novelSnapshot.exists()) {
-  //     const novelData = {
-  //       id: novelSnapshot.id,
-  //       ...novelSnapshot.data(),
-  //     };
-  //     commit('setCurrentNovel', novelData);
-  //   } else {
-  //     console.error('No such novel found!');
-  //   }
-  // },
-  async saveNovel({ rootState, commit, dispatch }, { uid, title, body, slug }) {
-    const name = rootState.user.profile.name // プロファイルからnameを取得
+  async saveNovel({ rootState, commit, dispatch }, { uid, title, body, slug, isPublic }) {
+    const name = rootState.user.profile.name
     const timestamp = Timestamp.now()
-
     if (!slug) {
       slug = generateUniqueSlug(title)
     }
-    // console.log(`saveNovel called with uid=${uid}, title=${title}, body=${body}, slug=${slug}`); // Add this line
-
+    
     const novelData = {
       title,
       body,
       name,
       timestamp,
       slug,
+      isPublic,
     }
 
     const userDocRef = doc(db, 'novels', uid)
@@ -234,11 +219,8 @@ export const actions = {
     // uidに一致するドキュメントが存在しない場合は新規ドキュメントを作成
     await setDoc(userDocRef, {}, { merge: true })
 
-    // console.log('saveNovel実行中')
-
     // 既存のデータを取得
     const userDocSnapshot = await getDoc(userDocRef)
-    // console.log(userDocSnapshot)
 
     if (userDocSnapshot.exists()) {
       const userData = userDocSnapshot.data()
@@ -246,24 +228,25 @@ export const actions = {
 
       // 同じidのデータが存在し、テキストが変わっていた場合、データを更新
       if (
-        //ここのelse分岐がないためreturnしてしまっている。今のところ下のelse文をコピーしておくが、今後整頓が必要
-        existingNovelData &&
-        (existingNovelData.title !== title || existingNovelData.body !== body)
+        existingNovelData && (existingNovelData.title !== title || existingNovelData.body !== body)
       ) {
         await setDoc(
           userDocRef,
           { novel: { [slug]: novelData } },
           { merge: true }
         )
-        //まず既存のノベルをnewから削除
-        await dispatch('deleteNewNovel', { uid, slug })
 
-        // 新しいドキュメントへの保存
-        await setDoc(
-          newDocRef,
-          { uid, title, body, slug, name, timestamp },
-          { merge: true }
-        )
+        if( isPublic ){ //公開する場合newへ保存する
+          //まず既存のノベルをnewから削除
+          await dispatch('deleteNewNovel', { uid, slug })
+
+          // newドキュメントへの保存
+          await setDoc(
+            newDocRef,
+            { uid, title, body, slug, name, timestamp },
+            { merge: true }
+          )
+        }
 
         dispatch('common/setMessage', '小説を更新しました', { root: true })
 
@@ -274,9 +257,8 @@ export const actions = {
           name,
           slug: slug,
           timestamp: timestamp,
-        }) // Include name and timestamp in the commit
-      } else {
-        //docが確認できなかったため新規データ追加
+        })
+      } else {  //docが確認できなかったため新規データ追加
         await setDoc(
           userDocRef,
           { novel: { [slug]: novelData } },
@@ -284,12 +266,14 @@ export const actions = {
         )
         // console.log('新規データ追加中')
 
-        // newドキュメントへの保存
-        await setDoc(
-          newDocRef,
-          { uid, title, body, slug, name, timestamp },
-          { merge: true }
-        )
+        if(isPublic){ //公開する場合にnewへ保存
+          // newドキュメントへの保存
+          await setDoc(
+            newDocRef,
+            { uid, title, body, slug, name, timestamp },
+            { merge: true }
+          )
+        }
 
         commit('setNovel', {
           uid,
@@ -298,7 +282,7 @@ export const actions = {
           name,
           slug: slug,
           timestamp: timestamp,
-        }) // Include name and timestamp in the commit
+        })
       }
     } else {
       // 既存のデータがない場合、新たにデータを追加
@@ -310,11 +294,13 @@ export const actions = {
       // console.log('新規データ追加中')
 
       // newドキュメントへの保存
-      await setDoc(
-        newDocRef,
-        { uid, title, body, slug, name, timestamp },
-        { merge: true }
-      )
+      if (isPublic){
+        await setDoc(
+          newDocRef,
+          { uid, title, body, slug, name, timestamp },
+          { merge: true }
+        )
+      }
 
       dispatch('common/setMessage', '新しい小説を保存しました', { root: true })
 
@@ -330,12 +316,15 @@ export const actions = {
   },
 
   //これからここを書きます
-  async setNovel({}) {},
   async createNovel(
     { state, commit, dispatch },
-    { uid, title, body, name, slug, timestamp }
-  ) {},
-  async updateNovel({}) {},
+    { uid, title, body, name, slug, isPublic, timestamp }
+  ) {
+
+  },
+  async updateNovel({
+
+  }) {},
 
   async deleteNovel({ state, commit, dispatch }, { uid, slug }) {
     // console.log(state.novel)

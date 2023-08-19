@@ -19,6 +19,7 @@ export default function ({ route, store, redirect }) {
       store.commit('user/logout')
       if (route.path == '/profile' || route.path == '/write' || route.path == '/myNovels') {
         redirect('/signup')
+        this.$store.commit('common/setIsMounted', true);
       }
     }
   })

@@ -6,7 +6,7 @@ export default ({store, route}, inject) => {
       content.scrollLeft = scrollWidth;
       // content.classList.add('-mounted');
       setTimeout(() => {
-        store.commit('common/toggleMount');
+        store.commit('common/setIsMounted', true);
       }, 200
       )
     });

@@ -86,6 +86,9 @@ export default {
             this.$router.push('/profile');
         }
     },
+    mounted() {
+        this.$store.commit('common/setIsMounted', true);
+    },
     methods: {
         async signIn(email, password) {
             const success = await this.$store.dispatch('user/signIn', { email, password });

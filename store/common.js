@@ -27,11 +27,11 @@ export const state = () => ({
       state.hasMessage = hasMessage;
       state.messageText = messageText;
     },
-    setIsMounted(state) {
-      state.isMounted = false;
-    },
     toggleMount(state) {
       state.isMounted = !state.isMounted;
+    },
+    setIsMounted(state, boolarn) {
+      state.isMounted = boolarn;
     },
   }
 

@@ -57,7 +57,7 @@
   color: #121212;
   @include NM_dent;
   border-radius: 16px;
-  padding: 8px 0;
+  padding: 8px 6px;
   text-align: center;
   margin-top: 16px;
   min-width: calc(338px / 2);
@@ -99,7 +99,7 @@ export default {
     }
   },
   mounted() {
-    this.$store.commit('common/toggleMount');
+    this.$store.commit('common/setIsMounted', true);
 
   },
   methods: {
@@ -116,7 +116,7 @@ export default {
     },
   },
   destroyed() {
-    this.$store.commit('common/setIsMounted');
+    this.$store.commit('common/setIsMounted', false);
   }
 }
 </script>

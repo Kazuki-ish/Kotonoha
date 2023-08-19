@@ -96,7 +96,7 @@ export default {
 
     methods: {
         changeMode() {
-        this.$store.commit('common/setIsMounted'); 
+        this.$store.commit('common/setIsMounted', false); 
         setTimeout(() => {
             this.$store.commit('user/toggleMode')
         }, 200)

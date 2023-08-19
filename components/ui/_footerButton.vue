@@ -1,8 +1,13 @@
 <template>
     <div class="button-list" v-if="$route.path.includes('writeNovel') && $route.params.slug || $route.name == 'write'">
+        <button class="c-black-txt" @click="draftNovel" :class="{ '-pushed': pushed, '-succeed': succeed }">
+            <span class="button-list__txt" @transitionend="pushRouter">
+                {{ draftButtonText }}
+            </span>
+        </button>
         <button class="c-black-txt" @click="overWriteNovel" :class="{ '-pushed': pushed, '-succeed': succeed }">
             <span class="button-list__txt" @transitionend="pushRouter">
-                {{ saveButtonText }}
+                {{ publishButtonText }}
             </span>
         </button>
         <button class="c-black-txt" @click="deleteNovel" :class="{ '-pushed': pushed, '-succeed': succeed }">
@@ -61,24 +66,30 @@
 export default {
     data() {
         return {
-            saveButtonText: '保存する',
+            draftButtonText: '保存する',
+            publishButtonText: '公開する',
             deleteButtonText: '削除する',
             pushed: false,
             succeed: false,
         }
     },
     methods: {
-        async overWriteNovel(event) {
+        async draftNovel(event) {
             this.pushed = true;
-            this.saveButtonText = '保存中';
+            this.draftButtonText = '保存中';
 
             const title = this.$store.state.novels.title;
             const body = this.$store.state.novels.body;
             const slug = this.$store.state.novels.slug;
+            // 初期化してないから上書きされる。。。
+            const isPublic = false;
 
             if (!title || !body) {
                 //console.log("Title or body is missing");
-                this.saveButtonText = '失敗';
+                // this.draftButtonText = '失敗';
+                setTimeout(() => {
+                    this.draftButtonText = '保存';
+                }, 500 )
                 return;
             }
 
@@ -87,11 +98,37 @@ export default {
                 title,
                 body,
                 slug,
+                isPublic,
+            });
+        },
+        async overWriteNovel(event) {
+            this.pushed = true;
+            this.publishButtonText = '公開中';
+
+            const title = this.$store.state.novels.title;
+            const body = this.$store.state.novels.body;
+            const slug = this.$store.state.novels.slug;
+            const isPublic = true;
+
+            if (!title || !body) {
+                //console.log("Title or body is missing");
+                this.publishButtonText = '失敗';
+                setTimeout(() => {
+                    this.publishButtonText = '保存';
+                }, 500 )
+                return;
+            }
+
+            await this.$store.dispatch("novels/saveNovel", {
+                uid: this.$store.state.user.uid,
+                title,
+                body,
+                slug,
+                isPublic,
             });
             // console.log("Novel saved successfully");
         },
         async deleteNovel(event) {
-
             this.pushed = true;
             const slug = this.$store.state.novels.slug;
             // console.log(slug)
@@ -104,7 +141,7 @@ export default {
         pushRouter(event) {
             if (event.propertyName === 'transform' && this.pushed) {
                 this.succeed = true;
-                this.saveButtonText = '完了';
+                this.publishButtonText = '完了';
             } else if (event.propertyName === 'opacity' && this.succeed) {
                 this.$router.push('/writeNovel');
             }
@@ -113,7 +150,8 @@ export default {
             if (this.$route.path === '/writeNovel') {
                 this.pushed = false;
                 this.succeed = false;
-                this.saveButtonText = '保存する';
+                this.publishButtonText = '公開';
+                this.darftNovelText = '保存';
             }
         },
     },

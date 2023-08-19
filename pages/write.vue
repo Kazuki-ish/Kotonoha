@@ -19,6 +19,9 @@
   min-height: 50%;
   padding: 8px 8px 8px 80vw;
 
+  -webkit-user-select: text;
+  user-select: text;
+
   &.-title {
     padding-left: 8px;
   }
@@ -51,8 +54,8 @@ export default {
     this.$store.commit('user/setMode', this.$route.name)
   },
   mounted() {
-    this.$store.commit('common/toggleMount');
-    console.log(this.$store.state.common.isMounted)
+    this.$store.commit('common/setIsMounted', true);
+    // console.log(this.$store.state.common.isMounted)
   },
   methods: {
     logText() {

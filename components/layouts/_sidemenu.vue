@@ -1,7 +1,7 @@
 <template>
     <div class="sidemenu">
         <div class="l-sidemenu">
-            <UiLoginbutton />
+            <UiLoginButton />
             <nav id="MenuList" :class="{ open:this.$store.state.common.isOpenMenu }">
                 <ul class="sidemenu__list">
                     <li class="sidemenu__item" v-for="menu in menus" v-if="menu.public" >
@@ -48,8 +48,9 @@
     .l-sidemenu{
         @include NM_convex_side;
         background-color: $base-color;
-        height: 100vh;
+        height: 110vh;
         width:70vw;
+        margin-top: -5vh;
     }
     #MenuList {
         position: fixed;

@@ -48,6 +48,7 @@ export default {
         this.$store.commit("common/inputAuther", this.novel.name)
     },
     destroyed() {
+        // slug初期化処理
         this.$store.commit("common/inputAuther", "")
     }
 };
