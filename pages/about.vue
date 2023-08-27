@@ -1,5 +1,5 @@
 <template>
-  <section class="c-vertical-inner" id="js-c-scroll">
+  <section class="c-vertical-inner" id="js-c-scroll" ref="scrollContent">
     <div class="c-vertical">
       <p><span class="big">縦書きの小説サイトが無い。</span><br></p>
       <p>
@@ -41,7 +41,7 @@ export default {
   mounted() {//DOMマウント後に実行
 
     //右端までスクロールする
-    this.$scrollSet()
+    this.$scrollSet(this.$refs.scrollContent)
   },
   destroyed() {
     this.$store.commit("common/inputAuther", "")

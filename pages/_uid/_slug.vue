@@ -1,6 +1,6 @@
 <template>
-    <section class="novel c-vertical-inner" id="js-c-scroll" ref="scrollContent">
-        <div class="c-vertical" v-if="novel">
+    <section class="novel c-vertical-inner">
+        <div class="c-vertical" @scroll='setScrollAmount' v-if="novel" id="js-c-scroll" ref="scrollContent">
             <h1 class="novel__title" v-html="novel.title"></h1>
             <p class="novel__body" v-html="novel.body"></p>
         </div>
@@ -35,7 +35,6 @@ export default {
         this.novel = await this.$store.dispatch('novels/fetchSingleNovel', { uid, slug });
     },
     mounted() {//DOMマウント後に実行
-
     },
     created() {
         this.$store.commit('user/setMode', this.$route.name)
@@ -44,8 +43,15 @@ export default {
     updated() {        
         this.$scrollSet(this.$refs.scrollContent)
         this.$store.commit("common/inputPageName", this.novel.title)
-        console.log(this.novel.name)
         this.$store.commit("common/inputAuther", this.novel.name)
+        // console.log(this.novel.name)
+    },
+    methods: {
+        setScrollAmount(event){
+            const scrollAmount = event.target.scrollLeft;  // 横方向のスクロール量を取得
+            this.$store.commit('common/setScrollAmount', scrollAmount);
+            console.log(scrollAmount);
+        }
     },
     destroyed() {
         // slug初期化処理

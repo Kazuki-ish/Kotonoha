@@ -15,7 +15,6 @@ import {
   deleteDoc,
   writeBatch,
 } from 'firebase/firestore'
-import consolaGlobalInstance from 'consola'
 
 export const state = () => ({
   userNovels: [],
@@ -189,9 +188,7 @@ export const actions = {
         // ...を追加
         novelBody = substringBody + '......';
       }
-    
-        console.log(novelBody)
-
+        // console.log(novelBody)
         return {
           id: slug, // Use slug as the id
           ...document.data(),

@@ -1,5 +1,5 @@
 <template>
-    <ul class="booklist c-vertical">
+    <ul class="booklist c-vertical" ref="scrollContent">
         <div class="booklist__profile" v-if="isProfile">
             <UiIcon />
             <h2 class="booklist__display-name">{{ this.$store.state.user.profile.name }}</h2>
@@ -143,11 +143,11 @@ export default {
     methods: {
         async fetchNewNovels() {
             await this.$store.dispatch('novels/fetchNewNovels');
-            await this.$scrollSet()
+            await this.$scrollSet(this.$refs.scrollContent)
         },
         async fetchUserNovels() {
             await this.$store.dispatch('novels/fetchUserNovels');
-            await this.$scrollSet();
+            await this.$scrollSet(this.$refs.scrollContent);
         },
         uid(index) {
             if (this.$route.name == "myNovels") {

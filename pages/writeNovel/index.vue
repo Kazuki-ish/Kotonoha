@@ -1,6 +1,6 @@
 <template>
-    <section class="c-vertical-inner" id="js-c-scroll">
-        <ul class="booklist c-vertical">
+    <section class="c-vertical-inner" >
+        <ul class="booklist c-vertical" id="js-c-scroll">
             <div class="booklist__profile">
                 <UiIcon />
                 <h2 class="booklist__display-name">{{ this.$store.state.user.profile.name }}</h2>
@@ -135,6 +135,7 @@ export default {
     async fetch() {
         this.setPageName()
         // this.setUser()
+        
     },
     created() {
         // this.$store.commit('user/setMode', this.$route.name)
