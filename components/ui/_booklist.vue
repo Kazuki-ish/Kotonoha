@@ -106,6 +106,7 @@
 
 <script>
 export default {
+    //動的コンポーネント化している。mynovelsとtopで共通のコンポーネント
     name: 'BookList',
     props: {
         isProfile: {

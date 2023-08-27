@@ -15,6 +15,7 @@ import {
   deleteDoc,
   writeBatch,
 } from 'firebase/firestore'
+import consolaGlobalInstance from 'consola'
 
 export const state = () => ({
   userNovels: [],
@@ -155,46 +156,112 @@ export const actions = {
 
   async fetchNewNovels({ commit, dispatch }) {
     return new Promise(async (resolve) => {
-      // User is signed in or not, the code should run
       const newNovelsRef = collection(db, 'new')
       const newNovelsSnapshot = await getDocs(newNovelsRef)
 
-      const newNovels = newNovelsSnapshot.docs.map((doc) => {
-        let novelBody = doc.data().body
+      const novelsPromises = await newNovelsSnapshot.docs.map(async (document) => {
 
-        // 144字以上かチェック
-        if (novelBody.length > 144) {
-          // ...を追加
-          novelBody = novelBody.substring(0, 144) + '......'
-        }
-
-        const timestamp = doc.data().timestamp // Directly use the timestamp property from the doc data
-        const slug = doc.data().slug // Retrieve slug from the document data
-
+        const timestamp = document.data().timestamp
+        const slug = document.data().slug
+        const uid = document.data().uid
         // console.log(slug)
+
+        // //slugをキーにしてnovels内から本文データを取得したい 非同期関数でソートが処理されないため今のところ無理
+        const userDocRef = doc(db, 'novels', uid)
+        const userDoc = await getDoc(userDocRef)
+        
+        const novelDocRef = doc(db, 'novels', uid )
+        const novelDocSs = await getDoc(novelDocRef)
+        const novelDoc = novelDocSs.data()
+        let novelBody = novelDoc.novel[slug].body
+
+      // 144字以上かチェック
+      if (novelBody.length > 144) {
+        // ...を追加前に、144文字目までの部分文字列を取得
+        let substringBody = novelBody.substring(0, 144);
+
+        // 途中で切れたタグを削除（例: <b, <br, ...）
+        substringBody = substringBody.replace(/<[^>]*$/, '');
+
+        // 連続したbrタグが5つ以下の場合に、それを削除
+        substringBody = substringBody.replace(/(<br\s*\/?>\s*){1,5}$/, '');
+
+        // ...を追加
+        novelBody = substringBody + '......';
+      }
+    
+        console.log(novelBody)
 
         return {
           id: slug, // Use slug as the id
-          ...doc.data(),
+          ...document.data(),
           body: novelBody, // Use the modified novelBody here
           timestamp: timestamp, // Use the timestamp from the doc data
         }
       })
 
-      // Sort the novels array by timestamp
+      // 全てのPromiseが解決するのを待ちます
+      const newNovels = await Promise.all(novelsPromises);
+
       newNovels.sort((a, b) => {
-        // Compare using seconds first, and then nanoseconds if seconds are equal
         return (
           b.timestamp.seconds - a.timestamp.seconds ||
           b.timestamp.nanoseconds - a.timestamp.nanoseconds
         )
       })
 
-      dispatch('fetchAllNewNovels')
+      // dispatch('fetchAllNewNovels')
 
       commit('setNewNovels', newNovels)
       resolve()
     })
+  },
+  async findNewNovel({ commit, dispatch }, { uid, slug }) {
+    const newCollectionRef = collection(db, 'new')
+    const querySnapshot = await getDocs(newCollectionRef)
+
+    const documents = querySnapshot.docs.map((doc) => {
+      return {
+        timestamp: doc.id, // ドキュメントのID (Timestamp)
+        slug: doc.data().slug, // slugフィールド
+        uid: doc.data().uid, // uidフィールド
+      }
+    })
+
+    // documents配列を検索し、指定されたuidとslugと一致するオブジェクトを見つける
+    const matchingDocument = documents.find(
+      (document) => document.uid === uid && document.slug === slug
+    )
+
+    // 一致するドキュメントが見つかった場合、そのtimestampプロパティを返す
+    if (matchingDocument) {
+      return matchingDocument.timestamp
+    }
+
+    dispatch('common/setErrorMessage', '小説が見つかりませんでした', { root: true })
+
+    // 一致するドキュメントが見つからない場合、nullを返す
+    return null
+  },
+  async fetchAllNewNovels({ commit }) {
+    const newCollectionRef = collection(db, 'new')
+    const querySnapshot = await getDocs(newCollectionRef)
+
+    // 全てのドキュメントを取得してオブジェクトの配列に代入
+    const allNewDocuments = querySnapshot.docs.map((doc) => {
+      return {
+        [doc.id]: {
+          // Timestampがキーとなります
+          slug: doc.data().slug, // slugフィールド
+          uid: doc.data().uid, // uidフィールド
+        },
+      }
+    })
+
+    // commitなど、必要に応じて他の操作をここに追加できます
+    // console.log(allNewDocuments)
+
+    return allNewDocuments // オブジェクトの配列を返す
   },
 
   async saveNovel({ rootState, commit, dispatch }, { uid, title, body, slug, isPublic }) {
@@ -365,41 +432,13 @@ export const actions = {
     }
   },
 
-  async findNewNovel({ commit, dispatch }, { uid, slug }) {
-    const newCollectionRef = collection(db, 'new')
-    const querySnapshot = await getDocs(newCollectionRef)
-
-    const documents = querySnapshot.docs.map((doc) => {
-      return {
-        timestamp: doc.id, // ドキュメントのID (Timestamp)
-        slug: doc.data().slug, // slugフィールド
-        uid: doc.data().uid, // uidフィールド
-      }
-    })
-
-    // documents配列を検索し、指定されたuidとslugと一致するオブジェクトを見つける
-    const matchingDocument = documents.find(
-      (document) => document.uid === uid && document.slug === slug
-    )
-
-    // 一致するドキュメントが見つかった場合、そのtimestampプロパティを返す
-    if (matchingDocument) {
-      return matchingDocument.timestamp
-    }
-
-    dispatch('common/setErrorMessage', 'findエラー', { root: true })
-
-    // 一致するドキュメントが見つからない場合、nullを返す
-    return null
-  },
-
   async updateNovelProfile({ commit, dispatch }, user) {
     const uid = user.uid
     const updatedName = user.displayName
 
     // console.log(user.displayName)
 
-    // findNewNovelアクションを呼び出してドキュメント名を取得
+    // fetchAllNewNovelsアクションを呼び出してドキュメント名を取得
     const allNewNovels = await dispatch('fetchAllNewNovels', { uid })
 
     //配列を初期化
@@ -448,27 +487,6 @@ export const actions = {
         await setDoc(userDocRef, { novel: { [novelSlug]:updatedValue } }, { merge: true })
       })
     )
-  },
-
-  async fetchAllNewNovels({ commit }) {
-    const newCollectionRef = collection(db, 'new')
-    const querySnapshot = await getDocs(newCollectionRef)
-
-    // 全てのドキュメントを取得してオブジェクトの配列に代入
-    const allNewDocuments = querySnapshot.docs.map((doc) => {
-      return {
-        [doc.id]: {
-          // Timestampがキーとなります
-          slug: doc.data().slug, // slugフィールド
-          uid: doc.data().uid, // uidフィールド
-        },
-      }
-    })
-
-    // commitなど、必要に応じて他の操作をここに追加できます
-    // console.log(allNewDocuments)
-
-    return allNewDocuments // オブジェクトの配列を返す
   },
 
   async fetchLikedNovels({ commit }, uid) {

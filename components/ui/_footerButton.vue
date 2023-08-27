@@ -31,7 +31,7 @@
             @include cubic_ease($time: 4s);
             @include NM_convex_anim;
             border-radius: calc(21 / 780 * 100vw);
-            padding: 8px;
+            padding: 0.5rem .75rem;
 
             &:nth-child(n + 2) {
                 margin-left: calc(94 / 780 * 100vw);

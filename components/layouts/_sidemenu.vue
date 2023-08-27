@@ -68,6 +68,7 @@ export default {
     data() {
         return {
             menus: [
+                { public: true, href: '/', title: 'トップに戻る' },
                 { public: true, href: '/about/', title: 'コトノハについて' },
                 { public: false, href: '/search/', title: '作品を探す' },
                 { public: false, href: '/search/', title: '作家を探す' },

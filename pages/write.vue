@@ -49,6 +49,9 @@ export default {
       name: '',
     }
   },
+  async fetch() {
+    this.$store.commit('novels/setSlug', null);
+  },
   created() {
     this.$store.commit("common/inputPageName", '作品を書く')
     this.$store.commit('user/setMode', this.$route.name)
