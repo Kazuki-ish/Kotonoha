@@ -121,7 +121,7 @@ export const actions = {
       // メールアドレス確認メールを送信
       if (userCredential.user) {
         await sendEmailVerification(auth.currentUser);
-        console.log('Verification email sent.');
+        // console.log('Verification email sent.');
         return true; // 成功した場合は true を返す
       }
     } catch (error) {

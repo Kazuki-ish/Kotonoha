@@ -235,7 +235,7 @@ export const actions = {
       return matchingDocument.timestamp
     }
 
-    dispatch('common/setErrorMessage', '小説が見つかりませんでした', { root: true })
+    dispatch('common/setMessage', '小説が見つかりませんでした', { root: true })
 
     // 一致するドキュメントが見つからない場合、nullを返す
     return null

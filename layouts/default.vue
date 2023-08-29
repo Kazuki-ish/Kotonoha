@@ -7,8 +7,9 @@
             }">
             <Nuxt  />
         </div>
-        <LayoutsFooter class="c-menu-op" :class="{
+        <LayoutsFooter class="c-menu-op c-reading" :class="{
             '-ready': this.$store.state.common.isOpenMenu,
+            '-reading': this.$store.state.common.isReading
         }" />
     </main>
 </template>
@@ -56,6 +57,15 @@ export default {
         
         &.-ready {
             opacity: .2;
+        }
+    }
+
+    .c-reading {
+        @include cubic_ease($propaty: opacity );
+        opacity: 1;
+
+        &.-reading {
+            opacity: .1;
         }
     }
 

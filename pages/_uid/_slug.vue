@@ -47,18 +47,37 @@ export default {
         this.$store.commit("common/inputPageName", this.novel.title)
         this.$store.commit("common/inputAuther", this.novel.name)
         // console.log(this.novel.name)
-        console.log(this.novel)
+        // console.log(this.novel)
+    },
+    computed: {
+        watchReading() {
+            return this.$store.state.common.scrollAmount
+        }
     },
     methods: {
         setScrollAmount(event){
             const scrollAmount = event.target.scrollLeft;  // 横方向のスクロール量を取得
             this.$store.commit('common/setScrollAmount', scrollAmount);
-            console.log(scrollAmount);
-        }
+            // console.log(scrollAmount);
+        },
     },
     destroyed() {
-        // slug初期化処理
+        // 作家名リセット
+        
         this.$store.commit("common/inputAuther", "")
+
+        this.$store.commit('common/setIsReading', false)
+    },
+    watch: {
+        watchReading(after, before) {
+            if(after <= before) {
+                // console.log('set')
+                this.$store.commit('common/setIsReading', true)
+            }
+            else {
+                this.$store.commit('common/setIsReading', false)
+            }
+        }
     }
 };
 </script>

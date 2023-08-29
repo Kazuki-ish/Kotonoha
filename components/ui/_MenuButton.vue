@@ -1,9 +1,13 @@
 <template>
     <div class="l-menubutton">
         <button id="OpenMenu" class="menubutton"
-            :class="{ '-open': this.$store.state.common.isOpenMenu, '-dent': this.$store.state.common.isOpenMenu }"
+            :class="{ 
+                '-open': this.$store.state.common.isOpenMenu,
+                '-dent': this.$store.state.common.isOpenMenu,
+                '-reading': this.$store.state.common.isReading,
+                }"
             v-on:click="toggleOpen">
-            <div class="l-lines"><span></span><span></span><span></span></div>
+            <div class="l-lines" ><span></span><span></span><span></span></div>
         </button>
         <div class="sidemenu-wrap" :class="{ '-open': this.$store.state.common.isOpenMenu }">
             <LayoutsSidemenu />
@@ -92,6 +96,10 @@
         @include NM_dent_anim;
     }
 
+    &.-reading {
+        @include NM_normal_anim;
+    }
+
     &.-open span {
         margin: -1px;
 
@@ -139,7 +147,8 @@ export default {
     },
     methods: {
         toggleOpen() {
-            this.$store.commit("common/toggle");
+            this.$store.commit("common/toggle")
+            this.$store.commit('common/setIsReading', false)
         }
     }
 }

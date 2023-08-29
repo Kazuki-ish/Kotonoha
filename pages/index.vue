@@ -14,7 +14,6 @@ export default {
       isScroll: true,
     }
   },
-
   created() {
         this.$store.commit("common/inputPageName", '')
   },

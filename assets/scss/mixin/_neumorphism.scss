@@ -49,3 +49,11 @@ $blur: 4px;
         -4px -4px $blur transparent,
         4px 4px $blur transparent;
 }
+
+@mixin NM_normal_anim (){
+    box-shadow:
+        -4px -4px $blur transparent inset,
+        4px 4px $blur transparent inset,
+        -4px -4px $blur transparent,
+        4px 4px $blur transparent;
+}

@@ -7,7 +7,7 @@
             </div>
             <li class="booklist__item">
                 <h1 class="booklist__item__title">新しく書く</h1>
-                <nuxt-link :to="'/write'">
+                <nuxt-link :to="'/write'" @click="pushed">
                     <p class="booklist__item__text -add-novel"><span></span><span></span></p>
                 </nuxt-link>
             </li>
@@ -23,7 +23,8 @@
 
 <style lang="scss" scoped>
 .booklist .booklist__item__text.-add-novel {
-    @include NM_dent;
+    @include NM_dent_anim;
+    @include cubic_ease($time: .2s);
     position: relative;
     min-height: get_Vh(857);
     min-width: get_Vw(252);
@@ -31,6 +32,10 @@
     @media screen and (min-width: 768px) {
         min-height: 400px;
         min-width: 120px;
+    }
+
+    &.-pushed {
+        @include NM_normal_anim;
     }
 
     span:first-of-type {
@@ -61,6 +66,7 @@ export default {
         return {
             displayName: this.$store.state.user.profile.name,
             displayIcon: this.$store.state.user.icon,
+            newPushed: false,
         }
     },
     computed: {
@@ -108,6 +114,9 @@ export default {
         setPageName() {
             this.$store.commit("common/inputPageName", '作品を書く')
         },
+        pushed() {
+            this.newPushed = true;
+        }
         // async setUser() {
         //     this.$store.dispatch('user/setUserFromAuth')
         // },

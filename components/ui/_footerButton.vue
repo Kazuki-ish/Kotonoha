@@ -1,17 +1,18 @@
 <template>
+    <!-- あとボタンだけいじったらリリース -->
     <div class="button-list" v-if="$route.path.includes('writeNovel') && $route.params.slug || $route.name == 'write'">
-        <button class="c-black-txt" @click="draftNovel" :class="{ '-pushed': pushed, '-succeed': succeed }">
-            <span class="button-list__txt" @transitionend="pushRouter">
+        <button class="c-black-txt" @click="draftNovel" :class="{ '-pushed': pushed.draft }">
+            <span class="button-list__txt">
                 {{ draftButtonText }}
             </span>
         </button>
-        <button class="c-black-txt" @click="overWriteNovel" :class="{ '-pushed': pushed, '-succeed': succeed }">
-            <span class="button-list__txt" @transitionend="pushRouter">
+        <button class="c-black-txt" @click="overWriteNovel" :class="{ '-pushed': pushed.publish }">
+            <span class="button-list__txt">
                 {{ publishButtonText }}
             </span>
         </button>
-        <button class="c-black-txt" @click="deleteNovel" :class="{ '-pushed': pushed, '-succeed': succeed }">
-            <span class="button-list__txt" @transitionend="pushRouter">
+        <button class="c-black-txt" @click="deleteNovel" :class="{ '-pushed': pushed.delete }">
+            <span class="button-list__txt">
                 {{ deleteButtonText }}
             </span>
         </button>
@@ -28,7 +29,7 @@
         transform: translateX(-50%);
 
         button {
-            @include cubic_ease($time: .2s);
+            @include cubic_ease(box-shadow, $time: .2s);
             @include NM_convex_anim;
             border-radius: calc(21 / 780 * 100vw);
             padding: 0.5rem .75rem;
@@ -38,11 +39,7 @@
             }
 
             &.-pushed {
-                @include NM_dent_anim;
-            }
-
-            &.-succeed {
-                opacity: 0;
+                @include NM_dent_anim();
             }
         }
     }
@@ -51,14 +48,6 @@
         @include cubic_ease();
         display: inline-block;
         white-space: nowrap;
-
-        .-pushed & {
-            transform: rotate(360deg);
-        }
-
-        .-succeed & {
-            opacity: 0;
-        }
     }
 </style>
 
@@ -66,27 +55,29 @@
 export default {
     data() {
         return {
+            pushed: {
+                draft: false,
+                publish: false,
+                delete: false,
+            },
             draftButtonText: '保存する',
             publishButtonText: '公開する',
             deleteButtonText: '削除する',
-            pushed: false,
-            succeed: false,
         }
     },
     computed: {
-        draftButtonText() {
+        // draftButtonText() {
             // if(){
 
             // }
             // else {
 
             // }
-        },
+        // },
     },
     methods: {
         async draftNovel(event) {
-            this.pushed = true;
-            this.draftButtonText = '保存中';
+            this.pushed.draft = true;
 
             const title = this.$store.state.novels.title;
             const body = this.$store.state.novels.body;
@@ -94,12 +85,8 @@ export default {
             // 初期化してないから上書きされる。。。
             const isPublic = false;
 
-            if (!title || !body) {
-                //console.log("Title or body is missing");
-                // this.draftButtonText = '失敗';
-                setTimeout(() => {
-                    this.draftButtonText = '保存';
-                }, 500 )
+            if (!title && !body) {
+                this.$store.dispatch('common/setMessage', '保存できませんでした')
                 return;
             }
 
@@ -110,10 +97,11 @@ export default {
                 slug,
                 isPublic,
             });
+            this.$store.dispatch('common/setMessage', '下書きを保存しました')
+            this.init()
         },
         async overWriteNovel(event) {
-            this.pushed = true;
-            this.publishButtonText = '公開中';
+            this.pushed.publish = true;
 
             const title = this.$store.state.novels.title;
             const body = this.$store.state.novels.body;
@@ -122,10 +110,7 @@ export default {
 
             if (!title || !body) {
                 //console.log("Title or body is missing");
-                this.publishButtonText = '失敗';
-                setTimeout(() => {
-                    this.publishButtonText = '保存';
-                }, 500 )
+                this.$store.dispatch('common/setMessage', '公開できませんでした')
                 return;
             }
 
@@ -136,10 +121,12 @@ export default {
                 slug,
                 isPublic,
             });
+            this.$store.dispatch('common/setMessage', '作品を公開しました')
+            this.init()
             // console.log("Novel saved successfully");
         },
         async deleteNovel(event) {
-            this.pushed = true;
+            this.pushed.delete = true;
             const slug = this.$store.state.novels.slug;
             // console.log(slug)
 
@@ -147,29 +134,24 @@ export default {
                 uid: this.$store.state.user.uid,
                 slug,
             });
-        },
-        pushRouter(event) {
-            if (event.propertyName === 'transform' && this.pushed) {
-                this.succeed = true;
-                this.publishButtonText = '完了';
-            } else if (event.propertyName === 'opacity' && this.succeed) {
-                this.$router.push('/writeNovel');
-            }
+            this.$store.dispatch('common/setMessage', '作品を削除しました')
+            this.init()
         },
         init() {
-            if (this.$route.path === '/writeNovel') {
-                this.pushed = false;
-                this.succeed = false;
-                this.publishButtonText = '公開';
-                this.darftNovelText = '保存';
-            }
+                this.pushed.draft = false;
+                this.pushed.publish = false;
+                this.pushed.delete = false;
+                this.$router.push('/writeNovel');
         },
     },
     watch: {
-        '$route.path': {
-            handler: 'init',
-            immediate: false
-        },
+        // '$route.path': {
+        //     handler: 'init',
+        //     immediate: false
+        // },
     },
+    beforeDestroy() {
+        this.$store.dispatch('common/changeIsMounted', false); 
+    }
 
 }</script>

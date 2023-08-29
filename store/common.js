@@ -6,6 +6,7 @@ export const state = () => ({
     messageText: '',
     isMounted: false,
     scrollAmount : '',
+    isReading: false,
   })
   
   export const mutations = {
@@ -36,7 +37,10 @@ export const state = () => ({
     },
     setScrollAmount(state, string) {
       state.scrollAmount = string
-    }
+    },
+    setIsReading(state, boolarn) {
+      state.isReading = boolarn
+    },
   }
 
   export const actions = {

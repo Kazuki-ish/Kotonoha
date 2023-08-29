@@ -1,6 +1,9 @@
 <template>
-    <div class="logo">
-        <h1 class="maintitle"><nuxt-link to="/">コトノハ</nuxt-link></h1><span class="prefix">アルファ</span>
+    <div class="logo c-reading" :class="{
+        '-reading': this.$store.state.common.isReading
+    }">
+        <h1 class="maintitle"><nuxt-link to="/">コトノハ</nuxt-link></h1>
+        <span class="prefix">アルファ</span>
     </div>
 </template>
 

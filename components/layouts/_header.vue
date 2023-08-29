@@ -1,7 +1,8 @@
 <template>
     <header class="l-header">
         <div class="l-header__wrap c-menu-op" :class="{
-            '-ready': this.$store.state.common.isOpenMenu,}">
+                '-ready': this.$store.state.common.isOpenMenu
+            }">
             <p class="l-header__txt -page-name">
                 {{ this.$store.state.common.pageName }}
             </p>
