@@ -1,13 +1,15 @@
 <template>
     <div class="l-menubutton">
-        <button id="OpenMenu" class="menubutton" :class="{ '-open': this.$store.state.common.isOpenMenu, '-dent': this.$store.state.common.isOpenMenu }"
+        <button id="OpenMenu" class="menubutton"
+            :class="{ '-open': this.$store.state.common.isOpenMenu, '-dent': this.$store.state.common.isOpenMenu }"
             v-on:click="toggleOpen">
             <div class="l-lines"><span></span><span></span><span></span></div>
         </button>
         <div class="sidemenu-wrap" :class="{ '-open': this.$store.state.common.isOpenMenu }">
             <LayoutsSidemenu />
         </div>
-        <div id="MenuBg" class="menubutton__bg" :class=" {'-open': this.$store.state.common.isOpenMenu }" v-on:click="toggleOpen"></div>
+        <div id="MenuBg" class="menubutton__bg" :class="{ '-open': this.$store.state.common.isOpenMenu }"
+            v-on:click="toggleOpen"></div>
     </div>
 </template>
 
@@ -49,6 +51,10 @@
     height: 48px;
     margin: auto 0 auto auto;
     border-radius: calc(21 / 768 * 100vw);
+
+    @media screen and (min-width: 768px) {
+        border-radius: 12px;
+    }
 
     .l-lines {
         position: absolute;
@@ -105,6 +111,7 @@
         }
     }
 }
+
 .menubutton__bg {
     @include cubic_ease;
     position: fixed;

@@ -20,9 +20,6 @@ export default {
     created() {
         // console.log(this.$store.state.user.editNovel)
         // console.log(this.displayName)
-        if (!this.$store.state.user.isLogin) {
-            this.$router.push('/signUp')
-        }
     },
     watch: {
         uid(newUid, oldUid) {
@@ -42,6 +39,9 @@ export default {
         //     this.$store.dispatch('user/setUserFromAuth')
         // },
     },
+    beforeDestroy() {
+        this.$store.dispatch('common/changeIsMounted', false); 
+  },
 };
 </script>
   

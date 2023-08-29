@@ -114,20 +114,20 @@ export const actions = {
   },
 
   async signUpWithEmail({ commit, dispatch }, { email, password }) {
-    //!!メールアドレスの確認セクション!!
-    // try {
-    //   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    // !!メールアドレスの確認セクション!!
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
-    //   // メールアドレス確認メールを送信
-    //   if (userCredential.user) {
-    //     await sendEmailVerification(auth.currentUser);
-    //     console.log('Verification email sent.');
-    //     return true; // 成功した場合は true を返す
-    //   }
-    // } catch (error) {
-    //   console.error(error.message);
-    //   return false; // エラーが発生した場合は false を返す
-    // }
+      // メールアドレス確認メールを送信
+      if (userCredential.user) {
+        await sendEmailVerification(auth.currentUser);
+        console.log('Verification email sent.');
+        return true; // 成功した場合は true を返す
+      }
+    } catch (error) {
+      console.error(error.message);
+      return false; // エラーが発生した場合は false を返す
+    }
 
     // 登録後のログイン処理
     try {

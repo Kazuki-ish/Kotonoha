@@ -10,6 +10,10 @@
     p{
   	  text-indent:1em;
     }
+    @media screen and (min-width: 768px) {
+        max-height:calc(100svh - 60px - 60px - 3rem);
+        margin: 2rem .5rem 1rem 0; 
+    }
   }
 
 .c-vertical{
@@ -18,7 +22,7 @@
     padding-bottom: 12px;
     line-height:calc(52 / 32);
     letter-spacing: 0.075em;
-    max-height:100%;
+    height:100%;
     width: 100%;
     overflow-x: auto;
     overflow-y: hidden;

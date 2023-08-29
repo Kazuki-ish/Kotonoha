@@ -18,5 +18,8 @@ export default {
   created() {
         this.$store.commit("common/inputPageName", '')
   },
+  beforeDestroy() {
+    this.$store.commit('common/setIsMounted', false)
+  },
 }
 </script>

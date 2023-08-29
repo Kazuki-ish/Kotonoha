@@ -2,11 +2,11 @@
     <div class="sidemenu">
         <div class="l-sidemenu">
             <UiLoginButton />
-            <nav id="MenuList" :class="{ open:this.$store.state.common.isOpenMenu }">
+            <nav id="MenuList" :class="{ open: this.$store.state.common.isOpenMenu }">
                 <ul class="sidemenu__list">
-                    <li class="sidemenu__item" v-for="menu in menus" v-if="menu.public" >
+                    <li class="sidemenu__item" v-for="menu in menus" v-if="menu.public">
                         <nuxt-link :to="menu.href">
-                            <p class="sidemenu__item__link" >{{menu.title}}</p>
+                            <p class="sidemenu__item__link">{{ menu.title }}</p>
                         </nuxt-link>
                     </li>
                 </ul>
@@ -17,50 +17,60 @@
 </template>
 
 <style lang="scss" scoped>
-    .sidemenu{
+.sidemenu {
 
-        &__list{
-            margin-top:60px;
-            
+    &__list {
+        margin-top: 60px;
+
+    }
+
+    &__item {
+        @include NM_convex;
+        margin-left: 12px;
+        border-radius: 9999px 0 0 9999px;
+
+        &:nth-child(n+2) {
+            margin-top: 8px;
+
         }
 
-        &__item{
-            @include NM_convex;
-            margin-left:12px;
-            border-radius: 9999px 0 0 9999px;
+        &__link {
+            padding: 14px 0 14px 24px;
+            font-size: 1.25rem;
+            letter-spacing: -0.05em;
+            line-height: calc(68 / 40);
 
-            &:nth-child(n+2){
-                margin-top:8px;
-                
-            }
-            &__link{
-                padding:14px 0 14px 24px;
-                font-size:20px;
-                letter-spacing: -0.05em;
-                line-height: calc(68 / 40);
-            }
-
-            a{
-                text-decoration: none;
+            @media screen and (min-width: 768px) {
+                font-size: 1rem;
             }
         }
-    }
-    .l-sidemenu{
-        @include NM_convex_side;
-        background-color: $base-color;
-        height: 110vh;
-        width:70vw;
-        margin-top: -5vh;
-    }
-    #MenuList {
-        position: fixed;
-        top: 0;
-        right: 0;
-        z-index: 4;
-        width: 100%;
-        height: 100%;
-    }
 
+        a {
+            text-decoration: none;
+        }
+    }
+}
+
+.l-sidemenu {
+    @include NM_convex_side;
+    background-color: $base-color;
+    height: 110vh;
+    width: 70vw;
+    margin-top: -5vh;
+
+    @media screen and (min-width: 768px) {
+        width: 20rem;
+    }
+}
+
+#MenuList {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 4;
+    width: 100%;
+    height: 100%;
+}
 </style>
 
 <script>
@@ -78,15 +88,9 @@ export default {
                 { public: false, href: '/test/', title: 'テストページ' },
             ],
         }
-        
+
     },
     methods: {
-        closeMenu(){
-            this.$store.commit('common/close')
-        },
-        toggleOpen() {
-            this.$store.commit("common/toggle");
-        }
     }
 }
 

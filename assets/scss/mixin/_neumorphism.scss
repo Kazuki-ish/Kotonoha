@@ -24,10 +24,10 @@ $blur: 4px;
 }
 @mixin NM_convex_anim ( $highlight:-4px,$shadow:4px ){
     box-shadow:
+        -4px -4px $blur transparent inset,
+        4px 4px $blur transparent inset,
         $highlight $highlight $blur $NM_highlight,
-        // $highlight * -1 $highlight * -1 $blur $NM_highlight inset,
-        $shadow $shadow $blur $NM_shadow,
-        6px 6px 12px transparent inset;
+        $shadow $shadow $blur $NM_shadow;
 }
 
 @mixin NM_dent ( $shadow:4px, $highlight:-4px, $color:$NM_shadow ){
@@ -46,6 +46,6 @@ $blur: 4px;
     box-shadow:
         $highlight $highlight $blur $NM_highlight inset,
         $shadow $shadow $blur $color inset,
-        -6px -6px -6px * -2 transparent,
-        3px 3px 3px * 2 transparent;
+        -4px -4px $blur transparent,
+        4px 4px $blur transparent;
 }

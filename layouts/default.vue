@@ -1,10 +1,15 @@
 <template>
-    <main class="l-main">
+    <main class="l-main" >
         <LayoutsHeader />
-        <div class="l-main__content" ref="main">
+        <div class="l-main__content" :class="{
+                '-mounted': this.$store.state.common.isMounted,
+                '-ready': this.$store.state.common.isOpenMenu,
+            }">
             <Nuxt  />
         </div>
-        <LayoutsFooter />
+        <LayoutsFooter class="c-menu-op" :class="{
+            '-ready': this.$store.state.common.isOpenMenu,
+        }" />
     </main>
 </template>
 
@@ -15,22 +20,22 @@ export default {
     },
     destroyed() {
     },
-    watch: {
-        '$store.state.common.isMounted'(newValue, oldValue) {
-            if (newValue === true) {
-                this.$refs.main.classList.add('-mounted');
-            } else {
-                this.$refs.main.classList.remove('-mounted');
-            }
-        }
-    },
+    // watch: {
+    //     '$store.state.common.isMounted'(newValue, oldValue) {
+    //         if (newValue === true) {
+    //             this.$refs.main.classList.add('-mounted');
+    //         } else {
+    //             this.$refs.main.classList.remove('-mounted');
+    //         }
+    //     }
+    // },
  }
 </script>
 
 <style lang="scss">
     .l-main {
-        @include cubic_ease;
-        max-height: 100svh;
+        @include cubic_ease($propaty: opacity);
+        height: 100svh;
         overflow: hidden;
         max-width: 100svw;
     }
@@ -45,12 +50,24 @@ export default {
         color:black;
     }
 
+    .c-menu-op {
+        @include cubic_ease($propaty: opacity, $time:.2s);
+        opacity: 1;
+        
+        &.-ready {
+            opacity: .2;
+        }
+    }
+
     .l-main__content {
-        @include cubic_ease($time:.2s);
+        @include cubic_ease($propaty: opacity, $time:.2s);
         opacity: 0;
 
         &.-mounted{
             opacity: 1;
+        }
+        &.-ready {
+            opacity: .2;
         }
     }
 </style>

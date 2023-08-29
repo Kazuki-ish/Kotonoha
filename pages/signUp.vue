@@ -20,15 +20,16 @@
 
 <style lang="scss" scoped>
 .sign-up {
-    margin: 8px;
+    margin: 0.5rem;
 
     button {
         @include NM_convex;
         color: #121212;
         display: block;
-        border-radius: 21px;
-        padding: 8px 32px;
+        border-radius: 0.75rem;
+        padding: 0.5rem 1rem;
         margin: 24px auto 0;
+        min-width: 11rem;
     }
 
     input {
@@ -36,11 +37,11 @@
         display: block;
         background-color: $base-color;
         color: #121212;
-        border-radius: 16px;
-        padding: 8px 0;
+        border-radius: 0.75rem;
+        padding: 0.5rem 0;
         text-align: center;
-        margin: 16px auto 0;
-        min-width: calc(338px / 2);
+        margin: 0.725rem auto 0;
+        min-width: 13rem;
     }
 }
 
@@ -53,19 +54,23 @@
 
 .sign-up__mail__txt {
     &:nth-child(n + 2) {
-        margin-top: 24px;
+        margin-top: 1.5rem;
     }
 }
 
 .sign-up__mail__btn {
-    margin-top: 24px;
+    margin-top: 2rem;
+
+    &.-login {
+        margin-top: 4rem;
+    }
 }
 
 .sign-up__google {
-    margin: 64px auto 0;
+    margin: 4rem auto 0;
 
     &__btn {
-      color: #121212;
+        color: #121212;
     }
 }
 </style>
@@ -87,7 +92,7 @@ export default {
         }
     },
     mounted() {
-        this.$store.commit('common/setIsMounted', true);
+        this.$store.dispatch('common/changeIsMounted', true); 
     },
     methods: {
         async signIn(email, password) {
@@ -99,7 +104,7 @@ export default {
             }
         },
         async signInWithGoogle() {
-            const success = await this.$store.dispatch('user/signUpWithGoogle', )
+            const success = await this.$store.dispatch('user/signUpWithGoogle',)
             if (success) {
                 this.$router.push('/');
             } else {
@@ -110,7 +115,10 @@ export default {
             this.$store.dispatch('user/signUpWithEmail', { email, password })
             this.$router.push('/');
         },
-    }
+    },
+    beforeDestroy() {
+        this.$store.commit('common/setIsMounted', false)
+    },
 }
 
 </script>

@@ -16,5 +16,8 @@ export default {
   created () {
     this.$store.commit("common/inputPageName", '探す' )
   },
+  beforeDestroy() {
+    this.$store.commit('common/setIsMounted', false)
+  },
 }
 </script>

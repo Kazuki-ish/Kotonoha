@@ -4,14 +4,13 @@ export default ({store, route}, inject) => {
       const scrollWidth = content.scrollWidth;
   
       // scrollLeftを0(右端)にする
-      content.scrollLeft = scrollWidth;
+      if (content) {
+        content.scrollLeft = scrollWidth;
+      }
 
       // console.log(content.scrollLeft)
       // content.classList.add('-mounted');
-      setTimeout(() => {
-        store.commit('common/setIsMounted', true);
-      }, 200
-      )
+        store.dispatch('common/changeIsMounted', true); 
     });
   };
   

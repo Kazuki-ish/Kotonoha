@@ -1,5 +1,5 @@
 <template>
-    <section class="c-vertical-inner" >
+    <section class="c-vertical-inner">
         <ul class="booklist c-vertical" id="js-c-scroll">
             <div class="booklist__profile">
                 <UiIcon />
@@ -22,92 +22,35 @@
 </template>
 
 <style lang="scss" scoped>
-.booklist {
-
-    h1 {
-        font-size: 1rem;
-        font-weight: 300;
-        margin: 0;
-        display: block;
-    }
-
-    p {
-        @include NM_convex;
-        border-radius: 18px;
-        //padding:16px 16px 12px;
-        margin: 0;
-    }
-}
-
-.booklist__profile {
-    display: block;
-}
-
-.booklist__display-name {
-    padding-top: 24px;
-    font-size: 24px;
-    font-weight: 300;
-}
-
-.booklist .booklist__item {
-    @include relative;
-    height: 80%;
-    //width: get_Vw(373);
-    white-space: pre-wrap;
-    list-style: none;
-    //padding:0 1.4rem;
-
-    &:nth-of-type(n + 2) {
-        margin-right: 2rem;
-    }
-    &:first-child {
-        margin-right: 1rem;
-    }
-    &:last-child {
-        margin-left: 4rem;
-    }
-}
-
-.booklist .booklist__item:nth-child(even) {
-    margin-top: 20%;
-}
-
-.booklist .booklist__item__wrapper {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.booklist .booklist__item__title {
-    margin-left: -1rem;
-    line-height: 1;
-}
-
-.booklist .booklist__item__author {
-    left: 0;
-    line-height: 1;
-    bottom: 0;
-}
-
-.booklist .booklist__item__text {
-    padding: 1rem;
-    margin: 0 0.2rem;
-}
-
 .booklist .booklist__item__text.-add-novel {
-        @include NM_dent;
-        position: relative;
-        min-height: get_Vh(857);
-        min-width: get_Vw(252);
+    @include NM_dent;
+    position: relative;
+    min-height: get_Vh(857);
+    min-width: get_Vw(252);
 
-        span:first-of-type {
-            transform: rotate(90deg) translate(0, calc(get_Vw(30) / 2));
+    @media screen and (min-width: 768px) {
+        min-height: 400px;
+        min-width: 120px;
+    }
+
+    span:first-of-type {
+        transform: rotate(90deg) translate(0, calc(get_Vw(30) / 2));
+
+        @media screen and (min-width: 768px) {
+            transform: rotate(90deg) translate(0, calc(1.5rem / 2));
         }
-        span{
-            @include absCenter;
-            border-top: solid black 1px;
-            display: block;
-            width: get_Vw(30);
+    }
+
+    span {
+        @include absCenter;
+        border-top: solid black 1px;
+        display: block;
+        width: get_Vw(30);
+
+        @media screen and (min-width: 768px) {
+            width: 1.5rem;
         }
+    }
 
 }
 </style>
@@ -122,7 +65,7 @@ export default {
     },
     computed: {
         // Vuex ストアから小説データを取得
-    novels() {
+        novels() {
             return this.$store.state.novels.userNovels;
         },
         uid() {
@@ -135,15 +78,12 @@ export default {
     async fetch() {
         this.setPageName()
         // this.setUser()
-        
+
     },
     created() {
         // this.$store.commit('user/setMode', this.$route.name)
         // console.log(this.$store.state.user.editNovel)
         // console.log(this.displayName)
-        if (!this.$store.state.user.isLogin) {
-            this.$router.push('/signUp')
-        }
     },
     watch: {
         uid(newUid, oldUid) {
@@ -174,6 +114,9 @@ export default {
     },
     async mounted() {//DOMマウント後に実行
         this.fetchUserNovels()
+    },
+    beforeDestroy() {
+        this.$store.dispatch('common/changeIsMounted', false); 
     },
 };
 </script>

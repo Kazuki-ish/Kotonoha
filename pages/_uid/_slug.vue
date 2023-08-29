@@ -1,6 +1,6 @@
 <template>
     <section class="novel c-vertical-inner">
-        <div class="c-vertical" @scroll='setScrollAmount' v-if="novel" id="js-c-scroll" ref="scrollContent">
+        <div class="c-vertical" @scroll='setScrollAmount' v-if="novel && novel.isPublic" id="js-c-scroll" ref="scrollContent">
             <h1 class="novel__title" v-html="novel.title"></h1>
             <p class="novel__body" v-html="novel.body"></p>
         </div>
@@ -40,11 +40,14 @@ export default {
         this.$store.commit('user/setMode', this.$route.name)
         // console.log (this.$route)
     },
-    updated() {        
-        this.$scrollSet(this.$refs.scrollContent)
+    updated() {
+        if (this.novel.isPublic) {
+            this.$scrollSet(this.$refs.scrollContent)
+        }
         this.$store.commit("common/inputPageName", this.novel.title)
         this.$store.commit("common/inputAuther", this.novel.name)
         // console.log(this.novel.name)
+        console.log(this.novel)
     },
     methods: {
         setScrollAmount(event){

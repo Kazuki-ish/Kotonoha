@@ -41,12 +41,27 @@ export const state = () => ({
 
   export const actions = {
     setMessage({commit}, message){
+      const time = 2500;
+
       commit('setMessage', {hasMessage: true, messageText: message});
       setTimeout(() => {
-        commit('setMessage', {hasMessage: false, messageText: ''});
-      }, 2000);
+        commit('setMessage', { hasMessage: false, messageText: message });
+      }, time);
+      setTimeout(() => {
+        commit('setMessage', {messageText:''})
+      }, time + 2000)
     },
     clearMessage({commit}) {
       commit('setMessage', {hasMessage: false, messageText: ''});
+    },
+    changeIsMounted({commit}, boolarn) {
+      if(boolarn == true) {
+        setTimeout(() => {
+          commit('setIsMounted', boolarn);
+        }, 100);
+      }
+      else {
+        commit('setIsMounted', boolarn);
+      }
     },
   }

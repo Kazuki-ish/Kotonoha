@@ -56,19 +56,24 @@
 .profile__list__input {
   color: #121212;
   @include NM_dent;
-  border-radius: 16px;
+  border-radius: 0.75rem;
   padding: 8px 6px;
   text-align: center;
-  margin-top: 16px;
-  min-width: calc(338px / 2);
+  margin-top: 0.725rem;
+  min-width: 13rem;
 }
 
 .profile__btn {
   @include NM_convex;
-  border-radius: 10px;
+  border-radius: 0.75rem;
   color: #121212;
-  padding: 8px 32px;
-  margin: 32px auto 0;
+  padding: 8px 1.725rem;
+  margin: 2rem auto 0;
+  min-width: 11rem;
+
+  &.-save {
+    margin-top: 4rem;
+  }
 }
 </style>
 
@@ -93,14 +98,9 @@ export default {
   created() {
     this.$store.commit("common/inputPageName", 'プロフィール')
     // console.log(this.$store.state.user.icon)
-
-    if (!this.$store.state.user.isLogin) {
-      this.$router.push('/signUp')
-    }
   },
   mounted() {
-    this.$store.commit('common/setIsMounted', true);
-
+      this.$store.dispatch('common/changeIsMounted', true);
   },
   methods: {
     async logOut() {
@@ -108,15 +108,22 @@ export default {
       this.$router.push('/');
     },
     async update() {
-      await this.$store.dispatch('user/update', this.updatedValues)
-      this.updatedValues = {
-        name: '',
-        mail: '',
-      };
+
+      if ( this.$store.state.user.uid === 'IqzNLCMUsagNOVaVxcJW2vG2nEn2') {
+        this.$store.dispatch('common/setMessage', 'このユーザーの情報は変更できません')
+        return
+      }
+      else{
+        await this.$store.dispatch('user/update', this.updatedValues)
+        this.updatedValues = {
+          name: '',
+          mail: '',
+        };
+      } 
     },
   },
-  destroyed() {
-    this.$store.commit('common/setIsMounted', false);
+  beforeDestroy() {
+    this.$store.dispatch('common/changeIsMounted', false); 
   }
 }
 </script>

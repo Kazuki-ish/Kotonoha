@@ -6,20 +6,23 @@ import { onAuthStateChanged } from 'firebase/auth'
 export default function ({ route, store, redirect }) {
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      store.commit('user/setUser', user)
       store.dispatch('user/gotUser', user)
-      //   console.log(user);
-      //   console.log(store.state.user);
+      // console.log('true')
       //   console.log(store.state.user.uid);
       //   console.log(store.state.user.profile);
-
-      // ページ遷移時にメッセージをクリアする処理
-      store.dispatch('common/clearMessage')
-    } else {
+    }
+    else { //ログインしているユーザーがいないときの処理
+      // console.log(route.path)
       store.commit('user/logout')
-      if (route.path == '/profile' || route.path == '/write' || route.path == '/myNovels') {
+      if (
+        route.path === '/profile/' ||
+        route.path === '/write/' ||
+        route.path === '/writeNovel/' ||
+        route.path === '/myNovels/'
+      ) {
+        // console.log(route.path)
         redirect('/signup')
-        this.$store.commit('common/setIsMounted', true);
+        store.commit('common/setIsMounted', true)
       }
     }
   })

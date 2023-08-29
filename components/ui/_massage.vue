@@ -19,6 +19,7 @@
     position: fixed;
     padding: 8px;
     margin: 0 0 4px 4px;
+    z-index: 9999;
     &.-reveal {
         transform: translateX(0);
     }

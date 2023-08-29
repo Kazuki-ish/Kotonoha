@@ -28,7 +28,7 @@
         transform: translateX(-50%);
 
         button {
-            @include cubic_ease($time: 4s);
+            @include cubic_ease($time: .2s);
             @include NM_convex_anim;
             border-radius: calc(21 / 780 * 100vw);
             padding: 0.5rem .75rem;
@@ -72,6 +72,16 @@ export default {
             pushed: false,
             succeed: false,
         }
+    },
+    computed: {
+        draftButtonText() {
+            // if(){
+
+            // }
+            // else {
+
+            // }
+        },
     },
     methods: {
         async draftNovel(event) {

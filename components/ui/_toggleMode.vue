@@ -29,6 +29,10 @@ $btn: 32px;
     display: flex;
     position: relative;
     margin: 0 24px;
+    @media screen and (min-width: 768px) {
+        width: 40%;
+        margin: auto;
+    }
 }
 
 .mode__txt {
@@ -36,6 +40,8 @@ $btn: 32px;
     text-align: center;
     opacity: .2;
     width: 50%;
+
+
 
     &.-view {
         margin-right: $btn;
@@ -96,7 +102,7 @@ export default {
 
     methods: {
         changeMode() {
-        this.$store.commit('common/setIsMounted', false); 
+        this.$store.dispatch('common/changeIsMounted', false); 
         setTimeout(() => {
             this.$store.commit('user/toggleMode')
         }, 200)

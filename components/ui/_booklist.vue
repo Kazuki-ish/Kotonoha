@@ -16,7 +16,10 @@
     </ul>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
+
+// このコンポーネントのみ全体にcssが適用されるので、命名規則や影響範囲に注意
+
 .booklist {
 
     h1 {
@@ -28,14 +31,15 @@
 
     p {
         @include NM_convex;
-        border-radius: 18px;
+        border-radius: 1rem;
         //padding:16px 16px 12px;
         margin: 0;
+        @media screen and (min-width: 768px) {
+            border-radius: 0.75rem;
+        }
     }
 
-    .-top & {
-
-    }
+    .-top & {}
 }
 
 .booklist__profile {
@@ -53,10 +57,15 @@
     //width: get_Vw(373);
     white-space: pre-wrap;
     list-style: none;
+
     //padding:0 1.4rem;
 
     &:nth-of-type(n + 2) {
         margin-right: 2rem;
+
+        @media screen and (min-width: 768px) {
+            margin-right:5rem;
+        }
     }
 
     &:first-child {
@@ -88,6 +97,7 @@
     text-align: right;
     margin-right: -1rem;
 }
+
 .booklist__item__link {
     display: block;
 }
