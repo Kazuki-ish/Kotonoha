@@ -63,14 +63,13 @@ export default {
     },
     destroyed() {
         // 作家名リセット
-        
         this.$store.commit("common/inputAuther", "")
 
         this.$store.commit('common/setIsReading', false)
     },
     watch: {
         watchReading(after, before) {
-            if(after <= before) {
+            if(after < before) {
                 // console.log('set')
                 this.$store.commit('common/setIsReading', true)
             }
