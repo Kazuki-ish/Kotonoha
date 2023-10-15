@@ -30,9 +30,6 @@ export default {
       isScroll: true
     };
   },
-  beforeCreate() {
-    this.$store.dispatch('common/changeIsMounted', false); 
-  },
   created() {
     this.$store.commit("common/inputPageName", 'コトノハについて')
     this.$store.commit("common/inputAuther", "")

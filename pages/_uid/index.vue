@@ -1,5 +1,5 @@
 <template>
-    <section class="c-vertical-inner" id="js-c-scroll">
+    <section class="c-vertical-inner" id="js-c-scroll" ref="scrollContent">
         <ul class="booklist c-vertical">
         <UiIcon />
         <h2 class="booklist__display-name">{{ this.$store.state.user.profile.name }}</h2>
@@ -129,14 +129,13 @@ export default {
         },
         watchMode(beforeToggle, afterToggle) {
             if (afterToggle == true) {
-                this.$refs.scroll.scrollSet()
+                this.scrollSet(this.$refs.scrollContent)
             }
         }
     },
     methods: {
         async fetchUserNovels() {
-            await this.$store.dispatch('novels/fetchUserNovels', this.uid);
-            this.$refs.scroll.scrollSet()
+            awaitscrollSet(this.$refs.scrollContent)
         },
         fetchNovels() {
             this.$store.commit("common/inputPageName", '仮')
@@ -148,7 +147,7 @@ export default {
     mounted() {//DOMマウント後に実行
 
         //右端までスクロールする
-        this.$refs.scroll.scrollSet()
+        this.scrollSet(this.$refs.scrollContent)
     },
 };
 </script>

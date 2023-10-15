@@ -132,9 +132,7 @@ export const actions = {
     // 登録後のログイン処理
     try {
       await signInWithEmailAndPassword(auth, email, password)
-      dispatch('common/setMessage', '登録して、ログインしました', {
-        root: true,
-      })
+      dispatch('common/setMessage', '登録して、ログインしました', {root: true,})
       commit('setUser', auth.currentUser)
     } catch (error) {
       // console.error(error.message);

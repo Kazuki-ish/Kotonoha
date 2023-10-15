@@ -508,4 +508,7 @@ export const actions = {
     commit('setBookmarkID', bookmarkID)
     commit('setBookmarkNum', bookmarkNum)
   },
+  setBookmark({}, ){
+      
+  },
 }
