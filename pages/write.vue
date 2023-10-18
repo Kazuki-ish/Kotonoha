@@ -43,6 +43,12 @@ export default {
   //https://qiita.com/oreo/items/da1c0f4ac946c48a8f49
   //縦書きコンテントエディタブル
 
+  head() {
+        return {
+            title: this.pageName,
+        };
+  },
+
   data() {
     return {
       pageName: '作品を書く',

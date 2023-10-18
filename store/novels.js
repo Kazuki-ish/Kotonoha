@@ -21,10 +21,12 @@ export const state = () => ({
   newNovels: [],
   currentNovel: null,
   novel: {},
+  readingNovel: {},
   title: '',
   body: '',
   slug: '',
   novelID: [],
+  isFavorite: false,
   likedID: [],
   bookmarkID: [],
   bookmarkNum: [],
@@ -67,6 +69,14 @@ export const mutations = {
     }
     state.novel[uid][novelSlug] = { title, body }
   },
+  setReadingNovel(state, novel) {
+    if(novel) {
+      state.readingNovel = novel
+    }
+  },
+  setIsFavorite(state, boolarn) {
+    state.isFavorite = boolarn
+  },
   removeNovel(state, { uid, novelSlug }) {
     if (state.novel[uid]) {
       delete state.novel[uid][novelSlug]
@@ -90,7 +100,7 @@ function generateUniqueSlug(title) {
 }
 
 export const actions = {
-  async fetchSingleNovel({ commit }, { uid, slug }) {
+  async fetchSingleNovel({ state, commit }, { uid, slug }) {
     const userDocRef = doc(db, 'novels', uid)
     const userDoc = await getDoc(userDocRef)
 
@@ -485,7 +495,54 @@ export const actions = {
       })
     )
   },
+  async fetchFavorited({ rootState, state, commit}) {
+    const uid = state.readingNovel.uid;
+    const slug = state.readingNovel.slug;
+    const favoriteUid = rootState.user.uid;
 
+    console.log(uid, slug, favoriteUid)
+  
+    const novelRef = doc(db, 'novels', uid);
+    const docSnap = await getDoc(novelRef);
+  
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      // console.log(data)
+  
+      if (data.novel[slug].favorites && data.novel[slug].favorites.includes(favoriteUid)) {
+        commit('setIsFavorite', true);
+      }
+    }
+    return;
+  },
+  async addFavorite({ rootState, state, commit } ) {
+    const uid = state.readingNovel.uid;
+    const slug = state.readingNovel.slug;
+    const favoriteUid = rootState.user.uid;
+    
+    // slugの直下のドキュメントへの参照
+    const novelRef = doc(db, 'novels', uid)
+    // console.log(novelRef)
+  
+    const docSnap = await getDoc(novelRef);
+    // console.log(docSnap)
+  
+    const data = docSnap.data();
+    // console.log(data)
+
+    if (!data.novel[slug].favorites) {
+      data.novel[slug].favorites = [];
+    }
+
+    if (!data.novel[slug].favorites.includes(favoriteUid)) {
+      data.novel[slug].favorites.push(favoriteUid);
+      await updateDoc(novelRef, {
+        [`novel.${slug}`]: data.novel[slug]
+      });      
+    }
+    commit('setIsFavorite', true);
+  },
+  
   async fetchLikedNovels({ commit }, uid) {
     const q = query(collection(db, 'likes'), where('uid', '==', uid))
     const querySnapshot = await getDocs(q)

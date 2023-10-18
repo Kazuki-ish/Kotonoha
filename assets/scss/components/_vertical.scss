@@ -13,13 +13,16 @@
     @media screen and (min-width: 768px) {
         max-height:calc(100svh - 60px - 60px - 3rem);
         margin: 2rem .5rem 1rem 0; 
+        overflow-x: visible;
+        scrollbar-color: #F4F3EA; //firefox
+
     }
   }
 
 .c-vertical{
     vertical-align: text-top;
     writing-mode: vertical-rl;
-    padding-bottom: 12px;
+    padding: 0 0 12px 4rem;
     line-height:calc(52 / 32);
     letter-spacing: 0.075em;
     height:100%;
@@ -30,6 +33,14 @@
     * {
         // display: inline-block;
     }
+
+    @media screen and (min-width: 768px) {
+        &::-webkit-scrollbar{
+            color: #F4F3EA;
+            display: none; //safari&Chrome
+        }
+    }
+
 }
 
 .c-vertical-input {

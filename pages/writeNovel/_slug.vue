@@ -1,18 +1,20 @@
 <template>
-    <section class="novel c-vertical-inner" id="js-c-scroll" ref="scrollContent">
-        <div class="c-vertical" v-if="novel">
-            <p class="write__txt -title">タイトル</p>
-            <p class="write__input -title c-vertical-input" ref="novelTitle" v-html="novel.title" 
-            @input="updateTitle" contenteditable="true">
-            </p>
-            <p class="write__txt -body">本文</p>
-            <p class="write__input -body c-vertical-input" ref="novelText" v-html="novel.body" 
-            @input="updateBody" contenteditable="true"></p>
-        </div>
-        <!-- <div class="c-vertical" v-else>
-            <p>小説が見つかりませんでした。</p>
-        </div> -->
-    </section>
+    <ModulesConvScroll>
+        <section class="novel c-vertical-inner" id="js-c-scroll" ref="scrollContent">
+            <div class="c-vertical" v-if="novel">
+                <p class="write__txt -title">タイトル</p>
+                <p class="write__input -title c-vertical-input" ref="novelTitle" v-html="novel.title" 
+                @input="updateTitle" contenteditable="true">
+                </p>
+                <p class="write__txt -body">本文</p>
+                <p class="write__input -body c-vertical-input" ref="novelText" v-html="novel.body" 
+                @input="updateBody" contenteditable="true"></p>
+            </div>
+            <!-- <div class="c-vertical" v-else>
+                <p>小説が見つかりませんでした。</p>
+            </div> -->
+        </section>
+    </ModulesConvScroll>
 </template>
 
 <style lang="scss" scoped>

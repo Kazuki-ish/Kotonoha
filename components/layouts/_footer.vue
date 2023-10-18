@@ -4,11 +4,13 @@
         '-wirte': $route.name == 'write',
         '-novel-list': $route.name == 'myNovels',
         '-profile': $route.name == 'profile',
+        '-novel-page': $store.state.common.isNovelPage == true,
     }">
         <UiFooterButton />
         <UiMassage />
         <UiToggleMode />
-        <!-- <UiFooterBookmark /> -->
+        <!-- <UiFooterBookmarkButton /> -->
+        <UiFooterFavoriteButton v-if="$store.state.common.isNovelPage"/>
     </footer>
 </template>
 
@@ -35,5 +37,7 @@ footer {
 
 export default {
     name: 'Footer',
+    mounted(){
+    },
 }
 </script>

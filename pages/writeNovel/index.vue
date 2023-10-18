@@ -1,24 +1,26 @@
 <template>
-    <section class="c-vertical-inner">
-        <ul class="booklist c-vertical" id="js-c-scroll">
-            <div class="booklist__profile">
-                <UiIcon />
-                <h2 class="booklist__display-name">{{ this.$store.state.user.profile.name }}</h2>
-            </div>
-            <li class="booklist__item">
-                <h1 class="booklist__item__title">新しく書く</h1>
-                <nuxt-link :to="'/write'" @click="pushed">
-                    <p class="booklist__item__text -add-novel"><span></span><span></span></p>
-                </nuxt-link>
-            </li>
-            <li class="booklist__item" v-for="novel in novels" :key="novel.id">
-                <h1 class="booklist__item__title" v-html="novel.title"></h1>
-                <nuxt-link :to="`/writeNovel/${novel.id}`">
-                    <p class="booklist__item__text" v-html="novel.body"></p>
-                </nuxt-link>
-            </li>
-        </ul>
-    </section>
+    <ModulesConvScroll>
+        <section class="c-vertical-inner">
+            <ul class="booklist c-vertical" id="js-c-scroll">
+                <div class="booklist__profile">
+                    <UiIcon />
+                    <h2 class="booklist__display-name">{{ this.$store.state.user.profile.name }}</h2>
+                </div>
+                <li class="booklist__item">
+                    <h1 class="booklist__item__title">新しく書く</h1>
+                    <nuxt-link :to="'/write'" @click="pushed">
+                        <p class="booklist__item__text -add-novel"><span></span><span></span></p>
+                    </nuxt-link>
+                </li>
+                <li class="booklist__item" v-for="novel in novels" :key="novel.id">
+                    <h1 class="booklist__item__title" v-html="novel.title"></h1>
+                    <nuxt-link :to="`/writeNovel/${novel.id}`">
+                        <p class="booklist__item__text" v-html="novel.body"></p>
+                    </nuxt-link>
+                </li>
+            </ul>
+        </section>
+    </ModulesConvScroll>
 </template>
 
 <style lang="scss" scoped>
@@ -62,8 +64,15 @@
   
 <script>
 export default {
+    head() {
+        return {
+            title: this.pageName,
+        };
+    },
+
     data() {
         return {
+            pageName: '小説を書く',
             displayName: this.$store.state.user.profile.name,
             displayIcon: this.$store.state.user.icon,
             newPushed: false,

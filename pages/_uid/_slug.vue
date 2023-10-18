@@ -1,13 +1,15 @@
 <template>
-    <section class="novel c-vertical-inner">
-        <div class="c-vertical" @scroll='setScrollAmount' @wheel="convWheel" v-if="novel && novel.isPublic" id="js-c-scroll" ref="scrollContent">
-            <h1 class="novel__title" v-html="novel.title"></h1>
-            <p class="novel__body" v-html="novel.body"></p>
-        </div>
-        <!-- <div class="c-vertical" v-else>
-            <p>小説が見つかりませんでした。</p>
-        </div> -->
-    </section>
+    <ModulesConvScroll>
+        <section class="novel c-vertical-inner">
+                <div class="c-vertical" @scroll='setScrollAmount' v-if="novel && novel.isPublic" id="js-c-scroll" ref="scrollContent">
+                    <h1 class="novel__title" v-html="novel.title"></h1>
+                    <p class="novel__body" v-html="novel.body"></p>
+                </div>
+                <!-- <div class="c-vertical" v-else>
+                    <p>小説が見つかりませんでした。</p>
+                </div> -->
+        </section>
+    </ModulesConvScroll>
 </template>
 
 <style lang="scss" scoped>
@@ -25,19 +27,31 @@
 <script>
 
 export default {
+    head() {
+        return {
+            title: "「" + this.title + "」 " + this.auther,
+        };
+    },
     data() {
         return {
             novel: null,
+            title: '',
+            auther: '',
         };
     },
     async fetch() {
         const { uid, slug } = this.$route.params;
         this.novel = await this.$store.dispatch('novels/fetchSingleNovel', { uid, slug });
+        this.title = this.novel.title;
+        this.auther = this.novel.name;
+        this.novel.uid = uid;
+        this.$store.commit('novels/setReadingNovel', this.novel);
     },
     mounted() {//DOMマウント後に実行
     },
     created() {
         this.$store.commit('user/setMode', this.$route.name)
+        this.$store.commit('common/setIsNovelPage', true);
         // console.log (this.$route)
     },
     updated() {
@@ -48,6 +62,7 @@ export default {
         this.$store.commit("common/inputAuther", this.novel.name)
         // console.log(this.novel.name)
         // console.log(this.novel)
+        this.$store.dispatch("novels/fetchFavorited")
     },
     computed: {
         watchReading() {
@@ -60,19 +75,13 @@ export default {
             this.$store.commit('common/setScrollAmount', scrollAmount);
             // console.log(scrollAmount);
         },
-        convWheel(event) {
-            // console.log(event.deltaY)
-            this.$refs.scrollContent.scrollLeft = this.$refs.scrollContent.scrollLeft + event.deltaY;
-            
-            const scrollAmount = this.$refs.scrollContent.scrollLeft;  // 横方向のスクロール量を取得
-            this.$store.commit('common/setScrollAmount', scrollAmount);
-        }
     },
     destroyed() {
         // 作家名リセット
         this.$store.commit("common/inputAuther", "")
 
         this.$store.commit('common/setIsReading', false)
+        this.$store.commit('common/setIsNovelPage', false)
     },
     watch: {
         watchReading(after, before) {

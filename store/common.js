@@ -7,6 +7,7 @@ export const state = () => ({
     isMounted: false,
     scrollAmount : '',
     isReading: false,
+    isNovelPage: false,
   })
   
   export const mutations = {
@@ -45,10 +46,13 @@ export const state = () => ({
       state.isMounted = boolarn;
     },
     setScrollAmount(state, horizontal) {
-      state.scrollAmount = horizontal
+      state.scrollAmount = horizontal;
     },
     setIsReading(state, boolarn) {
-      state.isReading = boolarn
+      state.isReading = boolarn;
+    },
+    setIsNovelPage(state, boolarn) {
+      state.isNovelPage = boolarn;
     },
   }
 

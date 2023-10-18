@@ -84,6 +84,12 @@ import { update } from 'immutable';
 export default {
   name: 'ProfilePage',
 
+  head() {
+        return {
+            title: this.pageName,
+        };
+  },
+
   data() {
     return {
       pageName: 'プロフィール',
