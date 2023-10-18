@@ -9,9 +9,14 @@
                 <button class="sign-up__mail__btn -login" @click="signIn(email, password)">ログインする</button>
                 <button class="sign-up__mail__btn -sign-up" @click="signUp(email, password)">新しく登録する</button>
             </div>
-            <div class="sign-up__google">
+            <div class="sign-up__btn -google">
                 <button @click="signInWithGoogle" class="sign-up__google__btn">
                     Googleでログインする
+                </button>
+            </div>
+            <div class="sign-up__btn">
+                <button @click="guestLogin" class="sign-up__google__btn">
+                    ゲストとしてログインする
                 </button>
             </div>
         </div>
@@ -28,7 +33,7 @@
         display: block;
         border-radius: 0.75rem;
         padding: 0.5rem 1rem;
-        margin: 24px auto 0;
+        margin: 1.5rem auto 0;
         min-width: 11rem;
     }
 
@@ -66,11 +71,15 @@
     }
 }
 
-.sign-up__google {
-    margin: 4rem auto 0;
+.sign-up__btn {
+    margin: 3rem auto 0;
 
-    &__btn {
+    &.-google {
+        // margin-top: 4rem;
+    }
+    & button {
         color: #121212;
+        min-width: 230px;
     }
 }
 </style>
@@ -83,6 +92,8 @@ export default {
             pageName: '新規登録/ログインする',
             email: '',
             password: '',
+            gEmail: 'testuser8770467634@gmail.com',
+            gPassword: 'testtest123',
         };
     },
     created() {
@@ -96,7 +107,7 @@ export default {
     },
     methods: {
         async signIn(email, password) {
-            const success = await this.$store.dispatch('user/signIn', { email, password });
+            const success = await this.$store.dispatch('user/signIn', { email, password, message: 'ログインしました' });
             if (success) {
                 this.$router.push('/');
             } else {
@@ -113,6 +124,10 @@ export default {
         },
         async signUp(email, password) {
             this.$store.dispatch('user/signUpWithEmail', { email, password })
+            this.$router.push('/');
+        },
+        async guestLogin() {
+            this.$store.dispatch('user/signIn', { email: 'testuser8770467634@gmail.com', password: 'testtest123', message: 'ゲストユーザーでログインしました' })
             this.$router.push('/');
         },
     },

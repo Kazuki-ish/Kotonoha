@@ -32,5 +32,19 @@
 
 <script>
     export default {
+        computed: {
+            hasMessage() {
+                return this.$store.state.common.hasMessage
+            },
+        },
+        watch: {
+            hasMessage(after, before) {
+                if(after == false) {
+                    setTimeout(() => {
+                        this.$store.commit("common/clearMessage")
+                    }, 200);
+                }
+            }
+        }
     }
 </script>

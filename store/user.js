@@ -139,12 +139,13 @@ export const actions = {
       dispatch('common/setMessage', error.message, { root: true })
     }
   },
-  async signIn({ commit, dispatch }, { email, password }) {
+  async signIn({ commit, dispatch }, { email, password, message }) {
+    // console.log(email, password, message);
     try {
       await signInWithEmailAndPassword(auth, email, password)
       commit('setUser', auth.currentUser)
 
-      dispatch('common/setMessage', 'ログインしました', { root: true })
+      dispatch('common/setMessage', message, { root: true })
 
       return true // 成功した場合は true を返す
     } catch (error) {

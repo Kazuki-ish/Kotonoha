@@ -80,6 +80,7 @@ export default {
             menus: [
                 { public: true, href: '/', title: 'トップに戻る' },
                 { public: true, href: '/about/', title: 'コトノハについて' },
+                { public: false, href: '/userrule/', title: '利用規約' },
                 { public: false, href: '/search/', title: '作品を探す' },
                 { public: false, href: '/search/', title: '作家を探す' },
                 { public: true, href: '/writeNovel/', title: '作品を書く' },

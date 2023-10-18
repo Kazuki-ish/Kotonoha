@@ -1,6 +1,6 @@
 <template>
     <section class="novel c-vertical-inner">
-        <div class="c-vertical" @scroll='setScrollAmount' v-if="novel && novel.isPublic" id="js-c-scroll" ref="scrollContent">
+        <div class="c-vertical" @scroll='setScrollAmount' @wheel="convWheel" v-if="novel && novel.isPublic" id="js-c-scroll" ref="scrollContent">
             <h1 class="novel__title" v-html="novel.title"></h1>
             <p class="novel__body" v-html="novel.body"></p>
         </div>
@@ -60,6 +60,13 @@ export default {
             this.$store.commit('common/setScrollAmount', scrollAmount);
             // console.log(scrollAmount);
         },
+        convWheel(event) {
+            // console.log(event.deltaY)
+            this.$refs.scrollContent.scrollLeft = this.$refs.scrollContent.scrollLeft + event.deltaY;
+            
+            const scrollAmount = this.$refs.scrollContent.scrollLeft;  // 横方向のスクロール量を取得
+            this.$store.commit('common/setScrollAmount', scrollAmount);
+        }
     },
     destroyed() {
         // 作家名リセット

@@ -7,7 +7,7 @@
                 '-reading': this.$store.state.common.isReading,
                 }"
             v-on:click="toggleOpen">
-            <div class="l-lines" ><span></span><span></span><span></span></div>
+            <div class="l-lines c-reading" :class="{'-reading': this.$store.state.common.isReading}" ><span></span><span></span><span></span></div>
         </button>
         <div class="sidemenu-wrap" :class="{ '-open': this.$store.state.common.isOpenMenu }">
             <LayoutsSidemenu />

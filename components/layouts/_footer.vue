@@ -8,7 +8,7 @@
         <UiFooterButton />
         <UiMassage />
         <UiToggleMode />
-        <UiFooterBookmark />
+        <!-- <UiFooterBookmark /> -->
     </footer>
 </template>
 

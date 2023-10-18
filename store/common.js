@@ -27,7 +27,16 @@ export const state = () => ({
     },
     setMessage(state, {hasMessage, messageText}) {
       state.hasMessage = hasMessage;
-      state.messageText = messageText;
+
+      if (messageText) {
+        state.messageText = messageText;
+      }
+    },
+    clearMessage(state) {
+      if (state.hasMessage == true) {
+        state.hasMessage = false;
+      }
+      state.messageText = '';
     },
     toggleMount(state) {
       state.isMounted = !state.isMounted;
@@ -35,8 +44,8 @@ export const state = () => ({
     setIsMounted(state, boolarn) {
       state.isMounted = boolarn;
     },
-    setScrollAmount(state, string) {
-      state.scrollAmount = string
+    setScrollAmount(state, horizontal) {
+      state.scrollAmount = horizontal
     },
     setIsReading(state, boolarn) {
       state.isReading = boolarn
@@ -45,18 +54,12 @@ export const state = () => ({
 
   export const actions = {
     setMessage({commit}, message){
-      const time = 2500;
+      const time = 3500;
 
       commit('setMessage', {hasMessage: true, messageText: message});
       setTimeout(() => {
-        commit('setMessage', { hasMessage: false, messageText: message });
+        commit('setMessage', { hasMessage: false });
       }, time);
-      setTimeout(() => {
-        commit('setMessage', {messageText:''})
-      }, time + 2000)
-    },
-    clearMessage({commit}) {
-      commit('setMessage', {hasMessage: false, messageText: ''});
     },
     changeIsMounted({commit}, boolarn) {
       if(boolarn == true) {
