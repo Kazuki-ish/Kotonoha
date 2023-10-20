@@ -8,6 +8,12 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ]
+    ],
+"redirects": [{
+    "regex": "^https://kotonoha-657ec\\.web\\.app/(?P<page>.*)",
+    "destination": "https://kotonoha.online/:page",
+    "type": 301
+  }]
+
   }
 }

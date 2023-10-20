@@ -27,6 +27,7 @@ export const state = () => ({
   slug: '',
   novelID: [],
   isFavorite: false,
+  isCoolTime: false,
   likedID: [],
   bookmarkID: [],
   bookmarkNum: [],
@@ -184,6 +185,13 @@ export const actions = {
         const novelDoc = novelDocSs.data()
         let novelBody = novelDoc.novel[slug].body
 
+        const favNumber = novelDoc.novel[slug].favorites ? 
+          novelDoc.novel[slug].favorites.length ? novelDoc.novel[slug].favorites.length : null 
+        : null
+
+      // console.log(favNumber)
+      // console.log(novelDoc.novel[slug].favorites)
+
       // 144字以上かチェック
       if (novelBody.length > 144) {
         // ...を追加前に、144文字目までの部分文字列を取得
@@ -204,9 +212,9 @@ export const actions = {
           ...document.data(),
           body: novelBody, // Use the modified novelBody here
           timestamp: timestamp, // Use the timestamp from the doc data
+          favNumber: favNumber,
         }
       })
-
       // 全てのPromiseが解決するのを待ちます
       const newNovels = await Promise.all(novelsPromises);
 
@@ -495,29 +503,38 @@ export const actions = {
       })
     )
   },
-  async fetchFavorited({ rootState, state, commit}) {
-    const uid = state.readingNovel.uid;
-    const slug = state.readingNovel.slug;
+  async fetchIsFavorited({ rootState, commit}, {uid, slug}) {
     const favoriteUid = rootState.user.uid;
-
-    console.log(uid, slug, favoriteUid)
   
     const novelRef = doc(db, 'novels', uid);
     const docSnap = await getDoc(novelRef);
-  
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      // console.log(data)
-  
-      if (data.novel[slug].favorites && data.novel[slug].favorites.includes(favoriteUid)) {
-        commit('setIsFavorite', true);
-      }
+    const data = docSnap.data();
+
+    if ( data.novel[slug].favorites && data.novel[slug].favorites.includes(favoriteUid)) {
+      commit('setIsFavorite', true);
     }
-    return;
+    else{
+      commit('setIsFavorite', false);
+    }
+  },
+  async fetchFavoritedNumber({},{uid, slug}) {
+
+    //firebaseからnovels直下のドキュメントフィールドを参照
+    const novelRef = doc(db, 'novels', uid)
+    const docSnap = await getDoc(novelRef);
+    const data = docSnap.data();
+
+    if (data.novel[slug].favorites) {
+      return data.novel[slug].favorites.length;
+    }
+    else {
+      return null;
+    }
   },
   async addFavorite({ rootState, state, commit } ) {
     const uid = state.readingNovel.uid;
     const slug = state.readingNovel.slug;
+    // ボタンを押したユーザーのuid
     const favoriteUid = rootState.user.uid;
     
     // slugの直下のドキュメントへの参照
@@ -530,17 +547,34 @@ export const actions = {
     const data = docSnap.data();
     // console.log(data)
 
+    //favorite項目がなければ配列として生成
     if (!data.novel[slug].favorites) {
       data.novel[slug].favorites = [];
     }
 
+    //favUidがなければ配列に追加してupdate
     if (!data.novel[slug].favorites.includes(favoriteUid)) {
       data.novel[slug].favorites.push(favoriteUid);
       await updateDoc(novelRef, {
         [`novel.${slug}`]: data.novel[slug]
-      });      
+      });
+      commit('setIsFavorite', true);
     }
-    commit('setIsFavorite', true);
+
+    //favUidがあれば配列から削除してupdate
+    else if (data.novel[slug].favorites.includes(favoriteUid)) {
+      //uidが一致する配列の番号を取得
+      const arrayNumber = data.novel[slug].favorites.indexOf(favoriteUid);
+      // console.log(arrayNumber)
+      
+      // n番目の数値を配列から削除してその長さ分詰める
+      data.novel[slug].favorites.splice(arrayNumber, 1);
+      await updateDoc(novelRef, {
+        [`novel.${slug}`]: data.novel[slug]
+      });
+      // console.log(data.novel[slug])
+      commit('setIsFavorite', false);
+    }
   },
   
   async fetchLikedNovels({ commit }, uid) {

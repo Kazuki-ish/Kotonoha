@@ -12,6 +12,10 @@
             <div v-if="novel.name && $route.name !== 'myNovels'" class="booklist__bottom-wraper">
                 <h2 class="booklist__item__auther">{{ novel.name }}</h2>
             </div>
+            <div v-if="$route.name !== 'myNovels'" class="booklist__item__fav">
+                <img src="~/assets/imgs/ico/favorite.png" alt="" class="booklist__item__fav-ico">
+                <p class="booklist__item__fav-num" v-if="novel.favNumber"> {{ novel.favNumber }}</p>
+            </div>
         </li>
     </ul>
 </template>
@@ -29,7 +33,7 @@
         display: block;
     }
 
-    p {
+    .booklist__item__text {
         @include NM_convex;
         border-radius: 1rem;
         //padding:16px 16px 12px;
@@ -53,7 +57,7 @@
 
 .booklist .booklist__item {
     @include relative;
-    height: 80%;
+    height: 85%;
     //width: get_Vw(373);
     white-space: pre-wrap;
     list-style: none;
@@ -61,7 +65,7 @@
     //padding:0 1.4rem;
 
     &:nth-of-type(n + 2) {
-        margin-right: 2rem;
+        margin-right: 3rem;
 
         @media screen and (min-width: 768px) {
             margin-right:5rem;
@@ -78,7 +82,7 @@
 }
 
 .booklist .booklist__item:nth-child(even) {
-    margin-top: 20%;
+    margin-top: 15%;
 }
 
 .booklist .booklist__item__wrapper {
@@ -90,12 +94,14 @@
     display: block;
     font-size: 18px;
     margin-left: -1rem;
+    margin-top: .5rem;
     line-height: 1;
 }
 
 .booklist .booklist__bottom-wraper {
     text-align: right;
     margin-right: -1rem;
+    margin-bottom: .5rem;
 }
 
 .booklist__item__link {
@@ -105,12 +111,31 @@
 .booklist .booklist__item__author {
     left: 0;
     line-height: 1;
-    bottom: 0;
+    bottom: 1rem;
 }
 
 .booklist .booklist__item__text {
-    padding: 1rem;
-    margin: 10px 0.2rem;
+    padding: 1rem .75rem;
+    margin: .5rem 0.2rem;
+}
+
+.booklist__item__fav {
+    @include absolute($bottom:.5rem, $right:0);
+    width: 1rem;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.booklist .booklist__item .booklist__item__fav-num {
+    text-combine-upright: all;
+    line-height: 1;
+    text-indent: 0;
+    margin-top: .25rem;
+}
+
+.booklist__item__fav-ico {
+    width:1rem
 }
 </style>
 

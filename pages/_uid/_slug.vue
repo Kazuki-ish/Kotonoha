@@ -46,8 +46,9 @@ export default {
         this.auther = this.novel.name;
         this.novel.uid = uid;
         this.$store.commit('novels/setReadingNovel', this.novel);
+        await this.$store.dispatch("novels/fetchIsFavorited", {uid, slug})
     },
-    mounted() {//DOMマウント後に実行
+    async mounted() {//DOMマウント後に実行
     },
     created() {
         this.$store.commit('user/setMode', this.$route.name)
@@ -62,7 +63,6 @@ export default {
         this.$store.commit("common/inputAuther", this.novel.name)
         // console.log(this.novel.name)
         // console.log(this.novel)
-        this.$store.dispatch("novels/fetchFavorited")
     },
     computed: {
         watchReading() {
