@@ -135,6 +135,7 @@
 }
 
 .booklist__item__fav-ico {
+    height: .794rem;
     width:1rem
 }
 </style>

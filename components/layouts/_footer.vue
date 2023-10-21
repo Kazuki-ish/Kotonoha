@@ -9,8 +9,12 @@
         <UiFooterButton />
         <UiMassage />
         <UiToggleMode />
-        <!-- <UiFooterBookmarkButton /> -->
-        <UiFooterFavoriteButton v-if="$store.state.common.isNovelPage"/>
+        <UiButtonWrapper v-if="$store.state.common.isNovelPage" >
+            <!-- <UiFooterBookmarkArrow :isFirst = true />
+            <UiFooterBookmarkButton />
+            <UiFooterBookmarkArrow /> -->
+            <UiFooterFavoriteButton />
+        </UiButtonWrapper>
     </footer>
 </template>
 

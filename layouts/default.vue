@@ -37,6 +37,7 @@ export default {
     .l-main {
         @include cubic_ease($propaty: opacity);
         height: 100svh;
+        max-height: 100svh;
         overflow: hidden;
         max-width: 100svw;
     }
