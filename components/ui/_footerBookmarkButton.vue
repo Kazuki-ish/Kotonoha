@@ -30,6 +30,8 @@
 
 <script>
 export default {
+    async fetch() {
+    },
     data() {
         return {
             isBtnClickable: true,
@@ -38,13 +40,14 @@ export default {
     },
     methods: {
         async bmHandler() {
+        const { uid, slug } = this.$route.params;  
             this.isBtnClickable = false;
 
             if (!this.$store.state.user.isLogin) {
                 this.$router.push('/signup');
             }
             else {
-                await this.$store.dispatch("novels/addBookmarks")
+                await this.$store.dispatch("novels/addBookmarks", {novel_uid:uid, slug})
                 // console.log(this.$store.state.novels.readingNovel)
 
                 // 一定時間後にボタンを再びクリック可能にする

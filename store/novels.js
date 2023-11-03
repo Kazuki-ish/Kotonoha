@@ -644,8 +644,7 @@ export const actions = {
       commit('setIsBookmark', true)
     }
   },
-  // async addBookmarks({ rootState, state, commit},{novel_uid, slug}) {
-  addBookmarks({ rootState, state, commit},) {
+  async addBookmarks({ rootState, state, commit},{novel_uid, slug}) {
     const scrollAmount = rootState.common.scrollAmount;
     const bookmarks = [...state.bookmarks];
 
@@ -655,52 +654,18 @@ export const actions = {
         bookmarks.sort((a, b) => b - a);
       }
     }
+
+
+    const uid = rootState.user.uid;
+    const userRef = doc(db, 'users', uid );
+    let docSnap = await getDoc(userRef);
+    let data = docSnap.data();
+
+    await updateDoc(userRef, {
+      [`bookmarks.${novel_uid}.${slug}`]: bookmarks // bookmarksを代入
+    });
+
     commit('setBookmarks', bookmarks);
     // console.log(bookmarks)
   },
-  // async addBookmark({ rootState, state, commit } ) {
-  //   const uid = state.readingNovel.uid;
-  //   const slug = state.readingNovel.slug;
-  //   // ボタンを押したユーザーのuid
-  //   const favoriteUid = rootState.user.uid;
-    
-  //   // slugの直下のドキュメントへの参照
-  //   const novelRef = doc(db, 'novels', uid)
-  //   // console.log(novelRef)
-  
-  //   const docSnap = await getDoc(novelRef);
-  //   // console.log(docSnap)
-  
-  //   const data = docSnap.data();
-  //   // console.log(data)
-
-  //   //favorite項目がなければ配列として生成
-  //   if (!data.novel[slug].favorites) {
-  //     data.novel[slug].favorites = [];
-  //   }
-
-  //   //favUidがなければ配列に追加してupdate
-  //   if (!data.novel[slug].favorites.includes(favoriteUid)) {
-  //     data.novel[slug].favorites.push(favoriteUid);
-  //     await updateDoc(novelRef, {
-  //       [`novel.${slug}`]: data.novel[slug]
-  //     });
-  //     commit('setIsFavorite', true);
-  //   }
-
-  //   //favUidがあれば配列から削除してupdate
-  //   else if (data.novel[slug].favorites.includes(favoriteUid)) {
-  //     //uidが一致する配列の番号を取得
-  //     const arrayNumber = data.novel[slug].favorites.indexOf(favoriteUid);
-  //     // console.log(arrayNumber)
-      
-  //     // n番目の数値を配列から削除してその長さ分詰める
-  //     data.novel[slug].favorites.splice(arrayNumber, 1);
-  //     await updateDoc(novelRef, {
-  //       [`novel.${slug}`]: data.novel[slug]
-  //     });
-  //     // console.log(data.novel[slug])
-  //     commit('setIsFavorite', false);
-  //   }
-  // },
 }
