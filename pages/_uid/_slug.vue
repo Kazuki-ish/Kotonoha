@@ -61,6 +61,13 @@ export default {
     updated() {
         if (this.novel.isPublic) {
             this.$scrollSet(this.$refs.scrollContent)
+            const el= this.$refs.scrollContent;
+            if (el.scrollWidth > el.clientWidth) {
+                this.$store.commit("novels/setBeAbleBookmark", true)
+            }
+            else{
+                this.$store.commit("novels/setBeAbleBookmark", false)
+            }
         }
         this.$store.commit("common/inputPageName", this.novel.title)
         this.$store.commit("common/inputAuther", this.novel.name)
@@ -68,7 +75,7 @@ export default {
         // console.log(this.novel)
     },
     computed: {
-        watchReading() {
+    watchReading() {
             return this.$store.state.common.scrollAmount
         }
     },

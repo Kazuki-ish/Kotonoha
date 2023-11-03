@@ -8,6 +8,7 @@ export const state = () => ({
     scrollAmount : '',
     isReading: false,
     isNovelPage: false,
+    readyBmIndex: '',
   })
   
   export const mutations = {
@@ -46,7 +47,7 @@ export const state = () => ({
       state.isMounted = boolarn;
     },
     setScrollAmount(state, horizontal) {
-      state.scrollAmount = horizontal;
+    state.scrollAmount = horizontal;
     },
     setIsReading(state, boolarn) {
       state.isReading = boolarn;
@@ -54,6 +55,12 @@ export const state = () => ({
     setIsNovelPage(state, boolarn) {
       state.isNovelPage = boolarn;
     },
+    setReadyBmIndex(state, value) {
+      state.readyBmIndex = value;
+    },
+    clearReadyBmIndex(state) {
+      state.readyBmIndex = '';
+    }
   }
 
   export const actions = {
@@ -75,4 +82,9 @@ export const state = () => ({
         commit('setIsMounted', boolarn);
       }
     },
+    setBmIndex({rootState, commit}, index) {
+      // console.log(index)
+      const value = rootState.novels.bookmarks[index]
+      commit ('setReadyBmIndex', value)
+    }
   }

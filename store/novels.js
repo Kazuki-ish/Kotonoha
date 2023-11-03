@@ -82,10 +82,10 @@ export const mutations = {
     state.isBookmark = boolarn
   },
   setBookmarks(state, array) {
-    state.Bookmarks = array
+    state.bookmarks = array
   },
-  setAbleBookmarks(state, boolarn) {
-    state.beAbleBookmarks = boolarn
+  setBeAbleBookmark(state, boolarn) {
+    state.beAbleBookmark = boolarn
   },
   removeNovel(state, { uid, novelSlug }) {
     if (state.novel[uid]) {
@@ -644,7 +644,20 @@ export const actions = {
       commit('setIsBookmark', true)
     }
   },
-  
+  // async addBookmarks({ rootState, state, commit},{novel_uid, slug}) {
+  addBookmarks({ rootState, state, commit},) {
+    const scrollAmount = rootState.common.scrollAmount;
+    const bookmarks = [...state.bookmarks];
+
+    if(!bookmarks.includes(scrollAmount)) {
+      bookmarks.push(scrollAmount)
+      if(bookmarks.length >= 2){
+        bookmarks.sort((a, b) => b - a);
+      }
+    }
+    commit('setBookmarks', bookmarks);
+    // console.log(bookmarks)
+  },
   // async addBookmark({ rootState, state, commit } ) {
   //   const uid = state.readingNovel.uid;
   //   const slug = state.readingNovel.slug;
