@@ -10,7 +10,7 @@
       "**/node_modules/**"
     ],
 "redirects": [{
-    "regex": "^https://kotonoha-657ec\\.web\\.app/(?P<page>.*)",
+    "regex": ".*kotonoha-657ec.*/(?P<page>.*)$",
     "destination": "https://kotonoha.online/:page",
     "type": 301
   }]

@@ -51,7 +51,7 @@ export default {
                 this.$router.push('/signup');
             }
             else {
-                await this.$store.dispatch("novels/addFavorite")
+                // await this.$store.dispatch("novels/fetchIsBookmarked")
                 // console.log(this.$store.state.novels.readingNovel)
 
                 // 一定時間後にボタンを再びクリック可能にする

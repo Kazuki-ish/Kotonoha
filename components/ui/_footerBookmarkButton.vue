@@ -1,7 +1,8 @@
 <template>
     <div class="bookmark" :class="{ '-bookmarked': $store.state.novels.isBookmark == true }">
-        <button class="bookmark__btn">
-            <img class="bookmark__ico" src="~/assets/imgs/ico/bookmark.png">
+        <button class="bookmark__btn" @click="bmHandler">
+            <img class="bookmark__ico" src="~/assets/imgs/ico/bookmark.png" v-if="$store.state.novels.isFavorite == true">
+            <img class="bookmark__ico" src="~/assets/imgs/ico/bookmark.png" v-if="$store.state.novels.isFavorite == false">
         </button>
     </div>
 </template>
@@ -28,5 +29,30 @@
 </style>
 
 <script>
+export default {
+    data() {
+        return {
+            isBtnClickable: true,
+            bookmarks: [],
+        }
+    },
+    methods: {
+        async bmHandler() {
+            this.isBtnClickable = false;
 
+            if (!this.$store.state.user.isLogin) {
+                this.$router.push('/signup');
+            }
+            else {
+                await this.$store.dispatch("novels/addFavorite")
+                // console.log(this.$store.state.novels.readingNovel)
+
+                // 一定時間後にボタンを再びクリック可能にする
+                setTimeout(() => {
+                    this.isBtnClickable = true;
+                }, 1000); // 1秒のクールタイム
+            }
+        }
+    },
+}
 </script>

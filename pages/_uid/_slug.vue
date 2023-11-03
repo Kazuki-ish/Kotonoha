@@ -47,6 +47,9 @@ export default {
         this.novel.uid = uid;
         this.$store.commit('novels/setReadingNovel', this.novel);
         await this.$store.dispatch("novels/fetchIsFavorited", {uid, slug})
+        if (this.$store.state.novels.beAbleBookmark){
+            await this.$store.dispatch("novels/fetchIsBookmarked", {novel_uid:uid, slug})
+        }
     },
     async mounted() {//DOMマウント後に実行
     },

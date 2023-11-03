@@ -28,9 +28,9 @@ export const state = () => ({
   novelID: [],
   isFavorite: false,
   isCoolTime: false,
-  likedID: [],
-  bookmarkID: [],
-  bookmarkNum: [],
+  isBookmark: false,
+  bookmarks: [],
+  beAbleBookmark: false,
 })
 
 export const mutations = {
@@ -77,6 +77,15 @@ export const mutations = {
   },
   setIsFavorite(state, boolarn) {
     state.isFavorite = boolarn
+  },
+  setIsBookmark(state, boolarn) {
+    state.isBookmark = boolarn
+  },
+  setBookmarks(state, array) {
+    state.Bookmarks = array
+  },
+  setAbleBookmarks(state, boolarn) {
+    state.beAbleBookmarks = boolarn
   },
   removeNovel(state, { uid, novelSlug }) {
     if (state.novel[uid]) {
@@ -576,30 +585,109 @@ export const actions = {
       commit('setIsFavorite', false);
     }
   },
+  async fetchIsBookmarked({ rootState, commit},{novel_uid, slug}) {
+    const uid = rootState.user.uid;
   
-  async fetchLikedNovels({ commit }, uid) {
-    const q = query(collection(db, 'likes'), where('uid', '==', uid))
-    const querySnapshot = await getDocs(q)
-    const likedID = []
-    querySnapshot.forEach((doc) => {
-      likedID.push(doc.id)
-    })
-    commit('setLikedID', likedID)
-  },
-  async fetchBookmarkedNovels({ commit }, uid) {
-    // この部分は、Firestore内にしおりデータの構造に応じて実装を変更してください。
-    const q = query(collection(db, 'bookmarks'), where('uid', '==', uid))
-    const querySnapshot = await getDocs(q)
-    const bookmarkID = []
-    const bookmarkNum = []
-    querySnapshot.forEach((doc) => {
-      bookmarkID.push(doc.id)
-      bookmarkNum.push(doc.data().bookmarkNum)
-    })
-    commit('setBookmarkID', bookmarkID)
-    commit('setBookmarkNum', bookmarkNum)
-  },
-  setBookmark({}, ){
+    // console.log(novel_uid)
+
+    const userRef = doc(db, 'users', uid );
+    let docSnap = await getDoc(userRef);
+    let data = docSnap.data();
+
+    // console.log(docSnap.data())
+
+    if (!data || !data.bookmarks){
+      //userdocがあるかチェックして、なければ配置する
+      await setDoc(userRef,{
+        bookmarks: {} // ここをオブジェクトとして初期化
+      }, { merge: true })
+
+      // docデータを更新
+      docSnap = await getDoc(userRef);
+      data = docSnap.data();
+    }
+
+    // bookmarks配列にnoveluidが含まれているかチェック
+    if (!(novel_uid in data.bookmarks)) {
+
+    // console.log(data.bookmarks)
+      // 含まれていなければ追加
+      const updatedBookmarks = {
+        ...data.bookmarks, // 既存の bookmarks オブジェクトを展開
+        [novel_uid]: {} // 新しいキーと値のペアを追加
+      };
+      console.log(updatedBookmarks)
+      await updateDoc(userRef, { bookmarks: updatedBookmarks });
+
+      // docデータを更新
+      docSnap = await getDoc(userRef);
+      data = docSnap.data();
       
+    }
+    if (
+        !(slug in data.bookmarks[novel_uid] || !(slug in data.bookmarks[novel_uid][slug]))
+      ) { //novel_uidかslugがない場合
+
+        await updateDoc(userRef, {
+          [`bookmarks.${novel_uid}.${slug}`]: [] // 配列で初期化
+        });
+
+        // docデータを更新
+        docSnap = await getDoc(userRef);
+        data = docSnap.data();
+    }
+
+    const bookmarks = data.bookmarks[novel_uid][slug]
+    // console.log(data.bookmarks[novel_uid][slug].length)
+    if (bookmarks.length !== 0) {
+      commit('setBookmarks', bookmarks)
+      commit('setIsBookmark', true)
+    }
   },
+  
+  // async addBookmark({ rootState, state, commit } ) {
+  //   const uid = state.readingNovel.uid;
+  //   const slug = state.readingNovel.slug;
+  //   // ボタンを押したユーザーのuid
+  //   const favoriteUid = rootState.user.uid;
+    
+  //   // slugの直下のドキュメントへの参照
+  //   const novelRef = doc(db, 'novels', uid)
+  //   // console.log(novelRef)
+  
+  //   const docSnap = await getDoc(novelRef);
+  //   // console.log(docSnap)
+  
+  //   const data = docSnap.data();
+  //   // console.log(data)
+
+  //   //favorite項目がなければ配列として生成
+  //   if (!data.novel[slug].favorites) {
+  //     data.novel[slug].favorites = [];
+  //   }
+
+  //   //favUidがなければ配列に追加してupdate
+  //   if (!data.novel[slug].favorites.includes(favoriteUid)) {
+  //     data.novel[slug].favorites.push(favoriteUid);
+  //     await updateDoc(novelRef, {
+  //       [`novel.${slug}`]: data.novel[slug]
+  //     });
+  //     commit('setIsFavorite', true);
+  //   }
+
+  //   //favUidがあれば配列から削除してupdate
+  //   else if (data.novel[slug].favorites.includes(favoriteUid)) {
+  //     //uidが一致する配列の番号を取得
+  //     const arrayNumber = data.novel[slug].favorites.indexOf(favoriteUid);
+  //     // console.log(arrayNumber)
+      
+  //     // n番目の数値を配列から削除してその長さ分詰める
+  //     data.novel[slug].favorites.splice(arrayNumber, 1);
+  //     await updateDoc(novelRef, {
+  //       [`novel.${slug}`]: data.novel[slug]
+  //     });
+  //     // console.log(data.novel[slug])
+  //     commit('setIsFavorite', false);
+  //   }
+  // },
 }
