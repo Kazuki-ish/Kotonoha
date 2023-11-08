@@ -10,9 +10,9 @@
         <UiMassage />
         <UiToggleMode />
         <UiButtonWrapper v-if="$store.state.common.isNovelPage" >
-            <UiFooterBookmarkArrow :isFirst = true v-if="$store.state.novels.beAbleBookmark" />
+            <!-- <UiFooterBookmarkArrow :isFirst = true v-if="$store.state.novels.beAbleBookmark" />
             <UiFooterBookmarkButton v-if="$store.state.novels.beAbleBookmark" />
-            <UiFooterBookmarkArrow v-if="$store.state.novels.beAbleBookmark" />
+            <UiFooterBookmarkArrow v-if="$store.state.novels.beAbleBookmark" /> -->
             <UiFooterFavoriteButton />
         </UiButtonWrapper>
     </footer>

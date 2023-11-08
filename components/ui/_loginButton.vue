@@ -13,7 +13,7 @@
             </p>
         </div>
         <div class="login-button__topage" v-else>
-            <nuxt-link :to="this.signUp">
+            <nuxt-link :to="this.signIn">
                 ログイン/新規登録
             </nuxt-link>
         </div>
@@ -41,6 +41,7 @@ export default {
     data() {
         return {
             signUp: '/signup/',
+            signIn: '/signin/',
             profile: '/profile/'
         };
     },

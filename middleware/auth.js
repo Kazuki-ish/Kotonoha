@@ -21,7 +21,7 @@ export default function ({ route, store, redirect }) {
         route.path === '/myNovels/'
       ) {
         // console.log(route.path)
-        redirect('/signup')
+        redirect('/signin')
         store.commit('common/setIsMounted', true)
       }
     }

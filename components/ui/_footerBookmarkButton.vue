@@ -44,11 +44,12 @@ export default {
             this.isBtnClickable = false;
 
             if (!this.$store.state.user.isLogin) {
-                this.$router.push('/signup');
+                this.$router.push('/signin');
             }
             else {
                 await this.$store.dispatch("novels/addBookmarks", {novel_uid:uid, slug})
                 // console.log(this.$store.state.novels.readingNovel)
+                //console.log(this.$store.state.novels.bookmarks)
 
                 // 一定時間後にボタンを再びクリック可能にする
                 setTimeout(() => {

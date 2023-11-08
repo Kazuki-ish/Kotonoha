@@ -1,11 +1,13 @@
 <template>
     <ModulesConvScroll>
         <section class="novel c-vertical-inner">
-                <div class="c-vertical" @scroll='setScrollAmount' v-if="novel && novel.isPublic" id="js-c-scroll" ref="scrollContent">
-                    <h1 class="novel__title" v-html="novel.title"></h1>
-                    <p class="novel__body" v-html="novel.body"></p>
-                </div>
-                <!-- <div class="c-vertical" v-else>
+            <div class="c-vertical" @scroll='setScrollAmount' v-if="novel && novel.isPublic" id="js-c-scroll"
+                ref="scrollContent">
+                <h1 class="novel__title" v-html="novel.title"></h1>
+                <p class="novel__body" v-html="novel.body"></p>
+                <UiSlugBookmarks />
+            </div>
+            <!-- <div class="c-vertical" v-else>
                     <p>小説が見つかりませんでした。</p>
                 </div> -->
         </section>
@@ -13,6 +15,10 @@
 </template>
 
 <style lang="scss" scoped>
+
+.novel {
+    // position: relative;
+}
 .novel__title {
     display: block;
     margin: 0 4rem;
@@ -22,6 +28,11 @@
 .novel__body {
     margin-right: 24px;
     max-height: 100%;
+}
+.novel__bookmarks {
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 </style>
 <script>
@@ -46,9 +57,9 @@ export default {
         this.auther = this.novel.name;
         this.novel.uid = uid;
         this.$store.commit('novels/setReadingNovel', this.novel);
-        await this.$store.dispatch("novels/fetchIsFavorited", {uid, slug})
-        if (this.$store.state.novels.beAbleBookmark){
-            await this.$store.dispatch("novels/fetchIsBookmarked", {novel_uid:uid, slug})
+        await this.$store.dispatch("novels/fetchIsFavorited", { uid, slug })
+        if (this.$store.state.novels.beAbleBookmark) {
+            await this.$store.dispatch("novels/fetchIsBookmarked", { novel_uid: uid, slug })
         }
     },
     async mounted() {//DOMマウント後に実行
@@ -61,11 +72,11 @@ export default {
     updated() {
         if (this.novel.isPublic) {
             this.$scrollSet(this.$refs.scrollContent)
-            const el= this.$refs.scrollContent;
+            const el = this.$refs.scrollContent;
             if (el.scrollWidth > el.clientWidth) {
                 this.$store.commit("novels/setBeAbleBookmark", true)
             }
-            else{
+            else {
                 this.$store.commit("novels/setBeAbleBookmark", false)
             }
         }
@@ -75,12 +86,12 @@ export default {
         // console.log(this.novel)
     },
     computed: {
-    watchReading() {
+        watchReading() {
             return this.$store.state.common.scrollAmount
         }
     },
     methods: {
-        setScrollAmount(event){
+        setScrollAmount(event) {
             const scrollAmount = event.target.scrollLeft;  // 横方向のスクロール量を取得
             this.$store.commit('common/setScrollAmount', scrollAmount);
             // console.log(scrollAmount);
@@ -95,7 +106,7 @@ export default {
     },
     watch: {
         watchReading(after, before) {
-            if(after < before) {
+            if (after < before) {
                 // console.log('set')
                 this.$store.commit('common/setIsReading', true)
             }

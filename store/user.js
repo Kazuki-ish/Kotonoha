@@ -122,17 +122,18 @@ export const actions = {
       if (userCredential.user) {
         await sendEmailVerification(auth.currentUser);
         // console.log('Verification email sent.');
+        dispatch('common/setMessage', '登録しました。コトノハへようこそ!', {root: true,})
         return true; // 成功した場合は true を返す
       }
     } catch (error) {
       console.error(error.message);
+      dispatch('common/setMessage', error.message, { root: true })
       return false; // エラーが発生した場合は false を返す
     }
 
     // 登録後のログイン処理
     try {
       await signInWithEmailAndPassword(auth, email, password)
-      dispatch('common/setMessage', '登録して、ログインしました', {root: true,})
       commit('setUser', auth.currentUser)
     } catch (error) {
       // console.error(error.message);

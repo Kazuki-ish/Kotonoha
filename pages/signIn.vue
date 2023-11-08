@@ -2,15 +2,23 @@
     <section class="sign-up">
         <div class="sign-up__inner">
             <div class="sign-up__mail">
-                <p class="sign-up__mail__txt">メールアドレス(新規登録)</p>
+                <p class="sign-up__mail__txt">メールアドレス</p>
                 <input class="sign-up__mail__input" v-model="email" type="email" placeholder="メールアドレス" />
-                <p class="sign-up__mail__txt">パスワード(6文字以上)</p>
+                <p class="sign-up__mail__txt">パスワード</p>
                 <input class="sign-up__mail__input" v-model="password" type="password" placeholder="パスワード" />
-                <button class="sign-up__mail__btn -sign-up" @click="signUp(email, password)">メールアドレスで登録する</button>
-            </div>
-            <div class="sign-up__btn -google">
+                <button class="sign-up__mail__btn -login" @click="signIn(email, password)">ログインする</button>
                 <button @click="signInWithGoogle" class="sign-up__google__btn">
-                    Googleで登録する
+                    Googleでログインする
+                </button>
+            </div>
+            <nuxt-link class="sign-up__btn -link" :to="'/signup/'" >
+                    <button>
+                        新規登録する
+                    </button>
+                </nuxt-link>
+            <div class="sign-up__btn">
+                <button @click="guestLogin" class="sign-up__google__btn">
+                    ゲストとしてログインする
                 </button>
             </div>
         </div>
@@ -61,7 +69,7 @@
     margin-top: 2rem;
 
     &.-login {
-        margin-top: 4rem;
+        margin-top: 1.5rem;
     }
 }
 
@@ -69,12 +77,17 @@
     margin: 3rem auto 0;
 
     &.-google {
-        // margin-top: 4rem;
+        margin-top: 1.5rem;
     }
     & button {
         color: #121212;
         min-width: 230px;
     }
+}
+
+.sign-up__btn.-link {
+    display: inline-block;
+
 }
 </style>
  
@@ -83,11 +96,12 @@
 export default {
     data() {
         return {
-            pageName: 'コトノハに新規登録する',
+            pageName: 'ログインする',
             email: '',
             password: '',
             gEmail: 'testuser8770467634@gmail.com',
             gPassword: 'testtest123',
+            hrefSignIn: '/signin/',
         };
     },
     created() {

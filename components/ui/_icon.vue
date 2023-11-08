@@ -1,8 +1,9 @@
 <template>
     <div class="icon" :class="$route.name">
         <img v-if="this.$store.state.user.icon" class="icon__none" v-bind:src="this.$store.state.user.icon" alt="">
-        <label v-else class="icon__image" for="file_upload">
+        <label v-else class="icon__image c-plus-wrapper" for="file_upload">
             <input class="icon__image__input" ref="imageInput" type="file" @change="uploadImage" />
+            <span></span><span></span>
         </label>
     </div>
 </template>

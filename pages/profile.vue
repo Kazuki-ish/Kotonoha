@@ -13,7 +13,7 @@
           <input class="profile__list__input" :class="`profile__list__input-${key}`" :id="key" :placeholder="value"
             v-model="updatedValues[key]" :type="key === 'mail' ? 'email' : 'text'" />
         </div>
-        <button class="profile__btn -save" type="submit">保存して更新</button>
+        <button class="profile__btn -save" type="submit">保存して更新する</button>
       </form>
 
       <button class="profile__btn -logout" @click="logOut">ログアウトする</button>
