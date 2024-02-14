@@ -2,6 +2,7 @@
 import { auth } from '~/plugins/firebase'
 import {
   signInWithPopup,
+  signInWithRedirect,
   updateEmail,
   updateProfile,
   GoogleAuthProvider,
@@ -102,6 +103,7 @@ export const actions = {
     try {
       const provider = new GoogleAuthProvider()
       const result = await signInWithPopup(auth, provider)
+      // await signInWithRedirect(auth, provider);
       // 成功したら、result.user にユーザー情報が格納されています
       // console.log('User:', result.user);
       dispatch('common/setMessage', 'Googleでログインしました', { root: true })

@@ -1,8 +1,10 @@
 <template>
     <div class="bookmark" :class="{ '-bookmarked': $store.state.novels.isBookmark == true }">
         <button class="bookmark__btn" @click="bmHandler">
-            <img class="bookmark__ico" src="~/assets/imgs/ico/bookmark.png" v-if="$store.state.novels.isFavorite == true">
-            <img class="bookmark__ico" src="~/assets/imgs/ico/bookmark.png" v-if="$store.state.novels.isFavorite == false">
+            <transition-group name="fade" tag="div" class="bookmark-container">
+                <img class="bookmark__ico" src="~/assets/imgs/ico/bookmarked.png" v-if="$store.state.novels.currentBookmark" key="bookmarked">
+                <img class="bookmark__ico" src="~/assets/imgs/ico/bookmark.png" v-else key="bookmark">
+            </transition-group>
         </button>
     </div>
 </template>
@@ -11,10 +13,11 @@
     .bookmark {
         @include cubic_ease(box-shadow, $time: .2s);
         @include NM_convex_anim;
+        position: relative;
         border-radius: calc(21 / 780 * 100vw);
 
         button {
-            padding: 0.5rem .75rem;
+            padding: 0.5rem +  .75rem;
 
             &:nth-child(n + 2) {
                 margin-left: calc(94 / 780 * 100vw);
@@ -22,9 +25,19 @@
         }
 
         &__ico {
-            display: block;
+            @include absCenter;
             height: 1.5rem;
         }
+    }
+
+    .bookmark-container {
+        display: grid;
+    }
+    .fade-enter-active, .fade-leave-active {
+        @include cubic_ease(opacity);
+    }
+    .fade-enter-from, .fade-leave-to {
+        opacity: 0;
     }
 </style>
 
@@ -40,7 +53,7 @@ export default {
     },
     methods: {
         async bmHandler() {
-        const { uid, slug } = this.$route.params;  
+        const { uid, slug } = this.$route.params;
             this.isBtnClickable = false;
 
             if (!this.$store.state.user.isLogin) {
@@ -50,6 +63,7 @@ export default {
                 await this.$store.dispatch("novels/addBookmarks", {novel_uid:uid, slug})
                 // console.log(this.$store.state.novels.readingNovel)
                 //console.log(this.$store.state.novels.bookmarks)
+                this.$store.commit('novels/setCurrentBookmark', true)
 
                 // 一定時間後にボタンを再びクリック可能にする
                 setTimeout(() => {

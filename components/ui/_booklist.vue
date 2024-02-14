@@ -142,7 +142,7 @@
 
 <script>
 export default {
-    //動的コンポーネント化している。mynovelsとtopで共通のコンポーネント
+    //動的コンポーネント化している。mynovelsとtop、uid_indexで共通のコンポーネント
     name: 'BookList',
     props: {
         isProfile: {

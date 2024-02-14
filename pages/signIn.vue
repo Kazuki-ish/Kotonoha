@@ -74,7 +74,7 @@
 }
 
 .sign-up__btn {
-    margin: 3rem auto 0;
+    margin: 1.5rem auto 0;
 
     &.-google {
         margin-top: 1.5rem;
@@ -101,7 +101,6 @@ export default {
             password: '',
             gEmail: 'testuser8770467634@gmail.com',
             gPassword: 'testtest123',
-            hrefSignIn: '/signin/',
         };
     },
     created() {
@@ -129,10 +128,6 @@ export default {
             } else {
                 // エラー処理などをここで行うことができます。
             }
-        },
-        async signUp(email, password) {
-            this.$store.dispatch('user/signUpWithEmail', { email, password })
-            this.$router.push('/');
         },
         async guestLogin() {
             this.$store.dispatch('user/signIn', { email: 'testuser8770467634@gmail.com', password: 'testtest123', message: 'ゲストユーザーでログインしました' })

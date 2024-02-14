@@ -66,7 +66,7 @@
 }
 
 .sign-up__btn {
-    margin: 3rem auto 0;
+    margin: 1.5rem auto 0;
 
     &.-google {
         // margin-top: 4rem;
@@ -86,8 +86,6 @@ export default {
             pageName: 'コトノハに新規登録する',
             email: '',
             password: '',
-            gEmail: 'testuser8770467634@gmail.com',
-            gPassword: 'testtest123',
         };
     },
     created() {
@@ -100,14 +98,6 @@ export default {
         this.$store.dispatch('common/changeIsMounted', true); 
     },
     methods: {
-        async signIn(email, password) {
-            const success = await this.$store.dispatch('user/signIn', { email, password, message: 'ログインしました' });
-            if (success) {
-                this.$router.push('/');
-            } else {
-                // エラー処理などをここで行うことができます。
-            }
-        },
         async signInWithGoogle() {
             const success = await this.$store.dispatch('user/signUpWithGoogle',)
             if (success) {
@@ -118,10 +108,6 @@ export default {
         },
         async signUp(email, password) {
             this.$store.dispatch('user/signUpWithEmail', { email, password })
-            this.$router.push('/');
-        },
-        async guestLogin() {
-            this.$store.dispatch('user/signIn', { email: 'testuser8770467634@gmail.com', password: 'testtest123', message: 'ゲストユーザーでログインしました' })
             this.$router.push('/');
         },
     },

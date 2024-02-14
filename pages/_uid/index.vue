@@ -1,122 +1,25 @@
 <template>
-    <section class="c-vertical-inner" id="js-c-scroll" ref="scrollContent">
-        <ul class="booklist c-vertical">
-        <UiIcon />
-        <h2 class="booklist__display-name">{{ this.$store.state.user.profile.name }}</h2>
-            <li class="booklist__item" v-for="novel in novels" :key="novel.id">
-                <h1 class="booklist__item__title" v-html="novel.title"></h1>
-                <nuxt-link :to="`/${uid}/${novel.id}`">
-                    <p class="booklist__item__text" v-html="novel.body"></p>
-                </nuxt-link>
-            </li>
-        </ul>
+    <section class="c-vertical-inner" id="js-c-scroll">
+        <UiBooklist :isProfile="isProfile" />
     </section>
 </template>
 
-<style lang="scss" scoped>
-.booklist {
-
-    h1 {
-        font-size: 1rem;
-        font-weight: 300;
-        margin: 0;
-        display: block;
-    }
-
-    p {
-        @include NM_convex;
-        border-radius: 18px;
-        //padding:16px 16px 12px;
-        margin: 0;
-    }
-}
-
-.booklist__display-name {
-    position: relative;
-    top: 24px;
-    font-size: 24px;
-    font-weight: 300;
-}
-
-.booklist .booklist__item {
-    @include relative;
-    height: get_Vh(857);
-    //width: get_Vw(373);
-    white-space: pre-wrap;
-    list-style: none;
-    //padding:0 1.4rem;
-
-    &:nth-child(n + 2) {
-        margin-right: 0.4rem;
-    }
-    &:first-child {
-        margin-right: 1rem;
-    }
-}
-
-.booklist .booklist__item:nth-child(even) {
-    margin-top: get_Vh(301);
-}
-
-.booklist .booklist__item__wrapper {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.booklist .booklist__item__title {
-    line-height: 1;
-}
-
-.booklist .booklist__item__author {
-    left: 0;
-    line-height: 1;
-    bottom: 0;
-}
-
-.booklist .booklist__item__text {
-    padding: 1rem;
-    margin: 0 0.2rem;
-}
-</style>
+<style lang="scss" scoped></style>
   
 <script>
 export default {
-    async asyncData({ params, error }) {
-  try {
-    const data = await fetchData(params.uid, params.novelid);
-    return { data };
-  } catch (err) {
-    error({ statusCode: 404, message: 'Page not found' });
-  }
-},
-
     data() {
         return {
-            displayName: this.$store.state.user.profile.name,
-            displayIcon: this.$store.state.user.icon,
+            isProfile: true,
         }
     },
-    computed: {
-        // Vuex ストアから小説データを取得
-        novels() {
-            return this.$store.state.novels.userNovels;
-        },
-        uid() {
-            return this.$store.state.user.uid;
-        },
-        watchMode() {
-            return this.$store.state.user.editNovel;
-        },
-    },
     async fetch() {
-        this.fetchNovels()
-        this.fetchUserNovels()
+        this.setPageName()
         // this.setUser()
     },
     created() {
-        this.$store.commit('user/setMode', this.$route.name)
         // console.log(this.$store.state.user.editNovel)
-        console.log(this.displayName)
+        // console.log(this.displayName)
     },
     watch: {
         uid(newUid, oldUid) {
@@ -127,28 +30,18 @@ export default {
                 }
             }
         },
-        watchMode(beforeToggle, afterToggle) {
-            if (afterToggle == true) {
-                this.scrollSet(this.$refs.scrollContent)
-            }
-        }
     },
     methods: {
-        async fetchUserNovels() {
-            awaitscrollSet(this.$refs.scrollContent)
-        },
-        fetchNovels() {
-            this.$store.commit("common/inputPageName", '仮')
+        setPageName() {
+            this.$store.commit("common/inputPageName", '書いた作品')
         },
         // async setUser() {
         //     this.$store.dispatch('user/setUserFromAuth')
         // },
     },
-    mounted() {//DOMマウント後に実行
-
-        //右端までスクロールする
-        this.scrollSet(this.$refs.scrollContent)
-    },
+    beforeDestroy() {
+        this.$store.dispatch('common/changeIsMounted', false); 
+  },
 };
 </script>
   

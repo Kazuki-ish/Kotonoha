@@ -5,7 +5,7 @@
                 ref="scrollContent">
                 <h1 class="novel__title" v-html="novel.title"></h1>
                 <p class="novel__body" v-html="novel.body"></p>
-                <UiSlugBookmarks />
+                <!-- <UiSlugBookmarks /> -->
             </div>
             <!-- <div class="c-vertical" v-else>
                     <p>小説が見つかりませんでした。</p>

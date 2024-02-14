@@ -1,6 +1,8 @@
 <template>
     <div class="bookmark-arrow">
-        <button class="bookmark-arrow__btn" :class="{ '-first': isFirst == true }" @click="moveBookmarks">
+        <button class="bookmark-arrow__btn"
+            :class="{ '-first': isFirst == true, '-is-active': isActive == true }"
+        @click="moveBookmarks($event)">
             <img class="bookmark-arrow__ico" src="~/assets/imgs/ico/arrow_line.png">
         </button>
     </div>
@@ -23,6 +25,9 @@
     .-first &__ico {
         transform: rotate(180deg);
     }
+    .-first.-is-active {
+        @include NM_normal_anim;
+    }
 
     &__ico {
         display: block;
@@ -32,11 +37,19 @@
     &.-favorited {
         @include NM_normal_anim;
     }
+    &.-is-active {
+        @include NM_normal_anim;
+    }
 }
 </style>
 
 <script>
 export default {
+    data() {
+        return {
+            isActive : false,
+        };
+    },
     props: {
         isFirst: Boolean
     },
@@ -44,7 +57,22 @@ export default {
     mounted() {
 
     },
-
+    watch: {
+    // Vuexのステートを監視
+    '$store.state.common.scrollAmount': {
+      handler(newVal) {
+        if (this.$store.state.novels.bookmarks.includes(newVal)) {
+            this.$store.commit('novels/setCurrentBookmark', true)
+            // console.log('')
+        }
+        else {
+            this.$store.commit('novels/setCurrentBookmark', false)
+            // console.log(this.$store.state.novels.bookmarks)
+        }
+      },
+      immediate: true, // コンポーネントがマウントされた時点で即座にチェックを行う
+    },
+  },
     methods: {
         findClosestIndexes() {
             const array = [...this.$store.state.novels.bookmarks];
@@ -70,29 +98,26 @@ export default {
                     rightDiff = diff;
                 }
             }
-
-            //右側の終端の場合にはnullに
-            if(target == rightIndex && rightIndex == 0) {
-                rightIndex = null
-            }
+            // console.log(leftIndex)
             return [leftIndex, rightIndex];
         },
 
-        moveBookmarks() {
+        moveBookmarks(event) {
             // 右側を基準にして定義
             const [leftIndex, rightIndex] = this.findClosestIndexes();
             let closestIndex = [rightIndex]
 
+            // console.log(event)
 
             if (!this.isFirst && rightIndex !== null) {
-                console.log(closestIndex)
+                // console.log(closestIndex)
                 this.$store.dispatch('common/setBmIndex', closestIndex)
                 this.$scrollSet()
             }
-            else {
+            else  if (this.isFirst) {
                 closestIndex = [leftIndex]
                 if (leftIndex !== null) {
-                    console.log(closestIndex)
+                    // console.log(closestIndex)
                     this.$store.dispatch('common/setBmIndex', closestIndex)
                     this.$scrollSet()
                 }
@@ -100,6 +125,9 @@ export default {
             // console.log(this.$store.state.common.setReadyBmIndex)
             // 必ずインデックスをクリアする
             this.$store.commit('common/clearReadyBmIndex')
+        },
+        watchScrollAmmount() {
+
         },
     },
 }

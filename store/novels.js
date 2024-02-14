@@ -29,6 +29,7 @@ export const state = () => ({
   isFavorite: false,
   isCoolTime: false,
   isBookmark: false,
+  currentBookmark: false,
   bookmarks: [],
   beAbleBookmark: false,
 })
@@ -83,6 +84,9 @@ export const mutations = {
   },
   setBookmarks(state, array) {
     state.bookmarks = array
+  },
+  setCurrentBookmark(state, boolarn) {
+    state.currentBookmark = boolarn
   },
   setBeAbleBookmark(state, boolarn) {
     state.beAbleBookmark = boolarn
@@ -624,13 +628,11 @@ export const actions = {
       data = docSnap.data();
       
     }
-    if (
-        !(slug in data.bookmarks[novel_uid] || !(slug in data.bookmarks[novel_uid][slug]))
-      ) { //novel_uidかslugがない場合
-
-        await updateDoc(userRef, {
-          [`bookmarks.${novel_uid}.${slug}`]: [] // 配列で初期化
-        });
+    if (!(slug in data.bookmarks[novel_uid])) {
+      //slugがない場合
+      await updateDoc(userRef, {
+        [`bookmarks.${novel_uid}.${slug}`]: [] // 配列で初期化
+      });
 
         // docデータを更新
         docSnap = await getDoc(userRef);

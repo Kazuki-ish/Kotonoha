@@ -1,5 +1,6 @@
 <template>
-    <main class="l-main">
+    <main class="l-main"
+        :class="`-${$route.name}`">
         <LayoutsHeader />
         <div class="l-main__content" :class="{
             '-mounted': this.$store.state.common.isMounted,
@@ -40,6 +41,10 @@ export default {
     max-height: 100svh;
     overflow: hidden;
     max-width: 100svw;
+
+    // &.-signUp, &.-signIn {
+    //     overflow-y: auto;
+    // }
 }
 
 a {
