@@ -85,6 +85,9 @@ export const mutations = {
   setBookmarks(state, array) {
     state.bookmarks = array
   },
+  clearBookmarks(state) {
+    state.bookmarks = []
+  },
   setCurrentBookmark(state, boolarn) {
     state.currentBookmark = boolarn
   },

@@ -124,11 +124,12 @@ export default {
             }
             // console.log(this.$store.state.common.setReadyBmIndex)
             // 必ずインデックスをクリアする
+            console.log(this.$store.state.novels.bookmarks)
             this.$store.commit('common/clearReadyBmIndex')
         },
-        watchScrollAmmount() {
-
-        },
+    },
+    beforeUnmount() {
+        this.$store.commit('novels/clearBookmarks')
     },
 }
 

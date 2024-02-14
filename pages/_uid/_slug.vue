@@ -59,6 +59,7 @@ export default {
         this.$store.commit('novels/setReadingNovel', this.novel);
         await this.$store.dispatch("novels/fetchIsFavorited", { uid, slug })
         if (this.$store.state.novels.beAbleBookmark) {
+            this.$store.commit('novels/clearBookmarks')
             await this.$store.dispatch("novels/fetchIsBookmarked", { novel_uid: uid, slug })
         }
     },
